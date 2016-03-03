@@ -1,0 +1,88 @@
+* { outline: none !important } 
+body { font: 13px 'Segoe UI','DejaVu Sans',Helvetica,'Trebuchet MS',Arial,sans-serif; font-weight: 100; line-height: 1.4em;}
+body { background: #fafafa; }
+*:not(.stb) { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+
+nav { background: linear-gradient(to bottom,rgba(255,255,255,1) 0,rgba(252,252,252,1) 100%); }
+nav { border-bottom: 1px solid #E6E6E6; box-shadow: 0 1px 5px rgba(0,0,0,.05); }
+ nav li.current, nav li:hover { background: #F7F7F7 }
+ nav .dropdown-menu > li > a { font-weight: 100 }
+ nav .dropdown-menu { border-color: #E6E6E6; box-shadow: 0 6px 12px rgba(0,0,0,.1);}
+ nav .navbar-default .navbar-nav > li > a { color: #111; font-size: 14px; }
+ nav .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, 
+  nav .navbar-default .navbar-nav>.open>a:hover { background: #fff; box-shadow: inset 0 0 20px rgba(0,0,0,0.15); }
+
+.animate { -webkit-transition:all .35s ease-out;-moz-transition-:all .35s ease-out;-o-transition:all .35s ease-out;transition:all .35s ease-out }
+
+.btn.btn-default { border: 1px solid #E6E6E6; box-shadow: 0 1px 5px rgba(0,0,0,.05); }
+.btn.btn-default:hover { border: 1px solid #cbcbcb; box-shadow: 0 1px 5px rgba(0,0,0,.09); background: #fff }
+.btn.btn-default:active { -webkit-box-shadow: inset 0 1px 10px rgba(0,0,0,.1); box-shadow: inset 0 1px 10px rgba(0,0,0,.1); }
+
+.container.ta { margin-top: 50px; }
+
+#content { margin: 25px 0; }
+.cs { position: relative; margin-bottom: 10px; overflow: visible; }
+ .cs-name { text-transform: capitalize; height: 17px; }
+ .cs-name .pt { opacity: 0 }
+ .cs-box { position: relative; min-height: 20px; border-radius: 4px; box-sizing: border-box; overflow: hidden; }
+ .cs-box { box-shadow: 0 0 1px rgba(0,0,0,0.55), 0 0 12px rgba(0,0,0,0.05); }
+  .xh { position: absolute; z-index: 10; top:0;bottom:0;left:0;right:0; cursor: pointer }
+  .lh, .rh { position: absolute; top:0;bottom:0; background: rgba(0,0,0,0.45); display: none; z-index: 35 }
+  .lh { border-right: 1px solid #000; border-radius: 4px 0 0 4px; left: -1px; }
+  .rh { border-left:  1px solid #000; border-radius: 0 3px 2px 0; right: 0px; }
+
+  .cs:hover .cs-box { box-shadow: 0 0 1px rgba(0,0,0,1), 0 0 12px rgba(0,0,0,0.2); }
+  .cs:hover .cs-name .pt { opacity: 1 }
+  .cs-box > canvas { width: 100%; height: 20px; display: block; cursor: pointer; opacity: 0.6 }
+
+#cs-lh-F, #cs-rh-F{ display: block; }
+#cs-pt-F { opacity: 1 }
+#cs-xh-F { cursor: text }
+#sel-box { position: absolute; z-index: 55; bottom: -1px; top: 17px; display: none; border: 1px solid rgba(0,115,20,0.5); background: rgba(0, 115, 20, 0.3) }
+#cs-bx-F #range { z-index: 45; position: absolute; top:0;left:0;right:0; bottom: 0; cursor: text }
+  
+.hm > a { float: left; height: 100%; }
+.ss { position: relative; width: 100%; z-index: 20; }
+.ss canvas { background: rgba(255,255,255,.8); width: 100%; height: 100%; position: absolute; top:0; z-index: 5 }
+.ss > div { position: relative; top:0; z-index: 10 }
+.ss .fn { font-size: 12px; line-height: 12px; height: 13px; position: relative }
+.ss:hover .fn { background: rgba(245,245,245,.8); }
+.ss .fn:hover { height: 14px; background: transparent !important; border-bottom: 1px solid rgb(240,240,240); }
+.ss .fn > span { height: 16px; position: absolute; left: 0; top: -15px; background: #fff; border-top: 1px solid rgb(240,240,240); border-right: 1px solid rgb(240,240,240); border-radius: 0 3px 0 0; padding: 2px 4px ; display: none }
+.ss .fn:hover > span { display: block; }
+
+.ch-zoom { overflow: hidden; background: #fff; border-left: 1px solid #888; border-right: 1px solid #888 }
+.ch-zoom-scroll { cursor: move }
+
+.chr { position: relative;}
+.chr-box { position: relative; height: 20px; border: 1px solid #ddd; border-radius: 3px; box-shadow: 0 0 12px rgba(0,0,0,0.05); box-sizing: border-box; overflow: hidden; }
+.chr canvas { position: absolute; height: 19px; top: 0px; left: 0px; z-index: 10; width: 100%; border-radius: 4px; }
+
+.spl-file { position: relative; height: 12px; border-bottom: 1px dotted #eee; }
+.spl-file:hover { background: rgba(0,0,0,0.05)  }
+.spl, .gene { position: absolute; line-height: 12px; top: 0px; font-size: 11px; font-family: monospace; font-weight: 100; }
+.spl > i { display: block; float: left; width: 4px; height: 10px; border-radius: 2px; margin: 1px 5px 1px 0; }
+.spl > a { text-decoration: none; display: none; cursor: pointer; }
+.spl.t1 > i { background: #a00; }
+.spl.t2 > i { background: #0a0; }
+.spl.t3 > i { background: #00a; }
+.det-1 .spl > a { display: inline-block }
+
+.genes { position: relative; min-height: 25px; }
+.genes .hm { height: 10px; }
+.gene > i { display: block; float: left; width: 4px; height: 10px; min-width: 1px; margin: 1px 5px 1px 0; background: #DEDEDE;
+    box-sizing: border-box;
+    border: 1px solid #333;
+    border-right-width: 3px;
+    border-left-width: 3px; }
+.gene > a { text-decoration: none; cursor: pointer; display: none; }
+.det-3 .gene > a { display: inline-block }
+
+.controls { margin-bottom: 20px; }
+.controls .disabled { color: #000; }
+.controls .btn-group { margin-right: 8px; }
+.glyphicon.ll { margin-left: -9px; }
+
+
+
+@media (min-width: @screen-sm-min) { }
