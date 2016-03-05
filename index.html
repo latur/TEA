@@ -4,136 +4,48 @@
 	<meta charset="utf-8">
 	<title>Transposable Elements Viewer</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="/css/bootstrap.min.css">
-	<link rel="stylesheet" href="/css/style.css">
-	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/heatmap.css">
+	<link rel="icon" href="favicon.ico" type="image/x-icon" />
 </head>
 <body>
-<nav class="navbar navbar-default navbar-fixed-top">
-	<div class="container">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" href="/">BioAlgorithm</a>
-		</div>
-		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-			<ul class="nav navbar-nav">
-				<li><a href="#">Home</a></li>
-				<li><a href="#">Projects</a></li>
-				<li class="current"><a href="#">Tools</a></li>
-				<li><a href="#">Journal</a></li>
-				<li><a href="#">Blog</a></li>
-				<li><a href="#">Team</a></li>
-			</ul>
-			<ul class="nav navbar-nav navbar-right">
-				<!--
-				<li><a href="/info">Info</a></li>
-				-->
-			</ul>
-		</div><!-- /.navbar-collapse -->
-	</div><!-- /.container -->
-</nav>
-<div class="container ta">
-	<h1>Transposable Elements Viewer</h1>
-	<h3>Genome Browser on Human Dec. 2013 (GRCh38/hg38) Assembly</h3>
-	<!--
+<div class="container page">
+	<h2>Transposable Elements Viewer</h2>
 	<hr/>
+	<div id="content"></div>
+	<!--
 	<div class="selecter input-group">
 		<a class="animate chrlist btn btn-default inactive"><span class="glyphicon glyphicon-align-justify"></span> Chromosomes</a> &nbsp; 
 		<input type="file" id="load" title="Add sample file(s)" multiple="true">
 		<span class="log" id="samplesLog"></span>
 	</div>
 	-->
-	<div id="content">Go</div>
 </div>
 
-<script id="chr-one-template" type="text/x-handlebars-template">
-	<hr>
-	<div class="controls">
-		<div class="btn-group btn-group-sm move-c">
-			<a class="cnt btn btn-default" data-e="-0.95">
-				<span class="glyphicon glyphicon-chevron-left"></span>
-				<span class="glyphicon glyphicon-chevron-left ll"></span>
-				<span class="glyphicon glyphicon-chevron-left ll"></span>
-			</a>
-			<a class="cnt btn btn-default" data-e="-0.4">
-				<span class="glyphicon glyphicon-chevron-left"></span>
-				<span class="glyphicon glyphicon-chevron-left ll"></span>
-			</a>
-			<a class="cnt btn btn-default" data-e="-0.1">
-				<span class="glyphicon glyphicon-chevron-left"></span>
-			</a>
-			<a class="btn btn-default disabled">Move</a>
-			<a class="cnt btn btn-default" data-e="0.1">
-				<span class="glyphicon glyphicon-chevron-right"></span>
-			</a>
-			<a class="cnt btn btn-default" data-e="0.4">
-				<span class="glyphicon glyphicon-chevron-right"></span>
-				<span class="glyphicon glyphicon-chevron-right ll"></span>
-			</a>
-			<a class="cnt btn btn-default" data-e="0.95">
-				<span class="glyphicon glyphicon-chevron-right"></span>
-				<span class="glyphicon glyphicon-chevron-right ll"></span>
-				<span class="glyphicon glyphicon-chevron-right ll"></span>
-			</a>
-		</div>
-		<div class="btn-group btn-group-sm zoom-c">
-			<a class="btn btn-default disabled">
-				<span class="glyphicon glyphicon-zoom-in"></span> Zoom in:
-			</a>
-			<a class="cnt btn btn-default" data-e="0.625">1.6x</a>
-			<a class="cnt btn btn-default" data-e="0.5">2x</a>
-			<a class="cnt btn btn-default" data-e="0.1">10x</a>
-		</div>
-		<div class="btn-group btn-group-sm zoom-c">
-			<a class="btn btn-default disabled">
-				<span class="glyphicon glyphicon-zoom-out"></span> Zoom out:
-			</a>
-			<a class="cnt btn btn-default" data-e="1.6">1.6x</a>
-			<a class="cnt btn btn-default" data-e="3">3x</a>
-			<a class="cnt btn btn-default" data-e="7">7x</a>
-			<a class="cnt btn btn-default" data-e="50">50x</a>
-		</div>
+<!-- Chromosome-List: Two columns template -->
+<script id="chrlist-template" type="text/x-handlebars-template">
+	<div class="row nsel">
+		<div class="col-xs-6 side-0"></div>
+		<div class="col-xs-6 side-1"></div>
 	</div>
-	{chrm}
-	<div class="ch-zoom">
-		<div id="ch-zoom-hm" class="ch-zoom-scroll">
-			<div class="samples">{smpl}</div>
-			<div class="genes">
-				<div class="hm" id="ghmap"></div>
-				<div id="genes"></div>
+</script>
+<!-- Chromosome-List: One chromosome template -->
+<script id="chr-template" type="text/x-handlebars-template">
+	<div class="chr">
+		<div class="chr-name">{name}</div>
+		<div class="chr-area">
+			<div class="chr-box {name}" data-name="{name}" style="width: {width}%">
+				<div class="helper"></div>
 			</div>
 		</div>
 	</div>
 </script>
 
-<script id="chr-template" type="text/x-handlebars-template">
-	<div id="sci-{index}" class="cs nsl">
-		<div id="sel-box"></div>
-		<span class="cs-name">{name}<span id="cs-pt-{index}" class="pt"></span></span>
-		<div class="cs-box" id="cs-bx-{index}" style="width: {width}%">
-			<div id="range"></div>
-			<canvas id="hm-canvas-{index}" height="1"></canvas>
-			<div class="ss" id="cs-ss-{index}"></div>
-			<div class="lh" id="cs-lh-{index}"></div>
-			<div class="rh" id="cs-rh-{index}"></div>
-		</div>
-	</div>
-</script>
-<script id="chr-zoom-trs-template" type="text/x-handlebars-template">
-	<div id="trs-{i}" class="spl t{type}" style="left: {left}%"><i></i><a>{name}</a></div>
-</script>
-<script id="gene-template" type="text/x-handlebars-template">
-	<div id="gid-{id}" class="gene" style="left: {left}%"><i style="width: {width}px"></i><a>{id}</a></div>
-</script>
-
 </body>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script type="text/javascript" src="/js/bootstrap.file-input.js"></script>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.file-input.js"></script>
+<script type="text/javascript" src="js/atlas.js"></script>
 </html>
 
 
