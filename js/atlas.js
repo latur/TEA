@@ -21,14 +21,6 @@ var expData = {};
 var doc = $('#content')[0];
 
 /* -------------------------------------------- */
-Object.prototype.map = function(Exe){
-	var t = this; 
-	return Object.keys(t).map(function(name, index){
-		return Exe(name, t[name], index);
-	});
-};
-
-/* -------------------------------------------- */
 function Route(loc){
 	if (loc) location.hash = loc;
 	// Show one chromosome
@@ -52,13 +44,27 @@ function Template(name, data){
 	return html;
 }
 
+function DataSort(){
+	for (var chr in expData) {
+		for (var f in expData[chr]) {
+			expData[chr][f] = expData[chr][f].sort(function(a,b){
+				if (a[0] > b[0]) return  1;
+				if (a[0] < b[0]) return -1;
+				return 0;
+			});
+		}
+	}
+	return true;
+}
+
 function ShowList(){
 	// Html elements:
 	doc.innerHTML = Template('chrlist');
-	chrs.map(function(name, size, i){
-		var chr = { name: name, width: size * 100 / chrs.chr1, i: i };
+	Object.keys(chrs).map(function(name, i){
+		var chr = { name: name, width: chrs[name] * 100 / chrs.chr1, i: i };
 		$('.side-' + i%2).append(Template('chr', chr))
 	});
+	$('#toList').addClass('disabled');
 	// Actions: select chromosome
 	var offset = 40000;
 	$('.chr-box').each(function(){
@@ -78,7 +84,37 @@ function ShowList(){
 }
 
 function ShowChromosome(name, startBp, endBp){
+	$('#toList').removeClass('disabled');
 	doc.innerHTML = name + ', ' + startBp + ': ' + endBp;
 }
 
-$(function(){ Route(false); });
+$(function(){ 
+	Route(false);
+	$('#load').bootstrapFileInput();
+	$('#toList').click(function(){ Route('#'); });
+	$('#load').change(function(e){
+		var fs = e.target.files;
+		var ftotal = fs.length, stack = fs.length;
+		for (var i = 0; i < fs.length; i++) { (function(f){
+			var reader = new FileReader();
+			reader.onload = function() {
+				stack--;
+				this.result.split('\n').map(function(line){
+					var c = line.split('\t');
+					if (chrs[c[0]]) {
+						if (!expData[c[0]]) expData[c[0]] = {};
+						if (!expData[c[0]][f.name]) expData[c[0]][f.name] = [];
+						c[1] = parseInt(c[1])
+						expData[c[0]][f.name].push(c.slice(1));
+					}
+				});
+				if (stack == 0) {
+					DataSort();
+					Route(false);
+				}
+			};
+			reader.readAsText(f);
+		})(fs[i]); }
+	});
+
+});
