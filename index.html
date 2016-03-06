@@ -14,7 +14,7 @@
 	<h2>Transposable Elements Viewer</h2>
 	<hr/>
 	<div class="selecter input-group">
-		<a id="toList" class="animate btn btn-default"><span class="glyphicon glyphicon-align-justify"></span> Chromosomes</a>
+		<a id="toList" class="animate btn btn-default"><span class="glyphicon glyphicon-align-justify"></span> All chromosomes</a>
 		<input type="file" id="load" title="Add sample file(s)" multiple="true">
 		<span class="log" id="samplesLog"></span>
 	</div>
@@ -32,12 +32,14 @@
 <script id="chr-template" type="text/x-handlebars-template">
 	<div class="chr">
 		<div class="chr-name">{name}</div>
-		<div class="chr-area">
-			<div class="chr-box {name}" data-name="{name}" style="width: {width}%">
-				<div class="helper"></div>
-			</div>
+		<div class="chr-box {name}" data-name="{name}" style="width: {width}%">
+			<div class="helper"></div>
 		</div>
 	</div>
+</script>
+<!-- Chromosome heatmap of samples -->
+<script id="hm-template" type="text/x-handlebars-template">
+	<div class="hm" style="background: 100% 100% url({image}); height: {height}px"></div>
 </script>
 
 </body>

@@ -19,8 +19,11 @@ var expID = false;
 var expData = {};
 // Page element
 var doc = $('#content')[0];
+// Cache for imagedata
+var cache = {'hm' : {}};
 
 /* -------------------------------------------- */
+// Routing based on location.hash
 function Route(loc){
 	if (loc) location.hash = loc;
 	// Show one chromosome
@@ -35,6 +38,7 @@ function Route(loc){
 	return ShowList();
 }
 
+// The template. Obtaining a template name and pasting data
 function Template(name, data){
 	var html = $('#' + name + '-template').html();
 	for (var e in data){
@@ -44,7 +48,9 @@ function Template(name, data){
 	return html;
 }
 
+// Sort of retrotransposons in the order on the chromosome
 function DataSort(){
+	cache = {'hm' : {}};
 	for (var chr in expData) {
 		for (var f in expData[chr]) {
 			expData[chr][f] = expData[chr][f].sort(function(a,b){
@@ -56,6 +62,55 @@ function DataSort(){
 	}
 	return true;
 }
+
+// Getting heatmap pictures for chromosome
+function SamplesHM(chr){
+	if (!expData[chr]) return ;
+	var width = $('.' + chr).width() + 2; // +2 is border
+	var height = Object.keys(expData[chr]).length * 10;
+	
+	if (!(chr in cache.hm)){
+		var canvas = document.createElement('canvas');
+		canvas.width = width;
+		canvas.height = height;
+		var ctx = canvas.getContext('2d');
+		var cdt = ctx.getImageData(0, 0, width, height);	
+		var Pixel = function(x,y,color,a){
+			var ind = (y * width + x) * 4;
+			cdt.data[ind + 0] = color[0]; // R
+			cdt.data[ind + 1] = color[1]; // G
+			cdt.data[ind + 2] = color[2]; // B
+			cdt.data[ind + 3] = a; // A
+		};
+		var y = 0;
+		var K = width/chrs[chr];
+		var colors = [[220,0,0],[0,220,0],[0,0,220]];
+		for (var f in expData[chr]) {
+			expData[chr][f].map(function(sm){
+				var col = colors[sm[2]-1], xx = Math.floor(K * sm[0]), yy = y + parseInt(sm[2]-1) * 3;
+				Pixel(xx, yy+1, col, 255);
+				Pixel(xx, yy+2, col, 255);
+				Pixel(xx, yy+3, col, 255);
+				Pixel(xx+1, yy+1, col, 95);
+				Pixel(xx+1, yy+2, col, 95);
+				Pixel(xx+1, yy+3, col, 95);
+			});
+			y += 10;
+		}
+		ctx.putImageData(cdt, 0, 0);
+		cache.hm[chr] = canvas.toDataURL();
+	}
+	
+	$('.' + chr).append(Template('hm', {
+		image : cache.hm[chr],
+		height : height,
+		samples : Object.keys(expData[chr]).map(function(f){
+			return '<div class="fn"><span>'+f.split('.').slice(0,-1).join('.')+'</span></div>';
+		}).join('')
+	}));
+}
+
+
 
 function ShowList(){
 	// Html elements:
@@ -80,7 +135,10 @@ function ShowList(){
 			var loc = $(this).children('.helper').html();
 			Route(loc);
 		});
-	})
+	});
+	// heatmap
+	Object.keys(expData).map(SamplesHM);
+	
 }
 
 function ShowChromosome(name, startBp, endBp){
