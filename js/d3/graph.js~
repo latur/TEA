@@ -1,0 +1,110 @@
+var links = [{source: "AA", target: "AA", type: "blue", type2: "green", edge: "thick"},
+	     {source: "AA", target: "AG", type: "green", type2: "blue", edge: "thick"},
+	     {source: "AA", target: "AT", type: "blue", type2: "red", edge: "thick"},
+	     {source: "AC", target: "CA", type: "blue", type2: "red", edge: "thick"},
+	     {source: "AC", target: "CC", type: "red", type2: "green", edge: "thick"},
+	     {source: "AC", target: "CT", type: "green", type2: "red", edge: "thin"},
+	     {source: "AG", target: "GA", type: "green", type2: "red", edge: "thick"},
+	     {source: "AG", target: "GT", type: "green", type2: "red", edge: "thick"},
+	     {source: "AT", target: "TA", type: "green", type2: "green", edge: "thin"},
+	     {source: "AT", target: "TC", type: "green", type2: "red", edge: "thin"},
+	     {source: "AT", target: "TG", type: "green", type2: "blue", edge: "thick"},
+	     {source: "AT", target: "TT", type: "green", type2: "green", edge: "thin"},
+	     {source: "CA", target: "AT", type: "green", type2: "red", edge: "thick"},
+	     {source: "CA", target: "AG", type: "green", type2: "red", edge: "thin"},
+	     {source: "CC", target: "CA", type: "green", type2: "red", edge: "thin"},
+	     {source: "CC", target: "CC", type: "green", type2: "red", edge: "thick"},
+	     {source: "CC", target: "CG", type: "green", type2: "green", edge: "thin"},
+	     {source: "CC", target: "CT", type: "green", type2: "red", edge: "thin"},
+	     {source: "CG", target: "GC", type: "green", type2: "blue", edge: "thick"},
+	     {source: "CG", target: "GG", type: "green", type2: "red", edge: "thick"},
+	     {source: "CG", target: "GT", type: "green", type2: "red", edge: "thick"},
+	     {source: "CT", target: "TA", type: "green", type2: "red", edge: "thin"},
+	     {source: "CT", target: "TC", type: "green", type2: "green", edge: "thin"},
+	     {source: "CT", target: "TG", type: "green", type2: "red", edge: "thick"},
+	     {source: "GA", target: "AG", type: "green", type2: "green", edge: "thick"},
+	     {source: "GC", target: "CA", type: "green", type2: "red", edge: "thick"},
+	     {source: "GT", target: "CA", type: "green", type2: "red", edge: "thin"}];
+
+function run(){	
+	var nodes = {};
+
+	// Compute the distinct nodes from the links.
+	links.forEach(function(link) {
+		link.source = nodes[link.source] ||
+			 (nodes[link.source] = {name: link.source,
+							type: link.type});
+		link.target = nodes[link.target] || 
+			(nodes[link.target] = {name: link.target,
+							type: link.type2});
+	});
+
+	var width = 400,
+	    height = 450;
+
+	var force = d3.layout.force()
+    	.nodes(d3.values(nodes))
+	.links(links)
+	.size([width, height])
+	.linkDistance(100)
+	.charge(-500)
+    	.on("tick", tick)
+    	.start();
+
+	var svg = d3.select("#slide2").append("svg")
+    	.attr("width", width)
+    	.attr("height", height);
+
+	// Per-type markers, as they don't inherit styles.
+	svg.append("defs").selectAll("marker")
+	.data(["thick", "thin", "true"])
+	.enter().append("marker")
+	.attr("id", function(d) { return d; })
+	.attr("viewBox", "0 -5 10 10")
+	.attr("refX", 15)
+	.attr("refY", -1.5)
+	.attr("markerWidth", 6)
+	.attr("markerHeight", 6)
+	.attr("orient", "auto")
+	.append("path")
+	.attr("d", "M0,-5L10,0L0,5");
+
+	var path = svg.append("g").selectAll("path")
+	.data(force.links())
+	.enter().append("path")
+	.attr("class", function(d) { return "link " + d.edge; })
+	.attr("marker-end", function(d) { return "url(#" + d.edge + ")"; });
+
+	var circle = svg.append("g").selectAll("circle")
+	.data(force.nodes())
+	.enter().append("circle")
+	.attr("r", 6)
+	.attr("class", function(d) { return "circle " + d.type; })
+	.call(force.drag);
+
+	var text = svg.append("g").selectAll("text")
+	.data(force.nodes())
+	.enter().append("text")
+	.attr("x", 0)
+	.attr("y", 0)
+	.text(function(d) { return d.name; });
+
+	// Use elliptical arc path segments to doubly-encode directionality.
+	function tick() {
+		path.attr("d", linkArc);
+		circle.attr("transform", transform);
+		text.attr("transform", transform);
+	}
+
+	function linkArc(d) {
+		var dx = d.target.x - d.source.x,
+      		dy = d.target.y - d.source.y,
+      		dr = Math.sqrt(dx * dx + dy * dy);
+  		return "M" + d.source.x + "," + d.source.y + "A" + dr + "," +
+			dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+	}
+
+	function transform(d) {
+ 		return "translate(" + d.x + "," + d.y + ")";
+	}
+}
