@@ -134,7 +134,7 @@ function ParseData(content, name){
 function run_sample(){
 	ParseData(sample, "sample1");
 	ParseData(sample2, "sample2");
-	ParseData(sample3, "sample3");
+	ParseData(sample2, "sample3");
 	general_map();
 	n_file = 0;
 	expData = {};
