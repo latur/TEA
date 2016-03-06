@@ -15,6 +15,7 @@
 </head>
 <body>
 <div class="container page">
+<<<<<<< HEAD
 	<div class="top_nav">
 		<h2 align="center">Transposable Elements Viewer</h2>
 		<hr/>
@@ -42,10 +43,20 @@
 		<div id="top_bar"></div>
 	</div>
 	<div id="map" class="map"></div>
+=======
+	<h2>Transposable Elements Viewer</h2>
+	<hr/>
+	<div class="selecter input-group">
+		<input type="file" id="load" title="Add sample file(s)" multiple="true">
+		<span class="log" id="samplesLog"></span>
+	</div>
+	<div id="content"></div>
+>>>>>>> 07735be23618112eb30a69177e1bd82f59be8626
 </div>
 
 <!-- Chromosome-List: Two columns template -->
 <script id="chrlist-template" type="text/x-handlebars-template">
+<<<<<<< HEAD
 	<div id="chr_list" class="chr_list"></div>
 </script> 
 <!-- Chromosome-List: One chromosome template -->
@@ -56,6 +67,76 @@
 </script>
 
 <!-- General map -->
+=======
+	<div class="row nsel chr-list">
+		<div class="col-xs-6 side-0"></div>
+		<div class="col-xs-6 side-1"></div>
+	</div>
+</script>
+<!-- Chromosome-List: One chromosome template -->
+<script id="chr-template" type="text/x-handlebars-template">
+	<div class="chr">
+		<div class="chr-name">{name}</div>
+		<div class="chr-box {name}" data-name="{name}" style="width: {width}%;">
+			<div class="helper"></div>
+		</div>
+	</div>
+</script>
+<!-- Chromosome heatmap of samples -->
+<script id="hm-template" type="text/x-handlebars-template">
+	<div class="hm" style="background-image: url({image}); height: {height}px">{samples}</div>
+</script>
+<!-- One chromosome -->
+<script id="chromosome-template" type="text/x-handlebars-template">
+	<div class="controls">
+		<div class="btn-group btn-group-sm move-c">
+			<a class="cnt btn btn-default" data-e="-0.95">
+				<span class="glyphicon glyphicon-chevron-left"></span>
+				<span class="glyphicon glyphicon-chevron-left ll"></span>
+				<span class="glyphicon glyphicon-chevron-left ll"></span>
+			</a>
+			<a class="cnt btn btn-default" data-e="-0.4">
+				<span class="glyphicon glyphicon-chevron-left"></span>
+				<span class="glyphicon glyphicon-chevron-left ll"></span>
+			</a>
+			<a class="cnt btn btn-default" data-e="-0.1">
+				<span class="glyphicon glyphicon-chevron-left"></span>
+			</a>
+			<a class="btn btn-default disabled">Move</a>
+			<a class="cnt btn btn-default" data-e="0.1">
+				<span class="glyphicon glyphicon-chevron-right"></span>
+			</a>
+			<a class="cnt btn btn-default" data-e="0.4">
+				<span class="glyphicon glyphicon-chevron-right"></span>
+				<span class="glyphicon glyphicon-chevron-right ll"></span>
+			</a>
+			<a class="cnt btn btn-default" data-e="0.95">
+				<span class="glyphicon glyphicon-chevron-right"></span>
+				<span class="glyphicon glyphicon-chevron-right ll"></span>
+				<span class="glyphicon glyphicon-chevron-right ll"></span>
+			</a>
+		</div>
+		<div class="btn-group btn-group-sm zoom-c">
+			<a class="btn btn-default disabled">Zoom in:</a>
+			<a class="cnt btn btn-default" data-e="0.625">x1.6</a>
+			<a class="cnt btn btn-default" data-e="0.5">x2</a>
+			<a class="cnt btn btn-default" data-e="0.1">x10</a>
+		</div>
+		<div class="btn-group btn-group-sm zoom-c">
+			<a class="btn btn-default disabled">Zoom out:</a>
+			<a class="cnt btn btn-default" data-e="1.6">x1.6</a>
+			<a class="cnt btn btn-default" data-e="2">x2</a>
+			<a class="cnt btn btn-default" data-e="10">x10</a>
+			<a class="cnt btn btn-default" data-e="50">x50</a>
+		</div>
+	</div>
+	<div class="chr-one">
+		<div class="chr-box {name}" data-name="{name}">
+		</div>
+	</div>
+</script>
+
+>>>>>>> 07735be23618112eb30a69177e1bd82f59be8626
 
 
 </body>
