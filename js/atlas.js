@@ -142,8 +142,10 @@ function ShowList(){
 }
 
 function ShowChromosome(name, startBp, endBp){
+	// Html elements:
+	doc.innerHTML = Template('chromosome');
 	$('#toList').removeClass('disabled');
-	doc.innerHTML = name + ', ' + startBp + ': ' + endBp;
+	// doc.innerHTML = name + ', ' + startBp + ': ' + endBp;
 }
 
 $(function(){ 

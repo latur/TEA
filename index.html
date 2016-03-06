@@ -14,7 +14,6 @@
 	<h2>Transposable Elements Viewer</h2>
 	<hr/>
 	<div class="selecter input-group">
-		<a id="toList" class="animate btn btn-default"><span class="glyphicon glyphicon-align-justify"></span> All chromosomes</a>
 		<input type="file" id="load" title="Add sample file(s)" multiple="true">
 		<span class="log" id="samplesLog"></span>
 	</div>
@@ -23,7 +22,7 @@
 
 <!-- Chromosome-List: Two columns template -->
 <script id="chrlist-template" type="text/x-handlebars-template">
-	<div class="row nsel">
+	<div class="row nsel chr-list">
 		<div class="col-xs-6 side-0"></div>
 		<div class="col-xs-6 side-1"></div>
 	</div>
@@ -41,6 +40,57 @@
 <script id="hm-template" type="text/x-handlebars-template">
 	<div class="hm" style="background-image: url({image}); height: {height}px">{samples}</div>
 </script>
+<!-- One chromosome -->
+<script id="chromosome-template" type="text/x-handlebars-template">
+	<div class="controls">
+		<div class="btn-group btn-group-sm move-c">
+			<a class="cnt btn btn-default" data-e="-0.95">
+				<span class="glyphicon glyphicon-chevron-left"></span>
+				<span class="glyphicon glyphicon-chevron-left ll"></span>
+				<span class="glyphicon glyphicon-chevron-left ll"></span>
+			</a>
+			<a class="cnt btn btn-default" data-e="-0.4">
+				<span class="glyphicon glyphicon-chevron-left"></span>
+				<span class="glyphicon glyphicon-chevron-left ll"></span>
+			</a>
+			<a class="cnt btn btn-default" data-e="-0.1">
+				<span class="glyphicon glyphicon-chevron-left"></span>
+			</a>
+			<a class="btn btn-default disabled">Move</a>
+			<a class="cnt btn btn-default" data-e="0.1">
+				<span class="glyphicon glyphicon-chevron-right"></span>
+			</a>
+			<a class="cnt btn btn-default" data-e="0.4">
+				<span class="glyphicon glyphicon-chevron-right"></span>
+				<span class="glyphicon glyphicon-chevron-right ll"></span>
+			</a>
+			<a class="cnt btn btn-default" data-e="0.95">
+				<span class="glyphicon glyphicon-chevron-right"></span>
+				<span class="glyphicon glyphicon-chevron-right ll"></span>
+				<span class="glyphicon glyphicon-chevron-right ll"></span>
+			</a>
+		</div>
+		<div class="btn-group btn-group-sm zoom-c">
+			<a class="btn btn-default disabled">Zoom in:</a>
+			<a class="cnt btn btn-default" data-e="0.625">x1.6</a>
+			<a class="cnt btn btn-default" data-e="0.5">x2</a>
+			<a class="cnt btn btn-default" data-e="0.1">x10</a>
+		</div>
+		<div class="btn-group btn-group-sm zoom-c">
+			<a class="btn btn-default disabled">Zoom out:</a>
+			<a class="cnt btn btn-default" data-e="1.6">x1.6</a>
+			<a class="cnt btn btn-default" data-e="2">x2</a>
+			<a class="cnt btn btn-default" data-e="10">x10</a>
+			<a class="cnt btn btn-default" data-e="50">x50</a>
+		</div>
+	</div>
+	<div class="chr-one">
+		<div class="chr-box {name}" data-name="{name}">
+		</div>
+	</div>
+</script>
+
+
 
 </body>
 <script type="text/javascript" src="js/jquery.min.js"></script>

@@ -35,15 +35,33 @@ body {
 }
 
 #content {
-	margin: 25px 0; 
+	margin-bottom: 50px;
 }
 .page { 
 	margin-top: 10px 
 }
+.selecter {
+	margin-bottom: 10px;
+}
+.chr-list {
+	padding-top: 20px;
+}
+.controls {
+	margin-bottom: 15px;
+}
+.controls .disabled {
+	color: #000;
+	font-weight: bold;
+}
+.controls .zoom-c .cnt {
+	font-family: monospace;
+}
 
-/* Panel */
-.selecter .btn {
-	margin-right: 7px 
+.controls .btn-group {
+	margin-right: 8px;
+}
+.glyphicon.ll {
+	margin-left: -9px;
 }
 
 /* Chromosome-list */
