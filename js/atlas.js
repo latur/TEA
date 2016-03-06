@@ -88,12 +88,12 @@ function SamplesHM(chr){
 		for (var f in expData[chr]) {
 			expData[chr][f].map(function(sm){
 				var col = colors[sm[2]-1], xx = Math.floor(K * sm[0]), yy = y + parseInt(sm[2]-1) * 3;
+				Pixel(xx, yy+0, col, 255);
 				Pixel(xx, yy+1, col, 255);
 				Pixel(xx, yy+2, col, 255);
-				Pixel(xx, yy+3, col, 255);
+				Pixel(xx+1, yy+0, col, 95);
 				Pixel(xx+1, yy+1, col, 95);
 				Pixel(xx+1, yy+2, col, 95);
-				Pixel(xx+1, yy+3, col, 95);
 			});
 			y += 10;
 		}

@@ -32,14 +32,14 @@
 <script id="chr-template" type="text/x-handlebars-template">
 	<div class="chr">
 		<div class="chr-name">{name}</div>
-		<div class="chr-box {name}" data-name="{name}" style="width: {width}%">
+		<div class="chr-box {name}" data-name="{name}" style="width: {width}%;">
 			<div class="helper"></div>
 		</div>
 	</div>
 </script>
 <!-- Chromosome heatmap of samples -->
 <script id="hm-template" type="text/x-handlebars-template">
-	<div class="hm" style="background: 100% 100% url({image}); height: {height}px"></div>
+	<div class="hm" style="background-image: url({image}); height: {height}px">{samples}</div>
 </script>
 
 </body>
