@@ -35,10 +35,15 @@
 		<a class="btn btn-default comparision"><span class="glyphicon glyphicon-scissors"></span> Group comparision</a>
 		<a class="btn btn-default showtree"><span class="glyphicon glyphicon-grain"></span> Phylogenetic tree</a>
 	</div>
-	<div class="btn-group samples-nav-pane">
-		<a class="btn btn-default clear"><span class="glyphicon glyphicon-refresh"></span> Clear all</a>
-		<a class="btn btn-default comparision"><span class="glyphicon glyphicon-scissors"></span> Group comparision</a>
-		<a class="btn btn-default showtree"><span class="glyphicon glyphicon-grain"></span> Phylogenetic tree</a>
+	<div class="btn-group">
+		<a onclick="show_TE('Aly', true)" class="btn btn-default">Alu</a>
+		<a onclick="show_TE('Line', true)" class="btn btn-default">Line</a>
+		<a onclick="show_TE('Others', true)" class="btn btn-default">Others</a>
+	</div>
+	<div class="btn-group">
+		<a onclick="general_map(1)" class="btn btn-default">Common</a>
+		<a onclick="general_map(2)" class="btn btn-default">Diff</a>
+		<a onclick="general_map(0)" class="btn btn-default">All</a>
 	</div>
 </script>
 
@@ -108,17 +113,6 @@
 		</div>
 	</div>
 </script>
-
-<!--
-		<input type="checkbox" id="Alu" checked="checked" onclick="show_TE(this.id, this.checked)"><label class="check_box" for="Alu">Alu</label>
-		<input class="check_box" type="checkbox" id="Line" checked="checked" onclick="show_TE(this.id, this.checked)"><label class="check_box" for="Line">Line</label>
-		<input class="check_box" type="checkbox" id="Others" checked="checked" onclick="show_TE(this.id, this.checked)"><label class="check_box" for="Others">Others</label>
-		<input class="check_box" type="checkbox" name="Compare" id="Common" onclick="general_map(1)"><label class="check_box" for="Common">Common</label>
-		<input class="check_box" type="checkbox" name="Compare" id="Diff" onclick="general_map(2)"><label class="check_box" for="Diff">Different</label>
-		<input class="check_box" type="checkbox" name="Compare" id="All" checked="checked" onclick="general_map(0)"><label class="check_box" for="All">All</label>
-
--->
-
 
 </body>
 <script type="text/javascript" src="js/jquery.min.js"></script>

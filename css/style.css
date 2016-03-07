@@ -39,7 +39,6 @@ body {
 }
 #find {
 	min-width: 420px;
-	margin-left: 10px;
 	margin-right: 10px;
 }
 #log {
@@ -50,6 +49,9 @@ body {
 }
 .page { 
 	margin-top: 10px 
+}
+.btn-group {
+	margin-right: 10px;
 }
 .selecter > * {
 	margin-bottom: 10px;
