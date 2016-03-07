@@ -46,12 +46,12 @@ function Route(loc){
 	// Show one chromosome
 	var chr = location.hash.match(/^\#?(chr[0-9XY]+)\:([0-9]+)\-([0-9]+)\/?([0-9a-z]+)?$/);
 	if (chr) {
-		if (chr[4]) expID = chr[4];
+		if (chr[4]) Download(chr[4]);
 		return ShowChromosome(chr[1], parseInt(chr[2]), parseInt(chr[3]));
 	}
 	// Show chromosome list
 	var home = location.hash.match(/^\#?([a-z]+)?\/?([0-9a-z]+)?\/?$/);
-	if (home[2]) expID = home[2];
+	if (home[2]) Download(home[2]);
 	if (home[1] == 'line') return ShowAsLine();
 	return ShowAsList();
 }
@@ -146,6 +146,26 @@ function Parse(content, filename){
 			expData[c[0]][filename].push(c.slice(1));
 		}
 	});
+}
+
+// Get experiment data by ID
+function Download(id){
+	if (id == expID) return ;
+	// Demo samples:
+	if (id == 'demo') {
+		$('#log').html('Loading experiment data...');
+		var demo = ['2s-ready.csv','2sready.csv','SRR12.csv'];
+		var loaded = 0;
+		demo.map(function(name){
+			$.get('/samples/' + name, function(content){
+				Parse(content, name);
+				loaded++;
+				$('#log').html('Files loaded: ' + loaded + '/' + demo.length);
+				if (loaded == demo.length) SamplesLoaded();
+			});
+		});
+	}
+	expID = id;
 }
 
 /* -------------------------------------------- */
