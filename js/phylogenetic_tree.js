@@ -8,17 +8,17 @@ function contruct_tree(){
 		for (var k = i+1; k < n_file; k += 1){
 			var n = file_list[k];
 			var pair = 0, total = 0;
-			for (var chr in expData[name]){
+			for (var chr in expDataUp[name]){
 				if (chr.localeCompare("map") == 0) continue;
-				total += expData[name][chr].length ;
+				total += expDataUp[name][chr].length ;
 
-				if (!expData[n].hasOwnProperty(chr)) continue;
-				total += expData[name][chr].length;
+				if (!expDataUp[n].hasOwnProperty(chr)) continue;
+				total += expDataUp[name][chr].length;
 
-				for (var p1 = 0; p1 < expData[name][chr].length; p1++){
-					for (var p2 = 0; p2 < expData[n][chr].length; p2++){
-						if (Math.abs(expData[name][chr][p1].pos - expData[n][chr][p2].pos) < 100 &&
-							expData[name][chr][p1].type == expData[n][chr][p2].type){
+				for (var p1 = 0; p1 < expDataUp[name][chr].length; p1++){
+					for (var p2 = 0; p2 < expDataUp[n][chr].length; p2++){
+						if (Math.abs(expDataUp[name][chr][p1].pos - expDataUp[n][chr][p2].pos) < 100 &&
+							expDataUp[name][chr][p1].type == expDataUp[n][chr][p2].type){
 								pair += 1;
 							break;
 						}

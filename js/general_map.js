@@ -104,10 +104,10 @@ function get_max(){
 
 function get_idlist(){
 	id_list = {};
-	for (var name in expData){
+	for (var name in expDataUp){
 		if (name.localeCompare("map") == 0) continue;
 
-		for (var chr in expData[name]){
+		for (var chr in expDataUp[name]){
 			if (chr.localeCompare("map") == 0) continue;
 
 			for (var pos = 0; pos < density_map[name][chr].length; pos++)
@@ -117,7 +117,7 @@ function get_idlist(){
 }
 
 function remove_file(id){
-	delete expData[id];
+	delete expDataUp[id];
 	delete density_map[id];
 	for (var i = 0; i < n_file; i++){
 		if (file_list[i].localeCompare(id) == 0){
@@ -170,29 +170,29 @@ function get_common(){
 
 	var name = file_list[0];
 
-	for (var chr in expData[name]){
+	for (var chr in expDataUp[name]){
 		if (chr.localeCompare("map") == 0) continue;
-		for (var pos = 0; pos < expData[name][chr].length; pos++){
+		for (var pos = 0; pos < expDataUp[name][chr].length; pos++){
 			var count = 0;
-			var id = [expData[name][chr][pos].id];
+			var id = [expDataUp[name][chr][pos].id];
 			for (var i = 1; i < n_file; i++){
 				var n = file_list[i];
-				if (!expData[n].hasOwnProperty(chr)) continue;
+				if (!expDataUp[n].hasOwnProperty(chr)) continue;
 
-				for (var k = 0; k < expData[n][chr].length; k++){
-					if (Math.abs(expData[name][chr][pos].pos - expData[n][chr][k].pos) < 100 &&
-						expData[name][chr][pos].type == expData[n][chr][k].type){
-						id.push(expData[n][chr][k].id);
+				for (var k = 0; k < expDataUp[n][chr].length; k++){
+					if (Math.abs(expDataUp[name][chr][pos].pos - expDataUp[n][chr][k].pos) < 100 &&
+						expDataUp[name][chr][pos].type == expDataUp[n][chr][k].type){
+						id.push(expDataUp[n][chr][k].id);
 						++count;
 						break;
 					}
-					if (expData[n][chr][k].pos - expData[name][chr][pos].pos > 100)
+					if (expDataUp[n][chr][k].pos - expDataUp[name][chr][pos].pos > 100)
 						break;
 				}
 				if (count < i) break;
 			}
 			if (count == n_file - 1)
-				add_common(chr, expData[name][chr][pos].pos, expData[name][chr][pos].type, id);
+				add_common(chr, expDataUp[name][chr][pos].pos, expDataUp[name][chr][pos].type, id);
 		}
 	}
 }

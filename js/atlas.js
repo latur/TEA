@@ -29,7 +29,7 @@ var cache = {'hm' : {}};
 const density_len = [249, 243, 199, 191, 182, 171, 160, 146, 139, 134, 136, 134, 115, 108, 102, 91, 84, 81, 59, 65, 47, 51, 157, 58];
 const chr_total = 3088269832;
 const TE_type = ["Alu", "Line", "Others"];
-
+var expDataUp = {};
 var file_list = [], id_list = {};
 var n_file = 0;
 var density_map = {}, d_max = 0;
@@ -42,7 +42,7 @@ var color = ["green", "red", "blue"];
 
 // Routing based on location.hash
 function Route(loc){
-	if (loc) location.hash = loc + '/' + expID;
+	if (loc) location.hash = loc + (expID ? ('/' + expID) : '');
 	// Show one chromosome
 	var chr = location.hash.match(/^\#?(chr[0-9XY]+)\:([0-9]+)\-([0-9]+)\/?([0-9a-z]+)?$/);
 	if (chr) {
@@ -234,12 +234,12 @@ function ShowChromosome(name, startBp, endBp){
 /* -------------------------------------------- */
 
 function ParseData(content, name){
-	if (expData.hasOwnProperty(name))
+	if (expDataUp.hasOwnProperty(name))
 		return;
 
 	++n_file;
 	file_list.push(name);
-	expData[name] = {};
+	expDataUp[name] = {};
 	density_map[name] = {};
 	content = content.split("\n");
 	for (var i = 0; i < content.length; i++){
@@ -247,8 +247,8 @@ function ParseData(content, name){
 		if (content[i][0].length < 1) continue;
 
 		var chr = parseInt(content[i][0]); // parseInt ? parseInt("chr1") == NaN 
-		if (!expData[name].hasOwnProperty(chr)){
-			expData[name][chr] = [];
+		if (!expDataUp[name].hasOwnProperty(chr)){
+			expDataUp[name][chr] = [];
 			density_map[name][chr] = [];
 			for (var k = 0; k < density_len[chr]; k++)
 				density_map[name][chr].push([0,0,0,0,0,0,0]);
@@ -261,7 +261,7 @@ function ParseData(content, name){
 
 		if (type > 2) type = 2;
 
-		expData[name][chr].push({
+		expDataUp[name][chr].push({
 			"id": id,
 			"pos": pos,
 			"type": type
