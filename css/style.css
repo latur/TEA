@@ -37,13 +37,24 @@ body {
 #content {
 	margin-bottom: 50px;
 }
+#find {
+	min-width: 420px;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+#log {
+	margin-left: 10px;
+}
+#log a {
+	cursor: pointer
+}
 .page { 
 	margin-top: 10px 
 }
-.selecter {
+.selecter > * {
 	margin-bottom: 10px;
 }
-.chr-list {
+.chr-list, .chr-line {
 	padding-top: 20px;
 }
 .controls {
@@ -56,13 +67,113 @@ body {
 .controls .zoom-c .cnt {
 	font-family: monospace;
 }
-
 .controls .btn-group {
-	margin-right: 8px;
+	margin: 8px 8px 0 0;
 }
 .glyphicon.ll {
 	margin-left: -9px;
 }
+
+/* Chromosome-list */
+.chr {
+	position: relative;
+	margin-left: 45px;
+	margin-bottom: 7px 
+}
+.chr-name {
+	text-transform: capitalize;
+	line-height: 18px;
+	position: absolute;
+	left: -45px;
+	width: 45px 
+}
+.chr-box { 
+	cursor: pointer;
+	position: relative;
+	min-height: 20px;
+	border: 1px solid #7D7D7D;
+	border-radius: 3px;
+	background-color: #fff;
+	background-repeat-X: no-repeat;
+    background-size: 100% 100%;
+	box-shadow: 0 0 8px rgba(0,0,0,0.1);
+	box-sizing: border-box 
+}
+.chr-box .helper {
+	display: none;
+	width: 160px;
+	margin-left: -80px;
+	font-size: 11px;
+	text-align: center;
+	background: rgba(0,0,0,0.7);
+    color: #eee;
+    position: absolute;
+    top: -22px;
+    height: 17px;
+    border-radius: 3px; 
+}
+.chr-box:hover {
+	border: 1px solid #515151;
+	box-shadow: 0 0 12px rgba(0,0,0,0.15); 
+}
+.chr-box:hover .helper {
+	display: block; 
+}
+
+.chr-line .chr {
+	margin-left: 0;
+	float: left;
+}
+.chr-line .chr-name {
+	display: none;
+}
+
+/* Samples. File names */
+.hm {
+	border-top: 1px solid #ccc;
+    background-size: 100% 100%;
+	background-color: rgba(255, 255, 255, 0.8);
+    margin-top: 15px;
+}
+.hm .fn {
+	font-size: 12px;
+	line-height: 12px;
+	height: 10px;
+	position: relative;
+	z-index: 10
+}
+.hm .fn:first-child{
+	margin-top: -1px;
+}
+.hm:hover .fn {
+	background: rgba(245,245,245,.8); 
+}
+.hm .fn:hover {
+	background: transparent !important;
+	border-bottom: 1px solid #ccc;
+	border-top: 1px solid #ccc;
+	z-index: 15
+}
+.hm .fn > span {
+	height: 16px; 
+	position: absolute; 
+	left: 0; 
+	top: -16px; 
+	background: rgba(245,245,245,.8); 
+	border-top: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	border-radius: 0 3px 0 0; 
+	padding: 2px 4px; 
+	display: none 
+}
+.hm .fn:hover > span { 
+	display: block; 
+}
+
+
+/* --------------------------- */
+
+
 
 .navigator{
 	position: relative;
@@ -94,7 +205,7 @@ body {
 	display: inline-block;
 	margin-top: 5px;
 	padding-top: 5px;
-	margin-left: 10px;
+	margin-left: 15px;
         cursor: pointer;
         width: 40px;
         height: 40px;
@@ -181,66 +292,10 @@ input[type=checkbox]:checked + label{
 	background-size: 14px 14px;
 }
 
-
-/* Chromosome-list */
-.chr {
-	position: relative;
-	margin-left: 45px;
-	margin-bottom: 7px 
-}
-.chr-name {
-	text-transform: capitalize;
-	line-height: 18px;
-	position: absolute;
-<<<<<<< HEAD
-	left: 45px;
-	right: 0px;
-	height: 20px }
-.chr-box {
-	display: inline-block;
-=======
-	left: -45px;
-	width: 45px 
-}
-.chr-box { 
->>>>>>> 07735be23618112eb30a69177e1bd82f59be8626
-	cursor: pointer;
-	position: relative;
-	min-height: 20px;
-	border: 1px solid #7D7D7D;
-	border-radius: 3px;
-	background-color: #fff;
-	background-repeat-X: no-repeat;
-    background-size: 100% 100%;
-	box-shadow: 0 0 8px rgba(0,0,0,0.1);
-	box-sizing: border-box 
-}
-.chr-box .helper {
-	display: none;
-	width: 160px;
-	margin-left: -80px;
-	font-size: 11px;
-	text-align: center;
-	background: rgba(0,0,0,0.7);
-    color: #eee;
-    position: absolute;
-    top: -22px;
-    height: 17px;
-    border-radius: 3px; 
-}
-.chr-box:hover {
-	border: 1px solid #515151;
-	box-shadow: 0 0 12px rgba(0,0,0,0.15); 
-}
-.chr-box:hover .helper {
-<<<<<<< HEAD
-	display: block; }
-
 /* General map */
 .top_nav{
 	position:fixed;
 	background-color:#fafafa;
-	z-index:10000;
 }
 .chr_list{
 	position: relative;
@@ -265,49 +320,88 @@ input[type=checkbox]:checked + label{
 
 .map_name:hover {
 	fill: #000;
-=======
-	display: block; 
 }
 
-/* Samples. File names */
-.hm {
-	border-top: 1px solid #ccc;
-    background-size: 100% 100%;
-	background-color: rgba(255, 255, 255, 0.8);
-    margin-top: 15px;
+/* Pop up table */
+.pop_up {
+	position: absolute;
+	display: inline-block;
+	background: #000;
+	color: #fff;
+	opacity: 0.5;
+	line-height: 120%
+	z-index: 1000;
+	padding: 3px;
 }
-.hm .fn {
-	font-size: 12px;
-	line-height: 12px;
-	height: 10px;
+
+.screen_blur {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: black;
+	opacity: 0.3;
+}
+
+/* Make group */
+
+.split_group {
+	width: 190px;
+	height: 160px;
+	text-align: center;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	color: #000;
+	line-height: 150%;
+	background: #fff;
+	-webkit-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+       	-moz-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+        box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+
+}
+
+.group_move {
 	position: relative;
-	z-index: 10
+	width: 50px;
+	margin: auto;
+	cursor: pointer;
+	font-weight: bold;
+	font-size: 15px;
+	text-align: center;
+	line-height: 150%;
+	border: 1px solid;
+	border-radius: 3px;
 }
-.hm .fn:first-child{
-	margin-top: -1px;
+
+.group_move:hover {
+	color: #a2cac2;
 }
-.hm:hover .fn {
-	background: rgba(245,245,245,.8); 
+
+.gene_name {
+	position: absolute;
+	height: 20px;
+	font-size: 15px;
+	text-align: center;
+	background: black;
+	left: 1500px;
+	top: 20px;
+	opacity: 0.6;
+	z-index: 1000;
 }
-.hm .fn:hover {
-	background: transparent !important;
-	border-bottom: 1px solid #ccc;
-	border-top: 1px solid #ccc;
-	z-index: 15
+
+/* Tree */
+.tree {
+	position: absolute;
+	display: block;
+	top: 20px;
+	left: 200px;
+	width: 800px;
+	height: 650px;
+	background: #fff;
+	border: 1px solid;
+	font-size: 30px;
+	line-height: 120%;
+	padding: 10px;
 }
-.hm .fn > span {
-	height: 16px; 
-	position: absolute; 
-	left: 0; 
-	top: -16px; 
-	background: rgba(245,245,245,.8); 
-	border-top: 1px solid #ccc;
-	border-right: 1px solid #ccc;
-	border-radius: 0 3px 0 0; 
-	padding: 2px 4px; 
-	display: none 
-}
-.hm .fn:hover > span { 
-	display: block; 
->>>>>>> 07735be23618112eb30a69177e1bd82f59be8626
-}
+

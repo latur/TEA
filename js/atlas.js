@@ -1,52 +1,48 @@
 /* -------------------------------------------- */
 "use strict";
 
+const chrsSum = 3088269832;
 const chrs = {
-	'chr1': 249000000,  'chr2':  243000000, 'chr3': 199000000, 
-	'chr4': 191000000,  'chr5':  182000000, 'chr6': 171000000, 
-	'chr7': 160000000,  'chr8':  146000000, 'chr9': 139000000, 
-	'chr10': 134000000, 'chr11': 136000000, 'chr12': 134000000, 
-	'chr13': 115000000, 'chr14': 108000000, 'chr15': 102000000, 
-	'chr16': 91000000,  'chr17': 84000000,  'chr18': 81000000, 
-	'chr19': 59000000,  'chr20': 65000000,  'chr21': 47000000, 
-	'chr22': 51000000,  'chrX':  157000000, 'chrY': 58000000
+	'chr1': 248956422,  'chr2':  242193529, 'chr3': 198295559, 
+	'chr4': 190214555,  'chr5':  181538259, 'chr6': 170805979, 
+	'chr7': 159345973,  'chr8':  145138636, 'chr9': 138394717, 
+	'chr10': 133797422, 'chr11': 135086622, 'chr12': 133275309, 
+	'chr13': 114364328, 'chr14': 107043718, 'chr15': 101991189, 
+	'chr16': 90338345,  'chr17': 83257441,  'chr18': 80373285, 
+	'chr19': 58617616,  'chr20': 64444167,  'chr21': 46709983, 
+	'chr22': 50818468,  'chrX':  156040895, 'chrY': 57227415
 };
-const density_len = [249, 243, 199, 191, 182, 171, 160, 146, 139, 134, 136, 134, 115, 108, 102, 91, 84, 81, 59, 65, 47, 51, 157, 58];
-const chr_total = 3088269832;
-const TE_type = ["Alu", "Line", "Other"];
 
 // Experiment ID 
 // (if specified, need to load samples of this experiment)
-var expID = false;
+var expID = '';
 // Experiment Samples Data
 var expData = {};
-var file_list = [];
-var n_file = 0;
-var density_map = {}, d_max = 0;
-var color = ["green", "red", "blue"];
-// Page element
-<<<<<<< HEAD
-var doc = $('#top_bar')[0];
-
-/* -------------------------------------------- */
-Object.prototype.map = function(Exe){
-	var t = this; 
-	return Object.keys(t).map(function(name, index){
-		return Exe(name, t[name], index);
-	});
-};
-
-/* -------------Main page--------------- */
-=======
+// Page elements
 var doc = $('#content')[0];
+var nav = $('#navbar')[0];
 // Cache for imagedata
 var cache = {'hm' : {}};
 
 /* -------------------------------------------- */
+/* ??? */
+const density_len = [249, 243, 199, 191, 182, 171, 160, 146, 139, 134, 136, 134, 115, 108, 102, 91, 84, 81, 59, 65, 47, 51, 157, 58];
+const chr_total = 3088269832;
+const TE_type = ["Alu", "Line", "Others"];
+
+var file_list = [], id_list = {};
+var n_file = 0;
+var density_map = {}, d_max = 0;
+var tree = [];
+var color = ["green", "red", "blue"];
+
+
+/* -------------------------------------------- */
+/* Functions */
+
 // Routing based on location.hash
->>>>>>> 07735be23618112eb30a69177e1bd82f59be8626
 function Route(loc){
-	if (loc) location.hash = loc;
+	if (loc) location.hash = loc + '/' + expID;
 	// Show one chromosome
 	var chr = location.hash.match(/^\#?(chr[0-9XY]+)\:([0-9]+)\-([0-9]+)\/?([0-9a-z]+)?$/);
 	if (chr) {
@@ -54,9 +50,10 @@ function Route(loc){
 		return ShowChromosome(chr[1], parseInt(chr[2]), parseInt(chr[3]));
 	}
 	// Show chromosome list
-	var home = location.hash.match(/^\#?\/?([0-9a-z]+)?$/);
-	if (home[1]) expID = home[1];
-	return ShowList();
+	var home = location.hash.match(/^\#?([a-z]+)?\/?([0-9a-z]+)?\/?$/);
+	if (home[2]) expID = home[2];
+	if (home[1] == 'line') return ShowAsLine();
+	return ShowAsList();
 }
 
 // The template. Obtaining a template name and pasting data
@@ -70,8 +67,10 @@ function Template(name, data){
 }
 
 // Sort of retrotransposons in the order on the chromosome
-function DataSort(){
+function SamplesLoaded(){
+	// Clear cache
 	cache = {'hm' : {}};
+	// Sort samples
 	for (var chr in expData) {
 		for (var f in expData[chr]) {
 			expData[chr][f] = expData[chr][f].sort(function(a,b){
@@ -81,6 +80,11 @@ function DataSort(){
 			});
 		}
 	}
+	// Samples nav
+	nav.innerHTML = Template('samples-nav');
+	$('.samples-nav-pane .clear').click(function(){ location.href = '' });
+	$('.samples-nav-pane .comparision').click(function(){ });
+	$('.samples-nav-pane .showtree').click(function(){ });
 	return true;
 }
 
@@ -131,25 +135,24 @@ function SamplesHM(chr){
 	}));
 }
 
-
-
-function ShowList(){
-	// Html elements:
-	doc.innerHTML = Template('chrlist');
-<<<<<<< HEAD
-	chrs.map(function(name, size, i){
-		var chr = { name: name, width: size * 1050 / chr_total, i: i };
-		$('#chr_list').append(Template('chr', chr))
+// Parse samples files. Separators: Col: "\t", Row: "\n"
+function Parse(content, filename){
+	content.split('\n').map(function(line){
+		var c = line.split('\t');
+		if (chrs[c[0]]) {
+			if (!expData[c[0]]) expData[c[0]] = {};
+			if (!expData[c[0]][filename]) expData[c[0]][filename] = [];
+			c[1] = parseInt(c[1])
+			expData[c[0]][filename].push(c.slice(1));
+		}
 	});
+}
 
-=======
-	Object.keys(chrs).map(function(name, i){
-		var chr = { name: name, width: chrs[name] * 100 / chrs.chr1, i: i };
-		$('.side-' + i%2).append(Template('chr', chr))
-	});
-	$('#toList').addClass('disabled');
->>>>>>> 07735be23618112eb30a69177e1bd82f59be8626
-	// Actions: select chromosome
+/* -------------------------------------------- */
+/* Pages */
+
+// Muse actions: select a chromosome
+function _ShowHelper(){
 	var offset = 40000;
 	$('.chr-box').each(function(){
 		var e = $(this)[0], name = $(this).data('name');
@@ -165,19 +168,49 @@ function ShowList(){
 			Route(loc);
 		});
 	});
-	// heatmap
-	Object.keys(expData).map(SamplesHM);
+}
 	
+// Showing chromosomes in two vertical list [Igor]
+function ShowAsList(){
+	$('.chr-view-mode a').removeClass('disabled');
+	$('.chr-view-mode .aslist').addClass('disabled');
+	// Html template:
+	doc.innerHTML = Template('chr-list');
+	Object.keys(chrs).map(function(name, i){
+		var chr = { name: name, style : '', width: chrs[name] * 100 / chrs.chr1, i: i };
+		$('.side-' + i%2).append(Template('chr', chr))
+	});
+	_ShowHelper();
+	// Heatmap of samples
+	Object.keys(expData).map(SamplesHM);
 }
 
+// Showing chromosomes as one line [Thao]
+function ShowAsLine(){
+	$('.chr-view-mode a').removeClass('disabled');
+	$('.chr-view-mode .asline').addClass('disabled');
+	// Html template:
+	doc.innerHTML = Template('chr-line');
+	Object.keys(chrs).map(function(name, i){
+		var chr = { name: name, style : 'width:' + chrs[name] * 100 / chrsSum + '%', width: 100, i: i };
+		$('.chr-line').append(Template('chr', chr))
+	});
+	_ShowHelper();
+
+	// This requires optimization.
+	// By varying the width of the screen and re-write on a clean HPD //
+	d3.select("#map").append("svg").attr("id", "g_map").attr("width", 1150);
+	run_sample();
+}
+
+// Selected region on chromosome
 function ShowChromosome(name, startBp, endBp){
+	$('.chr-view-mode a').removeClass('disabled');
 	// Html elements:
 	doc.innerHTML = Template('chromosome');
-	$('#toList').removeClass('disabled');
-	// doc.innerHTML = name + ', ' + startBp + ': ' + endBp;
+	// =]
 }
 
-<<<<<<< HEAD
 /* -------------------------------------------- */
 
 function ParseData(content, name){
@@ -190,24 +223,28 @@ function ParseData(content, name){
 	density_map[name] = {};
 	content = content.split("\n");
 	for (var i = 0; i < content.length; i++){
-		content[i] = content[i].split(",");
-		if (content[i].length < 3) continue;
+		content[i] = content[i].split(","); // separator is "\t"
+		if (content[i][0].length < 1) continue;
 
-		var chr = parseInt(content[i][0]);
+		var chr = parseInt(content[i][0]); // parseInt ? parseInt("chr1") == NaN 
 		if (!expData[name].hasOwnProperty(chr)){
 			expData[name][chr] = [];
 			density_map[name][chr] = [];
 			for (var k = 0; k < density_len[chr]; k++)
-				density_map[name][chr].push([0,0,0]);
+				density_map[name][chr].push([0,0,0,0,0,0,0]);
 		}
 
 		var pos = parseInt(content[i][1]);
 		var type = parseInt(content[i][2]);
+		var id = name + '-' + chr + '-' + pos + '-' + type;
+		id_list[id] = 0; // init all pos as different, turn 1 if it is a common pos
+
 		if (type > 2) type = 2;
 
 		expData[name][chr].push({
+			"id": id,
 			"pos": pos,
-			"type": TE_type[type]
+			"type": type
 		});
 
 		var cell = Math.ceil(pos/1000000)-1;
@@ -224,68 +261,36 @@ function run_sample(){
 	ParseData(sample, "sample1");
 	ParseData(sample2, "sample2");
 	ParseData(sample3, "sample3");
-	general_map();
-	n_file = 0;
-	expData = {};
-	file_list = [];
-	n_file = 0;
-	density_map = {};
-	d_max = 0;
+	get_common();
+	contruct_tree();
+	general_map(0);
 }
 
+
 $(function(){ 
-	ShowList();
-	d3.select("#map").append("svg").attr("id", "g_map").attr("width", 1150);
-	run_sample();
+	Route(false);
+	$('#demo-samples').click(function(){ Route('#list/demo'); });
+	$('.chr-view-mode .aslist').click(function(){ Route('#list'); });
+	$('.chr-view-mode .asline').click(function(){ Route('#line'); });
 
 	$('#load').bootstrapFileInput();
 	$('#load').change(function(e){
-		$("body").css("cursor", "progress");
 		var fs = e.target.files;
-		var itr = fs.length;
-		for (var i = 0; i < fs.length; i++) { 
-			(function(f){
-				var reader = new FileReader();
-				reader.onload = function() {
-					ParseData(this.result, f.name);
-					itr -= 1;
-					if (itr == 0)
-						general_map();
-				};
-				reader.readAsText(f);
-			})(fs[i]);
-		}
-		$("body").css("cursor", "default");		
-	});
-=======
-$(function(){ 
-	Route(false);
-	$('#load').bootstrapFileInput();
-	$('#toList').click(function(){ Route('#'); });
-	$('#load').change(function(e){
-		var fs = e.target.files;
-		var ftotal = fs.length, stack = fs.length;
+		var ftotal = fs.length, itr = fs.length;
 		for (var i = 0; i < fs.length; i++) { (function(f){
 			var reader = new FileReader();
 			reader.onload = function() {
-				stack--;
-				this.result.split('\n').map(function(line){
-					var c = line.split('\t');
-					if (chrs[c[0]]) {
-						if (!expData[c[0]]) expData[c[0]] = {};
-						if (!expData[c[0]][f.name]) expData[c[0]][f.name] = [];
-						c[1] = parseInt(c[1])
-						expData[c[0]][f.name].push(c.slice(1));
-					}
-				});
-				if (stack == 0) {
-					DataSort();
+				itr--;
+				Parse(this.result, f.name);
+				if (itr == 0) {
+					SamplesLoaded();
 					Route(false);
+					// get_common();
+					// contruct_tree();
+					// general_map(0);
 				}
 			};
 			reader.readAsText(f);
 		})(fs[i]); }
 	});
-
->>>>>>> 07735be23618112eb30a69177e1bd82f59be8626
 });
