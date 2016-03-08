@@ -222,7 +222,12 @@ function Download(id){
 				Parse(content, name);
 				loaded++;
 //				$('#log').html('Files loaded: ' + loaded + '/' + demo.length);
-				if (loaded == demo.length) SamplesLoaded();
+				if (loaded == demo.length){
+					get_max();
+					get_common();
+					contruct_tree()
+					SamplesLoaded();
+				}
 			});
 		});
 	}
