@@ -23,6 +23,9 @@ var doc = $('#content')[0];
 var nav = $('#navbar')[0];
 // Cache for imagedata
 var cache = {'hm' : {}};
+// Samples filter: checkboxes
+var visibleType = {'1': true, '2': true, '3': true};
+var visibleMode = 0;
 
 /* -------------------------------------------- */
 /* ??? */
@@ -85,6 +88,18 @@ function SamplesLoaded(){
 	$('.samples-nav-pane .clear').click(function(){ location.href = '' });
 	$('.samples-nav-pane .comparision').click(function(){ });
 	$('.samples-nav-pane .showtree').click(function(){ });
+
+	$('.visible.type a').click(function(){
+		var k = $(this).data('id');
+		$(this)[visibleType[k] ? 'removeClass' : 'addClass']('selected');
+		visibleType[k] = !visibleType[k];
+	});
+	$('.visible.mode a').click(function(){
+		$('.visible.mode a').removeClass('selected')
+		$(this).addClass('selected');
+		visibleMode = $(this).data('map');
+	});
+	
 	return true;
 }
 

@@ -35,15 +35,15 @@
 		<a class="btn btn-default comparision"><span class="glyphicon glyphicon-scissors"></span> Group comparision</a>
 		<a class="btn btn-default showtree"><span class="glyphicon glyphicon-grain"></span> Phylogenetic tree</a>
 	</div>
-	<div class="btn-group">
-		<a onclick="show_TE('Aly', true)" class="btn btn-default">Alu</a>
-		<a onclick="show_TE('Line', true)" class="btn btn-default">Line</a>
-		<a onclick="show_TE('Others', true)" class="btn btn-default">Others</a>
+	<div class="btn-group visible type">
+		<a class="btn btn-default selected" data-id="1"><span class="glyphicon glyphicon-ok"></span> Alu</a>
+		<a class="btn btn-default selected" data-id="2"><span class="glyphicon glyphicon-ok"></span> Line</a>
+		<a class="btn btn-default selected" data-id="3"><span class="glyphicon glyphicon-ok"></span> Others</a>
 	</div>
-	<div class="btn-group">
-		<a onclick="general_map(1)" class="btn btn-default">Common</a>
-		<a onclick="general_map(2)" class="btn btn-default">Diff</a>
-		<a onclick="general_map(0)" class="btn btn-default">All</a>
+	<div class="btn-group visible mode">
+		<a data-map="1" class="btn btn-default"><span class="glyphicon glyphicon-record"></span> Common</a>
+		<a data-map="2" class="btn btn-default"><span class="glyphicon glyphicon-record"></span> Diff</a>
+		<a data-map="0" class="btn btn-default selected"><span class="glyphicon glyphicon-record"></span> All</a>
 	</div>
 </script>
 
