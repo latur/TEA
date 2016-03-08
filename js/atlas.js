@@ -330,21 +330,23 @@ function ShowChromosome(name, start, end){
 		ora = start < end ? [start, end] : [end, start];
 		var e = x2 > x1 ? [x1, x2] : [x2, x1];
 		current = [e[0] < 0 ? 0 : e[0], e[1] > ww ? ww : e[1]];
+		current.push(start > end ? end : start)
+		current.push(start > end ? start : end)
 		return current;
 	}
 	
 	var ResizePre = function(xx){
 		var e = RangeParse(xx[0], xx[1]);
-		// Detail-level:
+		// Level of details:
 		var bp = xx[1] - xx[0];
 		detail = 0;
 		zoom.classList.remove('det-1');
 		zoom.classList.remove('det-2');
 		zoom.classList.remove('det-3');
-		if (bp < 80000000) detail++, zoom.classList.add('det-' + detail); // sample-names visible
-		if (bp < 30000000) detail++, zoom.classList.add('det-' + detail); // gene-lines
-		if (bp <  7000000) detail++, zoom.classList.add('det-' + detail); // gene-names
-		if (bp <  1000000) detail++, zoom.classList.add('det-' + detail); // ?
+		if (bp < 90000000) detail++, zoom.classList.add('det-' + detail); // L
+		if (bp <  8000000) detail++, zoom.classList.add('det-' + detail); // M
+		if (bp <  3500000) detail++, zoom.classList.add('det-' + detail); // S
+		if (bp <   100000) detail++, zoom.classList.add('det-' + detail); // XS
 
 		// Detail-line
 		zoom.style.width = ww * 100 / (e[1] - e[0]) + '%';
@@ -361,12 +363,12 @@ function ShowChromosome(name, start, end){
 		var e = RangeParse(xx[0], xx[1]);
 		if (xhr) xhr.abort(), xhr = false;
 		ResizePre(xx);
-		// «Шторки»
+		// black blur "blinds"
 		$('#cs-lh-F')[0].style.width = (e[0] * 100 / ww) + '%';
 		$('#cs-rh-F')[0].style.left  = (e[1] * 100 / ww) + '%';
 		// Hash
-		var bp1 = parseInt(e[0] * size / ww);
-		var bp2 = parseInt(e[1] * size / ww);
+		var bp1 = parseInt(e[2]);
+		var bp2 = parseInt(e[3]);
 		location.hash = '#' + name + ':' + bp1 + '-' + bp2;
 		$('#position')[0].innerHTML = ':' + bp1 + '-' + bp2;
 
@@ -400,49 +402,77 @@ function ShowChromosome(name, start, end){
 			});
 		}
 		
-		if (detail < 2) {
-			//$('#ghmap')[0].innerHTML = HMap(hMap[name]).join('')
-			return $('#genes')[0].innerHTML = '';
-		}
-		$('#ghmap')[0].innerHTML = '';
-		
 
-		var GS = [];
-		xx = xx.sort();
-		var bp1 = xx[0] - (xx[1] - xx[0]);
-		var bp2 = xx[1] + (xx[1] - xx[0]);
-		return ;
-		xhr = $.post('/execute/Genes', {chr : name, start : parseInt(bp1), end : parseInt(bp2)}, function(csv){
-			$('#genes')[0].innerHTML = csv.split('\n').map(function(gene){
-				var gn = gene.split(',');
-				if (gn.length < 2) return;
-				gn[1] = parseInt(gn[1], 32);
-				gn[2] = parseInt(gn[2], 32);
-				GS.push(gn);
-				return Template('gene', {
-					id    : gn[0],
-					left  : gn[1] * 100 / size, 
-					width : gn[2] * KPX
-				});
-			}).join('');
-			
-			var lines = [0], ins, val;
-			GS.map(function(gn){
-				// Init in px
-				val = gn[1] * KPX + gn[2] * KPX + 5;
-				ins = Place(lines, gn[1] * KPX);
-				if (detail > 2) val += gn[0].length * 6.61 + 25;
-				val = parseInt(val);
-				if (ins !== false) {
-					lines[ins] = val;
-				} else {
-					ins = lines.length;
-					lines.push(val);
-				}
-				$('#gid-' + gn[0])[0].style.top = ins * 12 + 3 + 'px';
-				$('#gid-' + gn[0])[0].parentNode.style.height = lines.length * 12 + 6 + 'px';
+		// $('#ghmap')[0].innerHTML = '';
+
+		if (detail == 0) return $('#genes')[0].innerHTML = '';
+		var mode = ['-','L','M','S','XS'][detail];
+		var range = bp2 - bp1;
+		var from = bp1 - range;
+		var req = [mode, name, from > 0 ? from : 0, bp2 + range].join('/')
+		
+		xhr = $.post('http://dev.mazepa.us/tea/app/' + req, {}, function(csv){
+			var data = csv.split('\n').map(function(row){
+				var r = row.split('\t');
+				r[0] = parseInt(r[0], 32);
+				if (r[1]) r[1] = parseInt(r[1], 32);
+				return r;
 			});
-			
+			// L - inits
+			if (detail == 1) {
+				$('#genes')[0].innerHTML = data.map(function(t){
+					return Template('zoom-L', { left : t[0] * 100 / size });
+				}).join('');
+				return ;
+			}
+			// M - intrvals
+			var lines = [0], ins, val;
+			if (detail == 2) {
+				$('#genes')[0].innerHTML = data.map(function(t){
+					var w = t[1] * KPX;
+					ins = Place(lines, t[0] * KPX);
+					val = parseInt(t[0] * KPX + t[1] * KPX + 1);
+					if (ins !== false) {
+						lines[ins] = val;
+					} else {
+						ins = lines.length;
+						lines.push(val);
+					}
+					if (bp2 > t[0] && t[0] > bp1) $('#genes').css({ height : lines.length * 8 + 6 + 'px'});
+					return Template('zoom-M', {
+						left  : t[0] * 100 / size,
+						width : w > 1 ? w : 1,
+						top   : ins * 8 + 3
+					});
+				}).join('');
+			}
+			// S - intrvals + names
+			if (detail == 3) {
+				$('#genes')[0].innerHTML = data.map(function(t){
+					var w = t[1] * KPX;
+					var title = t[2];
+					if (t[3]) title += ', ' + t[3];
+					ins = Place(lines, t[0] * KPX);
+					val = parseInt(t[0] * KPX + t[1] * KPX + (t[2] + t[3]).length * 6.5 + 25);
+					if (ins !== false) {
+						lines[ins] = val;
+					} else {
+						ins = lines.length;
+						lines.push(val);
+					}
+					if (bp2 > t[0] && t[0] > bp1) $('#genes').css({ height : lines.length * 13 + 6 + 'px'});
+					return Template('zoom-S', {
+						left  : t[0] * 100 / size,
+						width : w > 1 ? w : 1,
+						top   : ins * 13 + 3,
+						title : title
+					});
+				}).join('');
+			}
+			// XS - intrvals + names + exons
+			if (detail == 4) {
+
+			}
 		});
 	};
 
@@ -525,7 +555,7 @@ function run_sample(){
 }
 
 
-$(function(){ 
+$(function(){
 	Route('#line/demo');
 	$('#demo-samples').click(function(){ Route('#line/demo'); });
 	$('.chr-view-mode .aslist').click(function(){ Route('#list'); });

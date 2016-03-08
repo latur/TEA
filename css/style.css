@@ -245,19 +245,60 @@ body {
 }
 
 #range {
-z-index: 45;
-position: absolute; top:0;left:0;right:0; bottom: 0; cursor: text
+	z-index: 45;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	cursor: text
 }
-.lh, .rh { position: absolute; top:0;bottom:0; background: rgba(0,0,0,0.45); z-index: 35 }
+.lh, .rh { 
+	position: absolute; 
+	top:0; 
+	bottom:0; 
+	background: rgba(0,0,0,0.45); 
+	z-index: 35 
+}
 .lh { border-right: 1px solid #000; border-radius: 4px 0 0 4px; left: -1px; }
 .rh { border-left:  1px solid #000; border-radius: 0 3px 2px 0; right: 0px; }
-
 .xh { position: absolute; z-index: 10; top:0;bottom:0;left:0;right:0; cursor: pointer }
-
 
 #cs-xh-F { cursor: text }
 #sel-box { position: absolute; z-index: 55; bottom: -1px; top: 17px; display: none; border: 1px solid rgba(0,115,20,0.5); background: rgba(0, 115, 20, 0.3) }
 
+#genes {
+	min-height: 21px;
+	position: relative;
+}
+#genes .bx {
+	position: absolute;
+	height: 13px;
+	font-size: 11px;
+	font-family: monospace;
+	font-weight: 100;
+ }
+#genes .bx i {
+	float: left;
+	margin: 3px 5px 0px 0;
+	background: #eee;
+	border-left: 1px solid #aaa;
+	border-right: 1px solid #aaa;
+	height: 10px;
+}
+#genes .bx a {
+	text-decoration: none;
+}
+#genes .bx.gene {
+	background: rgba(0,0,0,0.3);
+	width: 2px;
+	height: 15px;
+	top: 3px;
+}
+#genes .bx.trsk {
+	background: #aaa;
+	height: 7px;
+}
 
 
 /* --------------------------- */
