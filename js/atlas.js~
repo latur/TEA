@@ -201,7 +201,7 @@ function Parse(content, filename){
 			var cell = Math.ceil(c[1]/1000000)-1;
 			if (cell >= density_len[c[0]]) cell = density_len[c[0]]-1;
 
-			++density_map[c[0]][filename][cell][c[3]-1];
+			++density_map[c[0]][filename][cell][c[3]];
 
 			// Use to trace for turn on/off element and show inf when needed
 			id_list[id] = 0;

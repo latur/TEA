@@ -141,7 +141,7 @@ function draw_tree(){
 					.attr("x2", dx)
 					.attr("y2", dy)
 					.attr("style", "stroke: black; stroke-width: 3px; cursor: pointer;")
-					.attr("id", (tree[i].dis/max_len).toPrecision(3))
+					.attr("id", (len/r).toPrecision(3))
 					.on("mouseover", function(){
 						var id = this.id;
 						$("body").append(function(){
@@ -168,7 +168,7 @@ function draw_tree(){
 					.attr("x2", dx)
 					.attr("y2", dy)
 					.attr("style", "stroke: black; stroke-width: 3px; cursor: pointer;")
-					.attr("id", (tree[i].dis/max_len).toPrecision(3))
+					.attr("id", (len/r).toPrecision(3))
 					.on("mouseover", function(){
 						var id = this.id;
 						$("body").append(function(){

@@ -36,7 +36,7 @@
 		<a class="btn btn-default comparision"><span class="glyphicon glyphicon-scissors"></span> Group comparision</a>
 		<a class="btn btn-default showtree"><span class="glyphicon glyphicon-grain"></span> Phylogenetic tree</a>
 	</div>
-	<div class="btn-group visible type">
+	<div class="btn-group visible type" >
 		<a class="btn btn-default selected" data-id="1"><span class="glyphicon glyphicon-ok"></span> Alu</a>
 		<a class="btn btn-default selected" data-id="2"><span class="glyphicon glyphicon-ok"></span> Line</a>
 		<a class="btn btn-default selected" data-id="3"><span class="glyphicon glyphicon-ok"></span> Others</a>
