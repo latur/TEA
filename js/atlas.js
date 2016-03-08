@@ -81,18 +81,7 @@ function Template(name, data){
 function SamplesLoaded(){
 	// Clear cache
 	cache = {'hm' : {}};
-	// Sort samples
-	// I have already sort before output
-/*	for (var chr in expData) {
-		for (var f in expData[chr]) {
-			expData[chr][f] = expData[chr][f].sort(function(a,b){
-				if (a[0] > b[0]) return  1;
-				if (a[0] < b[0]) return -1;
-				return 0;
-			});
-		}
-	}
-*/
+
 	// Samples nav
 	nav.innerHTML = Template('samples-nav');
 	$('.samples-nav-pane .clear').click(function(){ location.href = '' });
@@ -105,6 +94,8 @@ function SamplesLoaded(){
 		visibleType[k] = !visibleType[k];
 		// show/hidden TE element [ONLY WORK IN SHOW AS LINE MODE]
 		$("." + TE_type[k-1]).css("visibility", visibleType[k]? "visible" : "hidden");
+		cache = {'hm' : {}};
+		Route()
 	});
 	$('.visible.mode a').click(function(){
 		$('.visible.mode a').removeClass('selected')
@@ -147,7 +138,10 @@ function SamplesHM(chr){
 		var colors = [[220,0,0],[0,220,0],[0,0,220]];
 		for (var f in expData[chr]) {
 			expData[chr][f].map(function(sm){
-				var col = colors[sm[2]-1], xx = Math.floor(K * sm[0]), yy = y + parseInt(sm[2]-1) * 3;
+				if (!visibleType[sm[2]]) return;
+				var col = colors[sm[2]-1], 
+					xx = Math.floor(K * sm[0]), 
+					yy = y + parseInt(sm[2]-1) * 3;
 				Pixel(xx, yy+0, col, 255);
 				Pixel(xx, yy+1, col, 255);
 				Pixel(xx, yy+2, col, 255);
