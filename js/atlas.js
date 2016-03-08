@@ -227,10 +227,10 @@ function Download(id){
 					get_common();
 					contruct_tree();
 					SamplesLoaded();
-					Route('#line');
 				}
 			});
 		});
+		ShowAsLine();
 	}
 	expID = id;
 }
