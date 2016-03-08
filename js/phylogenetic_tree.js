@@ -14,7 +14,7 @@ function contruct_tree(){
 					total += expData[chr][name].length;
 
 				if (expData[chr][n])
-					total += expData[chr][name].length;
+					total += expData[chr][n].length;
 
 				if (!expData[chr][name] || !expData[chr][n]) continue;
 
