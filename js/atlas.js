@@ -62,9 +62,13 @@ function Route(loc){
 	// Show chromosome list
 	var home = location.hash.match(/^\#?([a-z]+)?\/?([0-9a-z]+)?\/?$/);
 
-	if (home[2]) Download(home[2]);
-	if (home[1] == 'list') return ShowAsList();
-	return ShowAsLine();
+	if (home[2]){
+		 Download(home[2]);
+		ShowAsLine();
+	}
+
+	if (home[1] == 'line') return ShowAsLine();
+	return ShowAsList();
 }
 
 // The template. Obtaining a template name and pasting data
@@ -222,12 +226,14 @@ function Download(id){
 				Parse(content, name);
 				loaded++;
 //				$('#log').html('Files loaded: ' + loaded + '/' + demo.length);
+				if (loaded == demo.length){
+					get_max();
+					get_common();
+					contruct_tree();
+					SamplesLoaded();
+				}
 			});
 		});
-		get_max();
-		get_common();
-		contruct_tree();
-		SamplesLoaded();
 	}
 	expID = id;
 }
