@@ -221,6 +221,9 @@ body {
 	display: none;
 	cursor: pointer;
 }
+.spl > a:hover {
+	border-bottom: 1px dotted #337ab7;
+}
 .spl.t1 > i {
 	background: rgba(170, 0, 0, 0.4);
 }
