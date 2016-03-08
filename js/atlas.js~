@@ -230,7 +230,7 @@ function Download(id){
 				}
 			});
 		});
-		ShowAsLine(){
+		ShowAsLine();
 	}
 	expID = id;
 }
