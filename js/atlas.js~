@@ -201,7 +201,7 @@ function Parse(content, filename){
 			var cell = Math.ceil(c[1]/1000000)-1;
 			if (cell >= density_len[c[0]]) cell = density_len[c[0]]-1;
 
-			++density_map[c[0]][filename][cell][c[3]];
+			++density_map[c[0]][filename][cell][c[3]-1];
 
 			// Use to trace for turn on/off element and show inf when needed
 			id_list[id] = 0;
@@ -214,14 +214,14 @@ function Download(id){
 	if (id == expID) return;
 	// Demo samples:
 	if (id == 'demo') {
-		$('#log').html('Loading experiment data...');
-		var demo = ['sample1(demo).csv','sample1(demo).csv','sample1(demo).csv'];
+//		$('#log').html('Loading experiment data...');
+		var demo = ['demo1.csv','demo2.csv','demo3.csv'];
 		var loaded = 0;
 		demo.map(function(name){
 			$.get('/samples/' + name, function(content){
 				Parse(content, name);
 				loaded++;
-				$('#log').html('Files loaded: ' + loaded + '/' + demo.length);
+//				$('#log').html('Files loaded: ' + loaded + '/' + demo.length);
 				if (loaded == demo.length) SamplesLoaded();
 			});
 		});

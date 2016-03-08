@@ -214,14 +214,14 @@ function Download(id){
 	if (id == expID) return;
 	// Demo samples:
 	if (id == 'demo') {
-		$('#log').html('Loading experiment data...');
-		var demo = ['sample1(demo).csv','sample1(demo).csv','sample1(demo).csv'];
+//		$('#log').html('Loading experiment data...');
+		var demo = ['demo1.csv','demo2.csv','demo3.csv'];
 		var loaded = 0;
 		demo.map(function(name){
 			$.get('/samples/' + name, function(content){
 				Parse(content, name);
 				loaded++;
-				$('#log').html('Files loaded: ' + loaded + '/' + demo.length);
+//				$('#log').html('Files loaded: ' + loaded + '/' + demo.length);
 				if (loaded == demo.length) SamplesLoaded();
 			});
 		});
