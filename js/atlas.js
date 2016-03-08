@@ -173,7 +173,7 @@ function Download(id){
 
 // Muse actions: select a chromosome
 function _ShowHelper(){
-	var offset = 40000;
+	var offset = 5000000;
 	$('.chr-box').each(function(){
 		var e = $(this)[0], name = $(this).data('name');
 		var K = chrs[name]/$(this).width();
@@ -224,11 +224,229 @@ function ShowAsLine(){
 }
 
 // Selected region on chromosome
-function ShowChromosome(name, startBp, endBp){
+function ShowChromosome(name, start, end){
+	var xhr;
 	$('.chr-view-mode a').removeClass('disabled');
+	// Impossible states:
+	if (!chrs[name] || end < start + 50) return Route('#');
 	// Html elements:
-	doc.innerHTML = Template('chromosome');
-	// =]
+	var samples = '';
+	if (expData[name]) {
+		Object.keys(expData[name]).map(function(f, i){
+			var samplefile = expData[name][f].map(function(spl, ind){
+				return Template('chr-zoom-trs', {
+					i: i + '-' + ind, 
+					type: spl[2], 
+					left: spl[0] * 100 / chrs[name],
+					name: spl[3]
+				});
+			}).join('');
+			samples += '<div class="spl-file">' + samplefile + '</div>';
+		});
+	}
+	doc.innerHTML = Template('chromosome', {
+		name: name,
+		samples: samples
+	});
+	// Events
+	var size = chrs[name];
+	var sl = $('#range')[0], 
+		zoom = $('#ch-zoom-hm')[0], 
+		place = $('#chr-one')[0], 
+		box = $('#sel-box')[0];
+	var ww = sl.offsetWidth;
+	var current = [0,1], ora = [0,1], detail = 0;
+	
+	var RangeParse = function(start, end){
+		// to pixels
+		var x1 = ww * start / size; 
+		var x2 = ww * end / size;
+		ora = start < end ? [start, end] : [end, start];
+		var e = x2 > x1 ? [x1, x2] : [x2, x1];
+		current = [e[0] < 0 ? 0 : e[0], e[1] > ww ? ww : e[1]];
+		return current;
+	}
+	
+	var ResizePre = function(xx){
+		var e = RangeParse(xx[0], xx[1]);
+		// Detail-level:
+		var bp = xx[1] - xx[0];
+		detail = 0;
+		zoom.classList.remove('det-1');
+		zoom.classList.remove('det-2');
+		zoom.classList.remove('det-3');
+		if (bp < 80000000) detail++, zoom.classList.add('det-' + detail); // sample-names visible
+		if (bp < 30000000) detail++, zoom.classList.add('det-' + detail); // gene-lines
+		if (bp <  7000000) detail++, zoom.classList.add('det-' + detail); // gene-names
+		if (bp <  1000000) detail++, zoom.classList.add('det-' + detail); // ?
+
+		// Detail-line
+		zoom.style.width = ww * 100 / (e[1] - e[0]) + '%';
+		zoom.style.marginLeft = - e[0] * 100 / (e[1] - e[0]) + '%';
+		// Select-range-box
+		box.style.left = e[0] + 'px';
+		box.style.width = e[1] - e[0] + 'px';
+	};
+
+	var Resized = function(xx){
+		console.log('Resized..');
+		console.log(xx);
+		if (xx[0] > xx[1]) xx = [xx[1], xx[0]];
+		var e = RangeParse(xx[0], xx[1]);
+		if (xhr) xhr.abort(), xhr = false;
+		ResizePre(xx);
+		// «Шторки»
+		$('#cs-lh-F')[0].style.width = (e[0] * 100 / ww) + '%';
+		$('#cs-rh-F')[0].style.left  = (e[1] * 100 / ww) + '%';
+		// Hash
+		var bp1 = parseInt(e[0] * size / ww);
+		var bp2 = parseInt(e[1] * size / ww);
+		location.hash = '#' + name + ':' + bp1 + '-' + bp2;
+		$('#position')[0].innerHTML = ':' + bp1 + '-' + bp2;
+
+		// Samples
+		var KPX = ww * ww / (e[1] - e[0]) / size;
+		var Place = function(lines, point){
+			for (var i in lines) if (point > lines[i]) return i;
+			return false;
+		};
+
+		if (expData[name]){
+			Object.keys(expData[name]).map(function(f, i){
+				var lines = [0], tr, ins, val;
+				for (var ind = 0; ind < expData[name][f].length; ind++) {
+					tr  = expData[name][f][ind];
+					val = tr[0] * KPX + 5;
+					ins = Place(lines, tr[0] * KPX);
+					if (detail > 0) val += tr[3].length * 6.61 + 20;
+					val = parseInt(val);
+					if (ins !== false) {
+						lines[ins] = val;
+					} else {
+						ins = lines.length;
+						lines.push(val);
+					}
+					$('#trs-' + i + '-' + ind)[0].style.top = ins * 12 + 3 + 'px';
+					if (tr[0] < size * e[0]/ww || tr[0] > size * e[1]/ww) continue;
+					if (tr[0] < xx[0] || tr[0] > xx[1]) continue;
+					$('#trs-' + i + '-' + ind)[0].parentNode.style.height = lines.length * 12 + 6 + 'px';
+				}
+			});
+		}
+		
+		if (detail < 2) {
+			//$('#ghmap')[0].innerHTML = HMap(hMap[name]).join('')
+			return $('#genes')[0].innerHTML = '';
+		}
+		$('#ghmap')[0].innerHTML = '';
+		
+
+		var GS = [];
+		xx = xx.sort();
+		var bp1 = xx[0] - (xx[1] - xx[0]);
+		var bp2 = xx[1] + (xx[1] - xx[0]);
+		return ;
+		xhr = $.post('/execute/Genes', {chr : name, start : parseInt(bp1), end : parseInt(bp2)}, function(csv){
+			$('#genes')[0].innerHTML = csv.split('\n').map(function(gene){
+				var gn = gene.split(',');
+				if (gn.length < 2) return;
+				gn[1] = parseInt(gn[1], 32);
+				gn[2] = parseInt(gn[2], 32);
+				GS.push(gn);
+				return Template('gene', {
+					id    : gn[0],
+					left  : gn[1] * 100 / size, 
+					width : gn[2] * KPX
+				});
+			}).join('');
+			
+			var lines = [0], ins, val;
+			GS.map(function(gn){
+				// Init in px
+				val = gn[1] * KPX + gn[2] * KPX + 5;
+				ins = Place(lines, gn[1] * KPX);
+				if (detail > 2) val += gn[0].length * 6.61 + 25;
+				val = parseInt(val);
+				if (ins !== false) {
+					lines[ins] = val;
+				} else {
+					ins = lines.length;
+					lines.push(val);
+				}
+				$('#gid-' + gn[0])[0].style.top = ins * 12 + 3 + 'px';
+				$('#gid-' + gn[0])[0].parentNode.style.height = lines.length * 12 + 6 + 'px';
+			});
+			
+		});
+	};
+
+	// Document
+	var px,ox,dx, tx,vx,ix;
+	// Select range (chromosome)
+	sl.onmousedown = function(e){
+		ox = e.offsetX;
+		px = e.pageX;
+	};
+	zoom.onmousedown = function(e){
+		tx = e.pageX;
+		ix = current;
+	};
+	document.onmousemove = function(e){
+		// Select range ?
+		if (!isNaN(ox)) {
+			if (isNaN(dx)) box.style.display = 'block';
+			dx = e.pageX - px;
+			// px1 * size / ww = start;
+			// px2 * size / ww = end;
+			ResizePre([(ox) * size / ww, (ox + dx) * size / ww]);
+		}
+		// Move range ?
+		if (!isNaN(tx)) {
+			if (isNaN(vx)) box.style.display = 'block';
+			vx = - (e.pageX - tx) * (ix[1] - ix[0]) / ww;;
+			// px1 * size / ww = start;
+			// px2 * size / ww = end;
+			ResizePre([(ix[0] + vx) * size / ww, (ix[1] + vx) * size / ww]);
+		}
+	};
+	document.onmouseup = function(e){
+		if (!isNaN(dx)) {
+			Resized([(ox) * size / ww, (ox + dx) * size / ww]);
+		}
+		if (!isNaN(vx)) {
+			Resized([(ix[0] + vx) * size / ww, (ix[1] + vx) * size / ww]);
+		}
+		box.style.display = 'none';
+		ox = NaN, px = NaN, dx = NaN, tx = NaN, vx = NaN;
+	};
+	document.onresize = function(){
+		ww = sl.offsetWidth;
+	};
+	
+	// Buttons:
+	$('.move-c a.cnt').click(function(){
+		var inc = parseFloat($(this).data('e'));
+		var p = inc * (ora[1] - ora[0]);
+		var x1 = ora[0] + p, x2 = ora[1] + p;
+		if (x1 <  0) { x1 = 0; x2 = ora[1] - ora[0]; }
+		if (x2 > size) { x2 = size; x1 = size - ora[1] + ora[0]; }
+		Resized([x1, x2]);
+	});
+	$('.zoom-c a.cnt').click(function(){
+		var inc = parseFloat($(this).data('e'));
+		var cen = (ora[1] + ora[0])/2;
+		var upg = inc * (ora[1] - ora[0]) / 2;
+		if (upg < 100) upg = 100;
+		var x1 = cen - upg, x2 = cen + upg;
+		if (x1 < 0) x1 = 0;
+		if (x2 > size) x2 = size;
+		Resized([x1, x2]);
+	});
+	
+	// [px1, px2] = [ww * start / size, ww * end / size]
+	// px1 * size / ww = start;
+	// px2 * size / ww = end;
+	Resized([start, end]);
 }
 
 /* -------------------------------------------- */
@@ -301,7 +519,9 @@ $(function(){
 			var reader = new FileReader();
 			reader.onload = function() {
 				itr--;
+				// It should be combined
 				Parse(this.result, f.name);
+				//ParseData(this.result, f.name);
 				if (itr == 0) {
 					SamplesLoaded();
 					Route(false);

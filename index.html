@@ -108,10 +108,31 @@
 			<a class="cnt btn btn-default" data-e="50">x50</a>
 		</div>
 	</div>
-	<div class="chr-one">
-		<div class="chr-box {name}" data-name="{name}">
+	<div id="chr-one" class="chr-one cs nsel">
+		<div id="sel-box"></div>
+		<span class="cs-name">{name}<span id="position" class="pt"></span></span>
+		<div class="chr-box {name}-full" data-name="{name}">
+			<div id="range"></div>
+			<div class="ss" id="cs-ss-F"></div>
+			<div class="lh" id="cs-lh-F"></div>
+			<div class="rh" id="cs-rh-F"></div>
 		</div>
 	</div>
+	<div class="ch-zoom nsel">
+		<div id="ch-zoom-hm" class="ch-zoom-scroll">
+			<div class="samples">{samples}</div>
+			<div class="genes">
+				<div class="hm" id="ghmap"></div>
+				<div id="genes"></div>
+			</div>
+		</div>
+	</div>
+</script>
+<script id="chr-zoom-trs-template" type="text/x-handlebars-template">
+	<div id="trs-{i}" class="spl t{type}" style="left: {left}%"><i></i><a>{name}</a></div>
+</script>
+<script id="gene-template" type="text/x-handlebars-template">
+	<div id="gid-{id}" class="gene" style="left: {left}%"><i style="width: {width}px"></i><a>{id}</a></div>
 </script>
 
 </body>

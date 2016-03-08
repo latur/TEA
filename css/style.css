@@ -172,6 +172,83 @@ body {
 	display: block; 
 }
 
+/* Chromosome */
+.ch-zoom {
+	overflow: hidden;
+	background: #fff;
+	border-left: 1px solid #888;
+	border-right: 1px solid #888
+}
+.ch-zoom-scroll {
+	cursor: move
+}
+
+.spl-file {
+	position: relative;
+	height: 12px;
+	border-bottom: 1px dotted #eee;
+}
+.spl-file:hover {
+	background: rgba(0,0,0,0.05)
+}
+.spl, .gene {
+	position: absolute;
+	line-height: 12px;
+	top: 0px;
+	font-size: 11px;
+	font-family: monospace;
+	font-weight: 100;
+}
+.spl > i {
+	display: block;
+	float: left;
+	width: 3px;
+	height: 10px;
+	margin: 1px 5px 1px 0;
+}
+.spl > a {
+	text-decoration: none;
+	display: none;
+	cursor: pointer;
+}
+.spl.t1 > i {
+	background: rgba(170, 0, 0, 0.4);
+}
+.spl.t2 > i {
+	background: rgba(0, 170, 0, 0.4);
+}
+.spl.t3 > i {
+	background: rgba(0, 0, 170, 0.4);
+}
+.det-1 .spl > a {
+	display: inline-block
+}
+
+.cs {
+	position: relative;
+	margin-bottom: 10px;
+	overflow: visible; 
+}
+.cs .cs-box {
+	border: 1px solid #515151;
+	box-shadow: 0 0 12px rgba(0,0,0,0.15);
+}
+
+#range {
+z-index: 45;
+position: absolute; top:0;left:0;right:0; bottom: 0; cursor: text
+}
+.lh, .rh { position: absolute; top:0;bottom:0; background: rgba(0,0,0,0.45); z-index: 35 }
+.lh { border-right: 1px solid #000; border-radius: 4px 0 0 4px; left: -1px; }
+.rh { border-left:  1px solid #000; border-radius: 0 3px 2px 0; right: 0px; }
+
+.xh { position: absolute; z-index: 10; top:0;bottom:0;left:0;right:0; cursor: pointer }
+
+
+#cs-xh-F { cursor: text }
+#sel-box { position: absolute; z-index: 55; bottom: -1px; top: 17px; display: none; border: 1px solid rgba(0,115,20,0.5); background: rgba(0, 115, 20, 0.3) }
+
+
 
 /* --------------------------- */
 
@@ -309,7 +386,7 @@ input[type=checkbox]:checked + label{
 
 .map{
 	position: absolute;
-	top: 210px;
+	top: 250px;
 	width: 1150px;
 	margin: auto;
 }
