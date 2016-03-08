@@ -63,7 +63,7 @@ function Route(loc){
 	var home = location.hash.match(/^\#?([a-z]+)?\/?([0-9a-z]+)?\/?$/);
 
 	if (home[2]) Download(home[2]);
-	if (home[1] == 'list') return ShowAsList() ;
+	if (home[1] == 'list') return ShowAsList();
 	return ShowAsLine();
 }
 
@@ -222,14 +222,12 @@ function Download(id){
 				Parse(content, name);
 				loaded++;
 //				$('#log').html('Files loaded: ' + loaded + '/' + demo.length);
-				if (loaded == demo.length){
-					get_max();
-					get_common();
-					contruct_tree()
-					SamplesLoaded();
-				}
 			});
 		});
+		get_max();
+		get_common();
+		contruct_tree();
+		SamplesLoaded();
 	}
 	expID = id;
 }
