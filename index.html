@@ -22,7 +22,7 @@
 		<a class="btn btn-default aslist"><span class="glyphicon glyphicon-book"></span> Sample Library</a>
 		<div class="input-group">
 			<input type="file" id="load" title="Add your sample(s)" multiple="true">
-<!--			<span id="log">or <a id="demo-samples">see a demo</a></span>  -->
+<!--			<span id="log">or <a id="demo-samples">see a demo</a></span>	-->
 		</div>
 	</div>
 	<div id="navbar"></div>
@@ -130,7 +130,7 @@
 	</div>
 </script>
 <script id="zoom-trs-template" type="text/x-handlebars-template">
-	<div id="trs-{i}" class="spl t{type}" style="left: {left}%"><i></i><a>{name}</a></div>
+	<div id="trs-{id}" class="spl t{type}" style="left: {left}%"><i></i><a data-f="{f}" data-i="{ind}">{name}</a></div>
 </script>
 <script id="zoom-L-template" type="text/x-handlebars-template">
 	<div class="bx gene" style="left:{left}%"></div>
@@ -144,10 +144,23 @@
 <script id="zoom-XS-template" type="text/x-handlebars-template">
 </script>
 
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby=""></div>
 
+<script id="modal-template" type="text/x-handlebars-template">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h5 class="modal-title"><b>{name}</b>. Chromosome: <kbd>{chr}</kbd>. Position: <kbd>{pos}</kbd></h5>
+			</div>
+			<pre>{seq}</pre>
+		</div>
+	</div>
+</script>
 
 </body>
 <script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.file-input.js"></script>
 <script type="text/javascript" src="js/d3/d3.min.js"></script>
 

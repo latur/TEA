@@ -296,7 +296,9 @@ function ShowChromosome(name, start, end){
 			var samplefile = expData[name][f].map(function(spl, ind){
 				if (!visibleType[spl[2]]) return '';
 				return Template('zoom-trs', {
-					i: i + '-' + ind, 
+					id: i + '-' + ind, 
+					f: f,
+					ind: ind,
 					type: spl[2], 
 					left: spl[0] * 100 / chrs[name],
 					name: spl[3]
@@ -309,6 +311,16 @@ function ShowChromosome(name, start, end){
 		name: name,
 		samples: samples
 	});
+	$('.spl a').click(function(){
+		var info = expData[name][$(this).data('f')][$(this).data('i')];
+		$('#modal').html(Template('modal', {
+			name : info[3],
+			pos  : info[0],
+			seq  : info[4].match(/.{1,60}/g).join('\n'),
+			chr  : name
+		})).modal();
+	});
+
 	// Events
 	var size = chrs[name];
 	var sl = $('#range')[0], 
@@ -539,6 +551,10 @@ function ShowChromosome(name, start, end){
 	// px1 * size / ww = start;
 	// px2 * size / ww = end;
 	Resized([start, end]);
+}
+
+function Modal(content){
+	$('#modal').html( Template('modal') ).modal();
 }
 
 $(function(){

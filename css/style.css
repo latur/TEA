@@ -302,6 +302,13 @@ body {
 	background: #aaa;
 	height: 7px;
 }
+#modal .modal-dialog {
+	width: 500px;
+}
+#modal pre {
+	border: none;
+	margin-bottom: 0;
+}
 
 
 /* --------------------------- */
