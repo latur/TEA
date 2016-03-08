@@ -294,6 +294,7 @@ function ShowChromosome(name, start, end){
 	if (expData[name]) {
 		Object.keys(expData[name]).map(function(f, i){
 			var samplefile = expData[name][f].map(function(spl, ind){
+				if (!visibleType[spl[2]]) return '';
 				return Template('zoom-trs', {
 					i: i + '-' + ind, 
 					type: spl[2], 
@@ -377,6 +378,8 @@ function ShowChromosome(name, start, end){
 			Object.keys(expData[name]).map(function(f, i){
 				var lines = [0], tr, ins, val;
 				for (var ind = 0; ind < expData[name][f].length; ind++) {
+					var te = $('#trs-' + i + '-' + ind);
+					if (te.length == 0) continue;
 					tr  = expData[name][f][ind];
 					val = tr[0] * KPX + 5;
 					ins = Place(lines, tr[0] * KPX);
@@ -388,10 +391,10 @@ function ShowChromosome(name, start, end){
 						ins = lines.length;
 						lines.push(val);
 					}
-					$('#trs-' + i + '-' + ind)[0].style.top = ins * 12 + 3 + 'px';
+					te[0].style.top = ins * 12 + 3 + 'px';
 					if (tr[0] < size * e[0]/ww || tr[0] > size * e[1]/ww) continue;
 					if (tr[0] < xx[0] || tr[0] > xx[1]) continue;
-					$('#trs-' + i + '-' + ind)[0].parentNode.style.height = lines.length * 12 + 6 + 'px';
+					te[0].parentNode.style.height = lines.length * 12 + 6 + 'px';
 				}
 			});
 		}
