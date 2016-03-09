@@ -624,6 +624,8 @@ $(function(){
 
 	$('#load').bootstrapFileInput();
 	$('#load').change(function(e){
+		if (n_group > 0)
+			delete_group();
 		var fs = e.target.files;
 		var ftotal = fs.length, itr = fs.length;
 		for (var i = 0; i < fs.length; i++) { (function(f){
