@@ -17,7 +17,7 @@ const chrs = {
 // (if specified, need to load samples of this experiment)
 var expID = '';
 // Experiment Samples Data
-var expData = {};
+var expData = {}, Group = {};
 // Page elements
 var doc = $('#content')[0];
 var nav = $('#navbar')[0];
@@ -39,13 +39,14 @@ const density_len = {
 	'chr19': 59,	'chr20': 65,	'chr21': 47,
 	'chr22': 51,	'chrX': 157,	'chrY': 58
 };
+
 const TE_type = ["Alu", "Line", "Others"];
-var file_list = [], id_list = {};
+var file_list = [], id_list = {}, group_list = [], n_group = 0;
 var n_file = 0;
-var density_map = {}, d_max = 0;
+var density_map = {}, d_max = 0, g_density = {}, g_max;
 var tree = [];
 var color = ["green", "red", "blue"];
-
+var as_line = 1;
 
 /* -------------------------------------------- */
 /* Functions */
@@ -85,7 +86,13 @@ function SamplesLoaded(){
 	// Samples nav
 	nav.innerHTML = Template('samples-nav');
 	$('.samples-nav-pane .clear').click(function(){ location.href = '' });
-	$('.samples-nav-pane .comparision').click(function(){ });
+	$('.samples-nav-pane .comparision').click(function(){
+		if (n_group == 0)
+			split_group();
+		else
+			delete_group();
+	});
+
 	$('.samples-nav-pane .showtree').click(function(){ draw_tree(); });
 
 	$('.visible.type a').click(function(){
@@ -95,7 +102,7 @@ function SamplesLoaded(){
 		// show/hidden TE element [ONLY WORK IN SHOW AS LINE MODE]
 		$("." + TE_type[k-1]).css("visibility", visibleType[k]? "visible" : "hidden");
 		cache = {'hm' : {}};
-		Route()
+		if (as_line == 0) Route();
 	});
 	$('.visible.mode a').click(function(){
 		$('.visible.mode a').removeClass('selected')
@@ -252,6 +259,9 @@ function _ShowHelper(){
 	
 // Showing chromosomes in two vertical list [Igor]
 function ShowAsList(){
+	as_line = 0;
+	$("#chrsline").html('');
+	$("#map").html('');
 	$('.chr-view-mode a').removeClass('disabled');
 	$('.chr-view-mode .aslist').addClass('disabled');
 	// Html template:
@@ -267,10 +277,12 @@ function ShowAsList(){
 
 // Showing chromosomes as one line [Thao]
 function ShowAsLine(){
+	as_line = 1;	
+	$("#content").html('');
 	$('.chr-view-mode a').removeClass('disabled');
 	$('.chr-view-mode .asline').addClass('disabled');
 	// Html template:
-	doc.innerHTML = Template('chr-line');
+	$("#chrsline")[0].innerHTML = Template('chr-line');
 	Object.keys(chrs).map(function(name, i){
 		var chr = { name: name, style : 'width:' + chrs[name] * 100 / chrsSum + '%', width: 100, i: i };
 		$('.chr-line').append(Template('chr', chr))
@@ -285,6 +297,9 @@ function ShowAsLine(){
 
 // Selected region on chromosome
 function ShowChromosome(name, start, end){
+	as_line = 0;
+	$("#chrsline").html('');
+	$("#map").html('');
 	var xhr;
 	$('.chr-view-mode a').removeClass('disabled');
 	// Impossible states:
@@ -351,9 +366,9 @@ function ShowChromosome(name, start, end){
 		zoom.classList.remove('det-2');
 		zoom.classList.remove('det-3');
 		if (bp < 90000000) detail++, zoom.classList.add('det-' + detail); // L
-		if (bp < 35000000) detail++, zoom.classList.add('det-' + detail); // M
-		if (bp < 10000000) detail++, zoom.classList.add('det-' + detail); // S
-		if (bp <  3000000) detail++, zoom.classList.add('det-' + detail); // XS
+		if (bp <  8000000) detail++, zoom.classList.add('det-' + detail); // M
+		if (bp <  3500000) detail++, zoom.classList.add('det-' + detail); // S
+		if (bp <   900000) detail++, zoom.classList.add('det-' + detail); // XS
 
 		// Detail-line
 		zoom.style.width = ww * 100 / (e[1] - e[0]) + '%';
@@ -594,6 +609,19 @@ $(function(){
 	$('.chr-view-mode .aslist').click(function(){ Route('#list'); });
 	$('.chr-view-mode .asline').click(function(){ Route('#line'); });
 
+// I haven't finish it :P
+	$("#find").keyup(function(e) {
+   		if (e.keyCode == 13) {
+			var content = this.val().split(":");
+			content[1] = content[1].split("-");
+			if (expData[content[0]])
+				ShowChromosome(content[0], content[1][0], content[1][1]);
+			else
+				this.attr("placeholder", "Wrong syntax. Please use: chr:start-end");
+		}
+	});
+//
+
 	$('#load').bootstrapFileInput();
 	$('#load').change(function(e){
 		var fs = e.target.files;
@@ -611,8 +639,6 @@ $(function(){
 					if (n_file > 2)
 						contruct_tree();
 					SamplesLoaded();
-					// Route(); - rerendering of current page
-					// Route('#line'); - rendering #line page
 					Route(); 
 				}
 			};

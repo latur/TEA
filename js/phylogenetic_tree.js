@@ -101,8 +101,7 @@ function draw_tree(){
 			return $("<div/>").attr("class", "screen_blur");
 		})
 		.append(function(){
-			return $("<div/>")
-				.attr("class", "tree")
+			return $("<div/>").attr("class", "tree")
 		});
 
 	$(document).keyup(function(e) {
@@ -115,11 +114,11 @@ function draw_tree(){
 	var circos = d3.select(".tree").append("svg")	
 			.attr("width", 650)
 			.attr("height", 650)
-			.attr("style", "position: relative; display: block; margin: auto;cursor: move");
+			.attr("style", "position: relative; display: block; margin: auto;cursor: move;");
 
 	var order = tree[tree.length-1].name.replace("\-", "\/").split("\/");
 
-	var unit = 2*Math.PI/n_file, r = 260, w = 650/2; max_len = tree[tree.length-1].dis;
+	var unit = 2*Math.PI/n_file, r = 250, w = 650/2, max_len = tree[tree.length-1].dis;
 
 	for (var i = 0; i < tree.length; i += 1){
 		var node = tree[i].name.split("\-");
@@ -218,7 +217,21 @@ function draw_tree(){
 			.attr("text-anchor", "start")
       			.attr("transform", "translate("+dx+","+dy+")rotate("+(-(360*i/n_file + 90))+")")
 			.text(file_list[Number(order[i])]);
-	}	
+	}
+
+	$(".tree").append(function(){
+		return $("<a/>")
+			.attr("class", "btn")
+			.attr("style", "position: absolute; right: 5px; top: 5px")
+			.append(function(){
+				return $("<span>")
+					.attr("class", "glyphicon glyphicon-remove");
+			})
+			.on("click", function(){
+				$(".screen_blur").remove();
+				$(".tree").remove();
+			});
+	});
 //	var elem=document.getElementById("tree_circos");
 //	var dial=kcRotateDial(elem);
 }

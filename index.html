@@ -10,30 +10,34 @@
 	<link rel="icon" href="favicon.ico" type="image/x-icon" />
 </head>
 <body>
-<div class="container page">
+<div class="container page" >
+	<div style="position: fixed; width: 90%; top: 0; background: #fafafa; z-index: 100" align="center">
 	<h2 align="center">Transposable Elements Atlas</h2>
 	<hr/>
-	<div class="form-inline selecter" align="center">
+	<div class="form-inline selecter" align="center" >
 		<div class="btn-group chr-view-mode">
 			<a class="btn btn-default asline"><span class="glyphicon glyphicon-home"></span> General</a>
 			<a class="btn btn-default aslist"><span class="glyphicon glyphicon-search"></span> Detail</a>
 		</div>
-		<input type="text" id="find" placeholder="Find region/gene. Ex: chr1:1000-400000" class="form-control">
 		<a class="btn btn-default aslist"><span class="glyphicon glyphicon-book"></span> Sample Library</a>
 		<div class="input-group">
 			<input type="file" id="load" title="Add your sample(s)" multiple="true">
 <!--			<span id="log">or <a id="demo-samples">see a demo</a></span>	-->
 		</div>
+		<input type="text" id="find" placeholder="Find region/gene. Ex: chr1:1000-400000" class="form-control">
 	</div>
 	<div id="navbar"></div>
-	<div id="content"></div>
+	<div id="chrsline"></div>
+	</div>
+	<div id="map" class="map"></div>
+	<div id="content" style="margin-top: 175px;"></div>
 </div>
 
 <!-- Samples pane -->
 <script id="samples-nav-template" type="text/x-handlebars-template">
 	<div class="btn-group samples-nav-pane" style="float:left;">
 		<a class="btn btn-default clear"><span class="glyphicon glyphicon-refresh"></span> Clear all</a>
-		<a class="btn btn-default comparision"><span class="glyphicon glyphicon-scissors"></span> Group comparision</a>
+		<a class="btn btn-default comparision"><span class="glyphicon glyphicon-adjust"></span> Group comparision</a>
 		<a class="btn btn-default showtree"><span class="glyphicon glyphicon-grain"></span> Phylogenetic tree</a>
 	</div>
 	<div class="btn-group visible type">
@@ -68,7 +72,6 @@
 <script id="chr-line-template" type="text/x-handlebars-template">
 	<div class="chr-line">
 	</div>
-	<div id="map" class="map"></div>
 </script>
 
 <!-- Chromosome heatmap of samples -->
@@ -167,6 +170,7 @@
 
 <script type="text/javascript" src="js/general_map.js"></script>
 <script type="text/javascript" src="js/phylogenetic_tree.js"></script>
+<script type="text/javascript" src="js/group_compare.js"></script>
 <script type="text/javascript" src="js/sample.js"></script>
 
 <script type="text/javascript" src="js/atlas.js"></script>

@@ -29,11 +29,16 @@ function get_check(mode){
 
 function general_map(mode){
 	get_check(mode);
+	$('.visible.type a').addClass('selected');
+	visibleType['1'] = visibleType['2'] = visibleType['3'] = true;
+
+	var w= $("#chrsline").width();
 	var map = d3.select("#g_map")
 		.html('')
+		.attr("width", w)
 		.attr("height", file_list.length*80);
 
-	var step = 1030*1000000/chrsSum;
+	var step = w*1000000/chrsSum;
 	for (var i = 0; i < n_file; i++){
 		var name = file_list[i];
 		var x = 0;
@@ -64,11 +69,16 @@ function general_map(mode){
 			.text(name);
 		y += 20;
 		for (var k in density_map){
-			if (k.localeCompare("map") == 0 || !density_map[k][name]) continue;
+			if (k.localeCompare("map") == 0 || !density_map[k][name]){
+				x += step*density_len[k];
+			 	continue;
+			}
 
 			for (var j = 0; j < density_len[k]; j++, x += step){
 				for (var t = 0; t < 3; t++){
-					if (density_map[k][name][j][t] == 0) continue;
+					if (mode == 0 && density_map[k][name][j][t] == 0) continue;
+					if (mode == 1 && density_map[k][name][j][t+3] == 0) continue;
+					if (mode == 2 && density_map[k][name][j][t] == density_map[k][name][j][t+3]) continue;
 					var ratio = calculate_ratio(mode, name, k, j, t);
 
 					map.append("line")
@@ -96,7 +106,6 @@ function general_map(mode){
 						});
 				}
 			}
-			x += 5;
 		}
 
 	}
@@ -219,15 +228,13 @@ function get_common(){
 						++count;
 						break;
 					}
-
-					if (expData[chr][n][k][0] - expData[chr][name][pos][0] > 100)
-						break;
+/*					if (expData[chr][n][k][0] - expData[chr][name][pos][0] > 100)
+						break;*/
 				}
 				if (count < i) break;
 			}
-			if (count == n_file - 1){
-				add_common(chr, expData[chr][name][pos][0], expData[chr][name][pos][2], id);
-			}
+			if (count == n_file - 1)
+				add_common(chr, expData[chr][name][pos][0], expData[chr][name][pos][2]-1, id);
 		};
 	};
 }
