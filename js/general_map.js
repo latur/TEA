@@ -78,7 +78,7 @@ function general_map(mode){
 				for (var t = 0; t < 3; t++){
 					if (mode == 0 && density_map[k][name][j][t] == 0) continue;
 					if (mode == 1 && density_map[k][name][j][t+3] == 0) continue;
-					if (mode == 2 && density_map[k][name][j][t] == density_map[k][name][j][t+3]) continue;
+					if (mode == 2 && density_map[k][name][j][t] <= density_map[k][name][j][t+3]) continue;
 					var ratio = calculate_ratio(mode, name, k, j, t);
 
 					map.append("line")
@@ -88,7 +88,7 @@ function general_map(mode){
 						.attr("y2", y + 30*ratio)
 						.attr("class", TE_type[t])
 						.attr("style", "stroke:" + color[t] + "; cursor: pointer")
-						.attr("opacity", ratio*3)
+						.attr("opacity", ratio*5)
 						.attr("id", Math.ceil(ratio*d_max) + " 	sites")
 						.on("mouseover", function(){
 							var id = this.id;
