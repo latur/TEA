@@ -351,9 +351,9 @@ function ShowChromosome(name, start, end){
 		zoom.classList.remove('det-2');
 		zoom.classList.remove('det-3');
 		if (bp < 90000000) detail++, zoom.classList.add('det-' + detail); // L
-		if (bp <  8000000) detail++, zoom.classList.add('det-' + detail); // M
-		if (bp <  3500000) detail++, zoom.classList.add('det-' + detail); // S
-		if (bp <   900000) detail++, zoom.classList.add('det-' + detail); // XS
+		if (bp < 35000000) detail++, zoom.classList.add('det-' + detail); // M
+		if (bp < 10000000) detail++, zoom.classList.add('det-' + detail); // S
+		if (bp <  3000000) detail++, zoom.classList.add('det-' + detail); // XS
 
 		// Detail-line
 		zoom.style.width = ww * 100 / (e[1] - e[0]) + '%';
