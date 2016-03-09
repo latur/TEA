@@ -353,7 +353,7 @@ function ShowChromosome(name, start, end){
 		if (bp < 90000000) detail++, zoom.classList.add('det-' + detail); // L
 		if (bp <  8000000) detail++, zoom.classList.add('det-' + detail); // M
 		if (bp <  3500000) detail++, zoom.classList.add('det-' + detail); // S
-		if (bp <   100000) detail++, zoom.classList.add('det-' + detail); // XS
+		if (bp <   900000) detail++, zoom.classList.add('det-' + detail); // XS
 
 		// Detail-line
 		zoom.style.width = ww * 100 / (e[1] - e[0]) + '%';
@@ -457,11 +457,11 @@ function ShowChromosome(name, start, end){
 			// S - intrvals + names
 			if (detail == 3) {
 				$('#genes')[0].innerHTML = data.map(function(t){
-					var w = t[1] * KPX;
-					var title = t[2];
+					var w = t[1] * KPX + 2;
+					var title = (t[4] == '+' ? '&gt;' : '&lt;') + t[2];
 					if (t[3]) title += ', ' + t[3];
 					ins = Place(lines, t[0] * KPX);
-					val = parseInt(t[0] * KPX + t[1] * KPX + (t[2] + t[3]).length * 6.5 + 25);
+					val = parseInt(t[0] * KPX + t[1] * KPX + (t[2] + t[3]).length * 6.61 + 55);
 					if (ins !== false) {
 						lines[ins] = val;
 					} else {
@@ -479,7 +479,38 @@ function ShowChromosome(name, start, end){
 			}
 			// XS - intrvals + names + exons
 			if (detail == 4) {
+				$('#genes')[0].innerHTML = data.map(function(t){
+					var w = t[1] * KPX + 2;
+					var title = (t[4] == '+' ? '&gt; ' : '&lt; ') + t[2];
+					if (t[3]) title += ', ' + t[3];
+					ins = Place(lines, t[0] * KPX);
+					val = parseInt(t[0] * KPX + t[1] * KPX + (t[2] + t[3]).length * 6.61 + 55);
+					if (ins !== false) {
+						lines[ins] = val;
+					} else {
+						ins = lines.length;
+						lines.push(val);
+					}
+					var ex1 = t[5].split(',');
+					var ex2 = t[6].split(',');
+					var exons = '';
+					for (var k = 0; k < ex1.length - 1; k++) {
+						var exleft = (ex1[k] - t[0]) * KPX;
+						var exwidth = (ex2[k] - ex1[k]) * KPX;
+						exons += '<div class="exon bx" style="left:' + exleft + 'px; width:'+exwidth+'px"></div>';
+					}
 
+
+					console.log()
+					if (bp2 > t[0] && t[0] > bp1) genes.style.height = lines.length * 13 + 6 + 'px';
+					return Template('zoom-XS', {
+						left  : t[0] * 100 / size,
+						width : w > 1 ? w : 1,
+						top   : ins * 13 + 3,
+						title : title,
+						exons : exons
+					});
+				}).join('');
 			}
 		});
 	};

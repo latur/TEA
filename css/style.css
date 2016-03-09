@@ -280,10 +280,11 @@ body {
 	font-size: 11px;
 	font-family: monospace;
 	font-weight: 100;
- }
+}
 #genes .bx i {
+	position: relative;
 	float: left;
-	margin: 3px 5px 0px 0;
+	margin: 3px 7px 0px 0;
 	background: #eee;
 	border-left: 1px solid #aaa;
 	border-right: 1px solid #aaa;
@@ -291,6 +292,10 @@ body {
 }
 #genes .bx a {
 	text-decoration: none;
+}
+#genes .bx.exon {
+    height: 10px;
+	background: rgba(0, 10, 200, 0.5);
 }
 #genes .bx.gene {
 	background: rgba(0,0,0,0.3);
