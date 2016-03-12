@@ -68,6 +68,17 @@ var Template = (function(classname){
 	}
 }('.template'));
 
+// Actions log
+function MuteMessage(txt){
+	$('body > *').addClass('blur');
+	$('body').append( Template('message', {txt : txt}) );
+}
+function MessageClose(){
+	$('.blur').removeClass('blur');
+	$('.background').fadeOut(300, function(){ $(this).remove() });
+}
+
+
 // Routing based on location.hash
 function Route(loc){
 	if (loc) location.hash = loc + (expID ? ('/' + expID) : '');
@@ -87,6 +98,7 @@ function Route(loc){
 
 // Sort of retrotransposons in the order on the chromosome
 function SamplesLoaded(){
+	MessageClose();
 	// Clear cache
 	cache = {'hm' : {}};
 	nav.innerHTML = Template('samples-bar');
@@ -638,6 +650,7 @@ $(function(){
 	// Samples uploader
 	$('#load').bootstrapFileInput();
 	$('#load').change(function(e){
+		MuteMessage('File processing...');
 		if (n_group > 0)
 			delete_group();
 		var fs = e.target.files;
