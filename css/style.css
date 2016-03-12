@@ -21,6 +21,13 @@ hr {
 	-ms-user-select: none;
 	user-select: none; 
 }
+.sel {
+	-webkit-user-select: auto;
+	-moz-user-select: auto;
+	-ms-user-select: auto;
+	user-select: auto; 
+	cursor: text;
+}
 .blur {
  	-webkit-filter: blur(3px);
  	-moz-filter: blur(3px);
@@ -309,7 +316,7 @@ hr {
 .xh { position: absolute; z-index: 10; top:0;bottom:0;left:0;right:0; cursor: pointer }
 
 #cs-xh-F { cursor: text }
-#sel-box { position: absolute; z-index: 55; bottom: -1px; top: 17px; display: none; border: 1px solid rgba(0,115,20,0.5); background: rgba(0, 115, 20, 0.3) }
+#sel-box { position: absolute; z-index: 55; bottom: -1px; top: -1px; display: none; border: 1px solid rgba(0,115,20,0.5); background: rgba(0, 115, 20, 0.3) }
 
 #genes {
 	min-height: 21px;

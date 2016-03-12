@@ -241,9 +241,8 @@ function progress_group(){
 	$(".split_group").remove();
 	$(".screen_blur").remove();
 	$('.samples-nav-pane .showtree').addClass("disabled");
-	$(".comparision span").removeClass("glyphicon-adjust").addClass("glyphicon-scissors");
-// Help me with this Igor
-	$(".comparision a").text("Delete group");
+	$(".comparision .glyphicon").removeClass("glyphicon-adjust").addClass("glyphicon-scissors");
+	$(".comparision .txt").html("Delete group");
 }
 
 function delete_group(){
@@ -260,5 +259,6 @@ function delete_group(){
 
 	Route();
 	$('.samples-nav-pane .showtree').removeClass("disabled");
-	$(".comparision span").removeClass("glyphicon-scissors").addClass("glyphicon-adjust");
+	$(".comparision .glyphicon").removeClass("glyphicon-adjust").addClass("glyphicon-adjust");
+	$(".comparision .txt").html("Group comparision");
 }

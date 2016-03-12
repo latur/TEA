@@ -107,7 +107,7 @@ function SamplesLoaded(){
 		location.href = ''
 	});
 	// Comparision window
-	$('.samples-nav-pane .comparision .txt').html(n_group == 0 ? 'Group comparision' : '');
+	$('.samples-nav-pane .comparision .txt').html(n_group == 0 ? 'Group comparision' : 'qwe');
 	$('.samples-nav-pane .comparision').click(function(){
 		if (n_group == 0){
 			split_group();
@@ -411,7 +411,7 @@ function ShowChromosome(name, start, end){
 		var bp1 = parseInt(e[2]);
 		var bp2 = parseInt(e[3]);
 		location.hash = '#' + name + ':' + bp1 + '-' + bp2;
-		$('#position')[0].innerHTML = ':' + bp1 + '-' + bp2;
+		$('#position')[0].innerHTML = (name + ':' + bp1 + '-' + bp2);
 
 		// Samples
 		var KPX = ww * ww / (e[1] - e[0]) / size;

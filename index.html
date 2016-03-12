@@ -37,7 +37,7 @@
 				<a class="cnt btn btn-default" data-e="-0.15">
 					<span class="glyphicon glyphicon-chevron-left"></span>
 				</a>
-				<a class="btn btn-default disabled">Move</a>
+				<span class="btn btn-default sel" id="position">Move</span>
 				<a class="cnt btn btn-default" data-e="0.15">
 					<span class="glyphicon glyphicon-chevron-right"></span>
 				</a>
@@ -117,7 +117,6 @@
 <script data-name="chromosome" class="template" type="text/x-handlebars-template">
 	<div id="chr-one" class="chr-one cs nsel">
 		<div id="sel-box"></div>
-		<span class="cs-name">{name}<span id="position" class="pt"></span></span>
 		<div class="chr-box {name}-full" data-name="{name}">
 			<div id="range"></div>
 			<div class="ss" id="cs-ss-F"></div>
