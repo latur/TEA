@@ -18,9 +18,11 @@ const chrs = {
 var expID = '';
 // Experiment Samples Data
 var expData = {}, Group = {};
-// Page elements
+// Page container
 var doc = $('#content')[0];
-var nav = $('#navbar')[0];
+var nav = $('#samples-bar')[0];
+var one = $('#onechrs-bar')[0];
+
 // Cache for imagedata
 var cache = {'hm' : {}};
 // Samples filter: checkboxes
@@ -46,7 +48,6 @@ var n_file = 0;
 var density_map = {}, d_max = 0, g_density = {}, g_max;
 var tree = [];
 var color = ["green", "red", "blue"];
-var as_line = 1;
 
 /* -------------------------------------------- */
 /* Functions */
@@ -57,7 +58,6 @@ var Template = (function(classname){
 	$(classname).each(function(){
 		templates[$(this).data('name')] = $(this).html();
 	});
-	console.log(templates);
 	return function(name, data){
 		var html = templates[name];
 		for (var e in data){
@@ -89,10 +89,11 @@ function Route(loc){
 function SamplesLoaded(){
 	// Clear cache
 	cache = {'hm' : {}};
-
-	// Samples nav
-	nav.innerHTML = Template('samples-nav');
+	nav.innerHTML = Template('samples-bar');
+	
+	// Reset all
 	$('.samples-nav-pane .clear').click(function(){ location.href = '' });
+	// Comparision window
 	$('.samples-nav-pane .comparision').click(function(){
 		if (n_group == 0)
 			split_group();
@@ -102,14 +103,15 @@ function SamplesLoaded(){
 
 	$('.samples-nav-pane .showtree').click(function(){ draw_tree(); });
 
-	$('.visible.type a').click(function(){
+	$('.visible.type a').click(function(e){
+		e.preventDefault();
 		var k = $(this).data('id');
 		$(this)[visibleType[k] ? 'removeClass' : 'addClass']('selected');
 		visibleType[k] = !visibleType[k];
 		// show/hidden TE element [ONLY WORK IN SHOW AS LINE MODE]
 		$("." + TE_type[k-1]).css("visibility", visibleType[k]? "visible" : "hidden");
 		cache = {'hm' : {}};
-		if (as_line == 0) Route();
+		Route();
 	});
 	$('.visible.mode a').click(function(){
 		$('.visible.mode a').removeClass('selected')
@@ -245,7 +247,7 @@ function Download(id){
 /* -------------------------------------------- */
 /* Pages */
 
-// Muse actions: select a chromosome
+// Mouse actions: select a chromosome
 function _ShowHelper(){
 	var offset = 5000000;
 	$('.chr-box').each(function(){
@@ -266,15 +268,13 @@ function _ShowHelper(){
 	
 // Showing chromosomes in two vertical list [Igor]
 function ShowAsList(){
-	as_line = 0;
-	$("#chrsline").html('');
-	$("#map").html('');
+	one.style.display = 'none';
 	$('.chr-view-mode a').removeClass('disabled');
 	$('.chr-view-mode .aslist').addClass('disabled');
 	// Html template:
 	doc.innerHTML = Template('chr-list');
 	Object.keys(chrs).map(function(name, i){
-		var chr = { name: name, style : '', width: chrs[name] * 100 / chrs.chr1, i: i };
+		var chr = { title: name, name: name, style : '', width: chrs[name] * 100 / chrs.chr1, i: i };
 		$('.side-' + i%2).append(Template('chr', chr))
 	});
 	_ShowHelper();
@@ -284,29 +284,26 @@ function ShowAsList(){
 
 // Showing chromosomes as one line [Thao]
 function ShowAsLine(){
-	as_line = 1;	
-	$("#content").html('');
+	one.style.display = 'none';
 	$('.chr-view-mode a').removeClass('disabled');
 	$('.chr-view-mode .asline').addClass('disabled');
 	// Html template:
-	$("#chrsline")[0].innerHTML = Template('chr-line');
+	doc.innerHTML = Template('chr-line');
 	Object.keys(chrs).map(function(name, i){
-		var chr = { name: name, style : 'width:' + chrs[name] * 100 / chrsSum + '%', width: 100, i: i };
+		var style = 'width:' + (chrs[name] * 100 / chrsSum - 0.4) + '%'; // 0.4% - margin
+		var title = i < 10 ? name : name.substr(3);
+		var chr = { title: title, name: name, style : style, width: 100, i: i };
 		$('.chr-line').append(Template('chr', chr))
 	});
 	_ShowHelper();
 
-	// This requires optimization.
-	// By varying the width of the screen and re-write on a clean HPD //
+	// This requires optimization =]
 	d3.select("#map").append("svg").attr("id", "g_map").attr("width", 1150);
 	general_map(0);
 }
 
 // Selected region on chromosome
 function ShowChromosome(name, start, end){
-	as_line = 0;
-	$("#chrsline").html('');
-	$("#map").html('');
 	var xhr;
 	$('.chr-view-mode a').removeClass('disabled');
 	// Impossible states:
@@ -329,10 +326,9 @@ function ShowChromosome(name, start, end){
 			samples += '<div class="spl-file">' + samplefile + '</div>';
 		});
 	}
-	doc.innerHTML = Template('chromosome', {
-		name: name,
-		samples: samples
-	});
+	one.style.display = 'block';
+	doc.innerHTML = Template('chromosome', { name: name, samples: samples });
+
 	$('.spl a').click(function(){
 		var info = expData[name][$(this).data('f')][$(this).data('i')];
 		$('#modal').html(Template('modal', {
@@ -629,6 +625,17 @@ $(function(){
 	});
 //
 
+	// Panel-fixed:
+	$(window).scroll(function(e) {
+		if ($(this).scrollTop() > 140) {
+			$('body').addClass('fix');
+			doc.style.marginTop = $('.fixed-nav')[0].offsetHeight + 'px';
+		} else {
+			$('body').removeClass('fix');
+			doc.style.marginTop = '0px';
+		}
+	});
+	// Samples uploader
 	$('#load').bootstrapFileInput();
 	$('#load').change(function(e){
 		if (n_group > 0)
