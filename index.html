@@ -66,6 +66,8 @@
 	<div id="content"></div>
 </div>
 
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby=""></div>
+
 <!-- Samples pane -->
 <script data-name="samples-bar" class="template" type="text/x-handlebars-template">
 	<div class="container">
@@ -158,32 +160,18 @@
 	</div>
 </script>
 
-
-<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby=""></div>
-
-<script data-name="tree" class="template" type="text/x-handlebars-template">
-	<div class="modal-dialog tree-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h3 class="modal-title">Phylogenetic tree</h3>
-			</div>
-			<div class="tree"></div>
-		</div>
-	</div>
-</script>
-
 <script data-name="modal" class="template" type="text/x-handlebars-template">
-	<div class="modal-dialog" role="document">
+	<div class="modal-dialog {class}" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h5 class="modal-title"><b>{name}</b>. Chromosome: <kbd>{chr}</kbd>. Position: <kbd>{pos}</kbd></h5>
+				<h5 class="modal-title">{title}</h5>
 			</div>
-			<pre>{seq}</pre>
+			{data}
 		</div>
 	</div>
 </script>
+
 
 </body>
 <script type="text/javascript" src="js/jquery.min.js"></script>

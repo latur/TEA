@@ -117,7 +117,7 @@ function SamplesLoaded(){
 	});
 
 	$('.samples-nav-pane .showtree').click(function(){
-		$('#modal').html(Template('tree')).modal();
+		Modal({ class : 'tree-dialog', data : '<div class="tree"></div>', title : 'Phylogenetic tree'})
 		draw_tree();
 	});
 
@@ -260,6 +260,11 @@ function Download(id){
 	expID = id;
 }
 
+// 
+function Modal(data){
+	$('#modal').html(Template('modal', data)).modal();
+}
+
 /* -------------------------------------------- */
 /* Pages */
 
@@ -347,12 +352,10 @@ function ShowChromosome(name, start, end){
 
 	$('.spl a').click(function(){
 		var info = expData[name][$(this).data('f')][$(this).data('i')];
-		$('#modal').html(Template('modal', {
-			name : info[3],
-			pos  : info[0],
-			seq  : info[4].match(/.{1,60}/g).join('\n'),
-			chr  : name
-		})).modal();
+		Modal({
+			title : '<b>'+info[3]+'</b>. Chromosome: <kbd>'+name+'</kbd>. Position: <kbd>'+info[0]+'</kbd>',
+			data  : '<pre>' + info[4].match(/.{1,60}/g).join('\n') + '</pre>'
+		});
 	});
 
 	// Events
