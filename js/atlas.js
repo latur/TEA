@@ -78,7 +78,6 @@ function MessageClose(){
 	$('.background').fadeOut(300, function(){ $(this).remove() });
 }
 
-
 // Routing based on location.hash
 function Route(loc){
 	if (loc) location.hash = loc + (expID ? ('/' + expID) : '');
@@ -104,16 +103,23 @@ function SamplesLoaded(){
 	nav.innerHTML = Template('samples-bar');
 	
 	// Reset all
-	$('.samples-nav-pane .clear').click(function(){ location.href = '' });
+	$('.samples-nav-pane .clear').click(function(){
+		location.href = ''
+	});
 	// Comparision window
+	$('.samples-nav-pane .comparision .txt').html(n_group == 0 ? 'Group comparision' : '');
 	$('.samples-nav-pane .comparision').click(function(){
-		if (n_group == 0)
+		if (n_group == 0){
 			split_group();
-		else
+		} else {
 			delete_group();
+		}
 	});
 
-	$('.samples-nav-pane .showtree').click(function(){ draw_tree(); });
+	$('.samples-nav-pane .showtree').click(function(){
+		$('#modal').html(Template('tree')).modal();
+		draw_tree();
+	});
 
 	$('.visible.type a').click(function(e){
 		e.preventDefault();
@@ -236,14 +242,12 @@ function Download(id){
 	if (id == expID) return;
 	// Demo samples:
 	if (id == 'demo') {
-//		$('#log').html('Loading experiment data...');
 		var demo = ['demo1.csv','demo2.csv','demo3.csv'];
 		var loaded = 0;
 		demo.map(function(name){
 			$.get('/samples/' + name, function(content){
 				Parse(content, name);
 				loaded++;
-//				$('#log').html('Files loaded: ' + loaded + '/' + demo.length);
 				if (loaded == demo.length){
 					get_max();
 					get_common();
@@ -614,10 +618,6 @@ function ShowChromosome(name, start, end){
 	Resized([start, end]);
 }
 
-function Modal(content){
-	$('#modal').html( Template('modal') ).modal();
-}
-
 $(function(){
 	Route(); 
 	$('#demo-samples').click(function(){ Route('#line/demo'); });
@@ -639,7 +639,7 @@ $(function(){
 
 	// Panel-fixed:
 	$(window).scroll(function(e) {
-		if ($(this).scrollTop() > 140) {
+		if ($(this).scrollTop() > 120) {
 			$('body').addClass('fix');
 			doc.style.marginTop = $('.fixed-nav')[0].offsetHeight + 'px';
 		} else {
@@ -650,17 +650,16 @@ $(function(){
 	// Samples uploader
 	$('#load').bootstrapFileInput();
 	$('#load').change(function(e){
-		MuteMessage('File processing...');
 		if (n_group > 0)
 			delete_group();
 		var fs = e.target.files;
 		var ftotal = fs.length, itr = fs.length;
+		if (ftotal > 0) MuteMessage('File processing...');
 		for (var i = 0; i < fs.length; i++) { (function(f){
 			var reader = new FileReader();
 			reader.onload = function() {
 				itr--;
 				Parse(this.result, f.name);
-
 				if (itr == 0) {
 					get_max();
 					if (n_file > 1)

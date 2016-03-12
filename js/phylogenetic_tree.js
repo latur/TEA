@@ -96,6 +96,7 @@ function contruct_tree(){
 }
 
 function draw_tree(){
+	/*
 	$("body")
 		.append(function(){
 			return $("<div/>").attr("class", "screen_blur");
@@ -110,7 +111,7 @@ function draw_tree(){
 			$(".tree").remove();
     		}
 	});
-
+	*/
 	var circos = d3.select(".tree").append("svg")	
 			.attr("width", 650)
 			.attr("height", 650)
@@ -218,20 +219,6 @@ function draw_tree(){
       			.attr("transform", "translate("+dx+","+dy+")rotate("+(-(360*i/n_file + 90))+")")
 			.text(file_list[Number(order[i])]);
 	}
-
-	$(".tree").append(function(){
-		return $("<a/>")
-			.attr("class", "btn")
-			.attr("style", "position: absolute; right: 5px; top: 5px")
-			.append(function(){
-				return $("<span>")
-					.attr("class", "glyphicon glyphicon-remove");
-			})
-			.on("click", function(){
-				$(".screen_blur").remove();
-				$(".tree").remove();
-			});
-	});
 //	var elem=document.getElementById("tree_circos");
 //	var dial=kcRotateDial(elem);
 }

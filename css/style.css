@@ -351,6 +351,9 @@ hr {
 #modal .modal-dialog {
 	width: 500px;
 }
+#modal .tree-dialog {
+	width: 650px;
+}
 #modal pre {
 	border: none;
 	margin-bottom: 0;
@@ -574,22 +577,6 @@ input[type=checkbox]:checked + label{
 	left: 1500px;
 	top: 20px;
 	opacity: 0.6;
-	z-index: 1000;
-}
-
-/* Tree */
-.tree {
-	position: absolute;
-	display: inline-block;
-	left: 50%;
-	margin-left: -325px;
-	top: 50%;
-	margin-top: -325px;
-	background: #fff;
-	border: 1px solid;
-	font-size: 30px;
-	line-height: 120%;
-	padding: 10px;
 	z-index: 1000;
 }
 
