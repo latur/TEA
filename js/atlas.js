@@ -28,7 +28,7 @@ var visibleType = {'1': true, '2': true, '3': true};
 var visibleMode = 0;
 
 /* -------------------------------------------- */
-/* ??? */
+
 const density_len = {
 	'chr1': 249,	'chr2': 243,	'chr3': 199,
 	'chr4': 191,	'chr5': 182, 	'chr6': 171,
@@ -51,6 +51,23 @@ var as_line = 1;
 /* -------------------------------------------- */
 /* Functions */
 
+// The template. Obtaining a template name and pasting data
+var Template = (function(classname){
+	var templates = {};
+	$(classname).each(function(){
+		templates[$(this).data('name')] = $(this).html();
+	});
+	console.log(templates);
+	return function(name, data){
+		var html = templates[name];
+		for (var e in data){
+			var find = new RegExp("{" + e + "}", "g");
+			html = html.replace(find, data[e] == undefined ? '' : data[e]);
+		}
+		return html;
+	}
+}('.template'));
+
 // Routing based on location.hash
 function Route(loc){
 	if (loc) location.hash = loc + (expID ? ('/' + expID) : '');
@@ -66,16 +83,6 @@ function Route(loc){
 	if (home[2]) Download(home[2]);
 	if (home[1] == 'list') return ShowAsList();
 	return ShowAsLine();
-}
-
-// The template. Obtaining a template name and pasting data
-function Template(name, data){
-	var html = $('#' + name + '-template').html();
-	for (var e in data){
-		var find = new RegExp("{" + e + "}", "g");
-		html = html.replace(find, data[e] == undefined ? '' : data[e]);
-	}
-	return html;
 }
 
 // Sort of retrotransposons in the order on the chromosome
