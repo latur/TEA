@@ -105,7 +105,7 @@ function general_map(mode){
 		}
 
 	}
-	$(".status").css("visibility", "hidden");
+
 }
 
 /* Data modified */

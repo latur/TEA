@@ -660,7 +660,7 @@ input[type=checkbox]:checked + label{
 
 .status {
 	width: 150px;
-	height: 25px;
+	height: 35px;
 	background: url('./loading.gif') left bottom no-repeat;
 	background-size: 150px 10px;
 	text-align: center;
