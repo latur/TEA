@@ -185,7 +185,7 @@ function progress_group(){
 			for (var k = 0; k < expData[chr][name].length; k++){
 				expData[chr][name][k][4] = "Present in samples: " + g[i][first].value;
 				expData[chr][name][k][1] = 1;
-				var cell = Math.ceil(expData[chr][name][k][0]/1000000)-1;
+				var cell = Math.ceil(expData[chr][name][k][0]/2000000)-1;
 				if (cell >= density_len[chr]) cell = density_len[chr]-1;
 
 				++density_map[chr][name][cell][expData[chr][name][k][2]-1];
@@ -197,28 +197,22 @@ function progress_group(){
 
 				for (pos = 0; pos < Group[chr][n].length; pos++){
 					for (p = 0; p < expData[chr][name].length; p++){
-						if (Math.abs(Group[chr][n][pos][0] - expData[chr][name][p][0]) < 100){
-							expData[chr][name][p][1] += 1;
+						if (Math.abs(Group[chr][n][pos][0] - expData[chr][name][p][0]) < 50){
 							expData[chr][name][p][4] += ", " + n;
-							var cell = Math.ceil(expData[chr][name][p][0]/1000000)-1;
+							var cell = Math.ceil(expData[chr][name][p][0]/2000000)-1;
 							if (cell >= density_len[chr]) cell = density_len[chr]-1;
 
 							if (Group[chr][n][pos][2] != expData[chr][name][p][2]){
 								expData[chr][name][p][3] += "/" + Group[chr][n][pos][2];
-							//	var minus = expData[chr][name][p][1] - 1;
-							//	density_map[chr][name][cell][expData[chr][name][p][2]-1] -= minus;
-							//	density_map[chr][name][cell][2] += minus+1;
-								expData[chr][name][p][2] = 3;
-							} //else 
-							//	++density_map[chr][name][cell][expData[chr][name][p][2]-1]
+							}	++density_map[chr][name][cell][expData[chr][name][p][2]-1]
 
 							break;
-						} else if (Group[chr][n][pos][0] -  expData[chr][name][p][0] >= 100){
+						} else if (Group[chr][n][pos][0] -  expData[chr][name][p][0] >= 50){
 							expData[chr][name].splice(p+1, 0, Group[chr][n][pos]);
 							expData[chr][name][p+1][4] = "Present in samples: " + n;
 							expData[chr][name][p+1][1] = 1;
 
-							var cell = Math.ceil(expData[chr][name][p+1][0]/1000000)-1;
+							var cell = Math.ceil(expData[chr][name][p+1][0]/2000000)-1;
 							if (cell >= density_len[chr]) cell = density_len[chr]-1;
 							++density_map[chr][name][cell][expData[chr][name][p+1][2]-1];
 							break;

@@ -19,10 +19,10 @@
 	<div class="form-inline selecter">
 		<div class="btn-group input-group">
 			<a class="btn btn-default aslist"><span class="glyphicon glyphicon-book"></span> Sample Library</a>
-			<input type="file" id="load" title=" Add sample(s)" multiple="true">
+			<input type="file" id="load" title="  Add sample(s)" multiple="true">
 			<a class="btn btn-default clear"><span class="glyphicon glyphicon-refresh"></span> Clear all</a>
 		</div>
-		<div class="status"> Loading...</div>
+		<div class="status"> Loading files...</div>
 		<input type="text" id="find" placeholder="Find region/gene. Ex: chr1:1000-400000" class="form-control">
 	</div>
 	<div id="samples-bar"></div>
@@ -83,15 +83,22 @@
 			<a class="btn btn-default comparision"><span class="glyphicon glyphicon-adjust"></span> <span class="txt">Group comparision</span></a>
 			<a class="btn btn-default showtree"><span class="glyphicon glyphicon-grain"></span> Phylogenetic tree</a>
 		</div>
-		<div class="btn-group visible type">
-			<a class="btn btn-default selected" data-id="1"><span class="glyphicon glyphicon-ok"></span> Alu</a>
-			<a class="btn btn-default selected" data-id="2"><span class="glyphicon glyphicon-ok"></span> Line</a>
-			<a class="btn btn-default selected" data-id="3"><span class="glyphicon glyphicon-ok"></span> Others</a>
-		</div>
-		<div class="btn-group visible mode">
-			<a data-map="1" class="btn btn-default"><span class="glyphicon glyphicon-record"></span> Common</a>
-			<a data-map="2" class="btn btn-default"><span class="glyphicon glyphicon-record"></span> Different</a>
-			<a data-map="0" class="btn btn-default selected"><span class="glyphicon glyphicon-record"></span> All</a>
+		<div class="btn-group">
+  			<button class="btn btn-default dropdown-toggle " type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+			<span class="glyphicon glyphicon-eye-open"></span> View mode
+    				<span class="caret"></span>
+			 </button>
+  			<ul class="dropdown-menu">
+				<li class="dropdown-header">Show type:</li>
+    				<li><a data-map="1" class="type"> Alu</a></li>
+    				<li><a data-map="2" class="type"> Line</a></li>
+    				<li><a data-map="3" class="type"> Others</a></li>
+    				<li><a data-map="0" class="type glyphicon glyphicon-ok"></span> All</a></li>
+				<li class="dropdown-header">Show compare:</li>
+    				<li><a data-map="1" class="mode"> Common</a></li>
+    				<li><a data-map="2" class="mode"> Different</a></li>
+    				<li><a data-map="0" class="mode glyphicon glyphicon-ok"> All</a></li>
+  			</ul>
 		</div>
 	</div>
 </script>
@@ -188,6 +195,7 @@
 
 </body>
 <script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/ocanvas-2.8.3.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.file-input.js"></script>
 <script type="text/javascript" src="js/d3/d3.min.js"></script>

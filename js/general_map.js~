@@ -27,11 +27,7 @@ function get_check(mode){
 
 }
 
-function general_map(mode){
-	get_check(mode);
-	$('.visible.type a').addClass('selected');
-	visibleType['1'] = visibleType['2'] = visibleType['3'] = true;
-
+function general_map(){
 	$("#content").html('');
 	map = d3.select("#content").append("svg")
 		.attr("width", 1100)
@@ -73,27 +69,47 @@ function general_map(mode){
 			if (k.localeCompare("map") == 0) continue;
 
 			for (var j = 0; j < density_len[k]; j++, x += step){
-				if (!density_map[k] || !density_map[k][name]) continue;
-				for (var t = 0; t < 3; t++){
-					if (mode == 0 && density_map[k][name][j][t] == 0) continue;
-					if (mode == 1 && density_map[k][name][j][t+3] == 0) continue;
-					if (mode == 2 && density_map[k][name][j][t] <= density_map[k][name][j][t+3]) continue;
-					var ratio = calculate_ratio(mode, name, k, j, t);
+				var value = 0;
+				if (density_map[k] && density_map[k][name]){
+					if (visibleMode == 0){
+						if (visibleType == 0)
+							value = density_map[k][name][j][0] + density_map[k][name][j][1] + density_map[k][name][j][2];
+						else 
+							value = density_map[k][name][j][visibleType-1];
+					} else if (visibleMode == 1){
+						if (visibleType == 0)
+							value = density_map[k][name][j][3] + density_map[k][name][j][4] + density_map[k][name][j][5];
+						else 
+							value = density_map[k][name][j][visibleType+2];
+					} else {
+						if (visibleType == 0)
+							value = (density_map[k][name][j][0] + density_map[k][name][j][1] + density_map[k][name][j][2]) -
+								(density_map[k][name][j][3] + density_map[k][name][j][4] + density_map[k][name][j][5]);
+						else 
+							value = density_map[k][name][j][visibleType-1] - density_map[k][name][j][visibleType+2];
+					} 
+				}
 
+				if (value == 0){
+					map.append("line")
+						.attr("x1", x)
+						.attr("y1", y)
+						.attr("x2", x+step)
+						.attr("y2", y)
+						.attr("style", "stroke:" + color[visibleType]);
+				} else {
 					map.append("polyline")
-					 	.attr("points", (x-step) + "," + y + " " + (x+step/2) + "," + (y-60*ratio) + " " + (x+2*step) + "," + y)
-						.attr("class", TE_type[t])
-						.attr("style", "stroke:" + color[t] + "; cursor: pointer")
-						.attr("opacity", ratio*5)
-						.attr("id", Math.ceil(ratio*d_max) + " 	sites")
+					 	.attr("points", (x-step) + "," + y + " " + (x+step/2) + "," + (y-60*value/d_max) + " " + (x+2*step) + "," + y)
+						.attr("style", "stroke:" + color[visibleType] + "; cursor: pointer")
+						.attr("id", value + " sites")
 						.on("mouseover", function(){
 							var id = this.id;
 							$("body").append(function(){
 								return $("<div/>")
 									.attr("class", "pop_up")
 									.attr("style", "height: 20px; font-size: 12px; text-align: center;")
-									.css("left", event.clientX + 10)
-									.css("top", event.clientY + 10)
+									.css("left", event.pageX + 10)
+									.css("top", event.pageY + 10)
 									.html(id);
 							});
 						})
@@ -106,6 +122,7 @@ function general_map(mode){
 
 	}
 
+	$(".status").css("visibility", "hidden");
 }
 
 /* Data modified */
@@ -153,7 +170,7 @@ function remove_file(id){
 	}
 
 	for (var i = 0; i < n_file; i++){
-		if (file_list[i].localeCompare(id) == 0){
+		if (file_list[i] == id){
 			file_list.splice(i, 1);
 			break;
 		}
@@ -168,7 +185,7 @@ function remove_file(id){
 		contruct_tree();
 
 	SamplesLoaded();
-	general_map(0);
+	general_map();
 }
 
 /* Calculate common differenet & tree */
@@ -219,14 +236,12 @@ function get_common(){
 				if (!expData[chr][n]) break;
 
 				for (var k = 0; k < expData[chr][n].length; k++){
-					if (Math.abs(expData[chr][name][pos][0] - expData[chr][n][k][0]) < 100 &&
+					if (Math.abs(expData[chr][name][pos][0] - expData[chr][n][k][0]) < 50 &&
 							expData[chr][name][pos][2] == expData[chr][n][k][2]){
 						id.push(expData[chr][n][k][0][5]);
 						++count;
 						break;
 					}
-/*					if (expData[chr][n][k][0] - expData[chr][name][pos][0] > 100)
-						break;*/
 				}
 				if (count < i) break;
 			}

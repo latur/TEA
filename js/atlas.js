@@ -26,7 +26,7 @@ var one = $('#onechrs-bar')[0];
 // Cache for imagedata
 var cache = {'hm' : {}};
 // Samples filter: checkboxes
-var visibleType = {'1': true, '2': true, '3': true};
+var visibleType = 0;
 var visibleMode = 0;
 
 /* -------------------------------------------- */
@@ -47,8 +47,7 @@ var file_list = [], id_list = {}, group_list = [], n_group = 0;
 var n_file = 0;
 var density_map = {}, d_max = 0, g_density = {}, g_max;
 var tree = [];
-var color = ["green", "red", "blue"];
-var line_view = true;
+var color = ["grey", "green", "red", "blue"];
 
 /* -------------------------------------------- */
 /* Functions */
@@ -121,22 +120,19 @@ function SamplesLoaded(){
 		draw_tree();
 	});
 
-	$('.visible.type a').click(function(e){
-		e.preventDefault();
-		var k = $(this).data('id');
-		$(this)[visibleType[k] ? 'removeClass' : 'addClass']('selected');
-		visibleType[k] = !visibleType[k];
-		// show/hidden TE element [ONLY WORK IN SHOW AS LINE MODE]
-		$("." + TE_type[k-1]).css("visibility", visibleType[k]? "visible" : "hidden");
-		cache = {'hm' : {}};
-		if (!line_view)	Route();
+	$('.type').click(function(e){
+		$('.type').removeClass('glyphicon glyphicon-ok')
+		$(this).addClass('glyphicon glyphicon-ok');
+		visibleType = $(this).data('map');
+
+		Route();
 	});
-	$('.visible.mode a').click(function(){
-		$('.visible.mode a').removeClass('selected')
-		$(this).addClass('selected');
+	$('.mode').click(function(){
+		$('.mode').removeClass('glyphicon glyphicon-ok')
+		$(this).addClass('glyphicon glyphicon-ok');
 		visibleMode = $(this).data('map');
 
-		general_map(visibleMode);
+		Route();
 	});
 
 	// Disable some function when number of file is lower than needed
@@ -289,7 +285,6 @@ function _ShowHelper(){
 	
 // Showing chromosomes in two vertical list [Igor]
 function ShowAsList(){
-	line_view = false;
 	$("#onechrs-bar").attr("style", "display: none;");
 	$('.chr-view-mode a').removeClass('disabled');
 	$('.chr-view-mode .aslist').addClass('disabled');
@@ -306,7 +301,6 @@ function ShowAsList(){
 
 // Showing chromosomes as one line [Thao]
 function ShowAsLine(){
-	line_view = true;
 	$("#onechrs-bar").attr("style", "display: none;");
 	$('.chr-view-mode a').removeClass('disabled');
 	$('.chr-view-mode .asline').addClass('disabled');
@@ -322,22 +316,24 @@ function ShowAsLine(){
 	_ShowHelper();
 
 	// This requires optimization =]
-	general_map(0);
+	general_map();
 }
 
 // Selected region on chromosome
 function ShowChromosome(name, start, end){
-	line_view = false;
 	var xhr;
-	$('.chr-view-mode a').removeClass('disabled');
+	$('.chr-view-mode a').addClass('disabled');
+	$('.chr-view-mode .asline').removeClass('disabled');
+
 	// Impossible states:
 	if (!chrs[name] || end < start + 50) return Route('#');
+
 	// Html elements:
 	var samples = '';
 	if (expData[name]) {
 		Object.keys(expData[name]).map(function(f, i){
 			var samplefile = expData[name][f].map(function(spl, ind){
-				if (!visibleType[spl[2]]) return '';
+				if (visibleType != 0 && visibleType != spl[2]) return '';
 				return Template('zoom-trs', {
 					id: i + '-' + ind, 
 					f: f,
