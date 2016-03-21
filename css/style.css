@@ -3,10 +3,13 @@ body {
 	font: 13px 'Segoe UI', 'DejaVu Sans', Helvetica, 'Trebuchet MS', Arial, sans-serif;
 	font-weight: 100;
 	line-height: 1.4em;
-	background: #fafafa;
+	background: #FDFDFF;
+}
+a {
+	cursor: pointer;
 }
 hr {
-	margin-bottom: 15px;
+	margin-bottom: 10px;
 	margin-top: 10px;
 }
 .animate { 
@@ -19,26 +22,32 @@ hr {
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
-	user-select: none; 
+	user-select: none;
 }
 .sel {
 	-webkit-user-select: auto;
 	-moz-user-select: auto;
 	-ms-user-select: auto;
-	user-select: auto; 
+	user-select: auto;
 	cursor: text;
 }
 .blur {
- 	-webkit-filter: blur(3px);
- 	-moz-filter: blur(3px);
- 	-ms-filter: blur(3px);
- 	-o-filter: blur(3px);
- 	filter: blur(3px);
- }
+	-webkit-filter: blur(2px);
+	-moz-filter: blur(2px);
+	-ms-filter: blur(2px);
+	-o-filter: blur(2px);
+	filter: blur(2px);
+}
+.pad {
+	margin: 0 20px 10px 20px;
+    position: relative;
+}
+
+/* -------------------------------------------- */
 /* Buttons */
 .btn.btn-default { 
-	border: 1px solid #E6E6E6;
 	box-shadow: 0 1px 5px rgba(0,0,0,.07);
+	border: 1px solid #E6E6E6;
 }
 .btn.btn-default:hover { 
 	border: 1px solid #cbcbcb;
@@ -50,75 +59,68 @@ hr {
 	box-shadow: inset 0 1px 10px rgba(0,0,0,.1) 
 }
 
-#content {
-	position: relative;;
-	z-index: 20;
-	margin-bottom: 50px;
+/* -------------------------------------------- */
+/* Intro */
+.intro {
+	text-align: center;
+	margin: 100px auto;
 }
-#find {
-	min-width: 420px;
-	margin-right: 10px;
+.intro .btn-group {
+	margin: 20px auto;
 }
-#samples-bar, #onechrs-bar {
-	margin-bottom: 10px;
-	margin-top: 10px;
-}
-#onechrs-bar {
+.extended-controls {
 	display: none;
 }
-.page { 
-	margin-top: 10px 
+.load-samples {
+	position: relative;
+	overflow: hidden
 }
-.btn-group {
-	margin-right: 5px;
-	margin-top: 10px;
-}
-.selecter {
-	display: block;
-	width: 1050px;
-	margin: auto;
-	margin-top: 20px;
-}
-
-.selecter > * {
-	display: inline-block;
-}
-.chr-list, .chr-line {
-	padding-top: 20px;
-}
-.controls {
-	padding: 10px 0;
-}
-.controls .disabled {
-	color: #000;
-	font-weight: bold;
-}
-.controls .zoom-c .cnt {
-	font-family: monospace;
-}
-.glyphicon.ll {
-	margin-left: -9px;
-}
-
-.type.glyphicon , .mode.glyphicon {
-	cursor: default;
-	color: grey;	
-}
-
-.type, .mode {
+.load-samples input {
 	cursor: pointer;
-}
-
-.fix .fixed-nav {
+	position: absolute;
+	top: 0;
+	left: 0;
+	opacity: 0;
+	filter: alpha(opacity=0);
+	z-index: 99;
 	width: 100%;
-	position: fixed;
-	top: 0px;
-	z-index: 50;
-	box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-	background: #FFF;
+    height: 100%;
 }
 
+/* -------------------------------------------- */
+/* Library */
+#modal .modal-dialog.library {
+	width: 380px;
+}
+.sample-names {
+	margin-bottom: 0;
+}
+.sample-names li {
+	border-radius: 0 !important;
+	cursor: pointer;
+	border: none;
+}
+.sample-names li span {
+	float: right;
+	color: #eee
+}
+.sample-names li.selected, .sample-names li.loaded {
+	background: rgba(0,0,0,0.03)
+}
+.sample-names li.selected span {
+	color: #000
+}
+.sample-names li.loaded span {
+	color: #20B100;
+}
+.sample-names li:hover {
+	background: rgba(0,0,80,0.04)
+}
+
+/* -------------------------------------------- */
+/* Message */
 .background {
+	display: none;
 	position: fixed;
 	z-index: 40;
 	width: 100%;
@@ -129,26 +131,13 @@ hr {
 	background: rgba(0,0,0,0.7)
 }
 .background .message {
-	margin: 120px 0;
+	margin: 250px 0;
 	text-align: center;
 	color: #EEE
 }
 
-.form-control {
-	float: right;
-}
-
-.container, .chr-line {
-	display: block;
-	width: 1100px;
-	margin: auto;
-}
-
-.chr-line {
-	height: 50px;
-}
-
-/* Chromosome-list */
+/* -------------------------------------------- */
+/* Chromosomes-2-lists */
 .chr {
 	position: relative;
 	margin-left: 45px;
@@ -156,7 +145,7 @@ hr {
 }
 .chr-name {
 	text-transform: capitalize;
-	line-height: 18px;
+	line-height: 20px;
 	position: absolute;
 	left: -45px;
 	width: 45px 
@@ -165,13 +154,13 @@ hr {
 	cursor: pointer;
 	position: relative;
 	min-height: 20px;
-	border: 1px solid #7D7D7D;
 	border-radius: 3px;
 	background-color: #fff;
 	background-repeat-X: no-repeat;
 	background-size: 100% 100%;
-	box-shadow: 0 0 8px rgba(0,0,0,0.1);
-	box-sizing: border-box 
+	box-shadow: 0 0 0 1px #888, 0 0 8px rgba(0,0,0,0.3);
+	box-sizing: border-box;
+	padding-top: 15px;
 }
 .chr-box .helper {
 	display: none;
@@ -184,80 +173,189 @@ hr {
 	position: absolute;
 	top: -22px;
 	height: 17px;
-	border-radius: 3px; 
+	border-radius: 3px;
 }
 .chr-box:hover {
-	border: 1px solid #515151;
-	box-shadow: 0 0 12px rgba(0,0,0,0.15); 
+	box-shadow: 0 0 0 1px #777, 0 0 12px rgba(0,0,0,0.3);
 }
 .chr-box:hover .helper {
-	display: block; 
+	display: block;
 }
 
-.chr {
-	margin: 0;
+/* Chromosomes-general */
+.chr-line .chr {
+	margin: 0 0.15% 0 0;
 	float: left;
 }
-
-.chr-name {
-	left: 0px;
-	top: -20px;
-	right: 0;
-	text-align: center;
-	text-overflow: ellipsis;
-	overflow: hidden;
-	width: 100%;
-	font-size: 11px;
+.chr-line .chr-name {
+    left: 0;
+	top: -13px;
+    text-align: left;
+    width: auto;
+    line-height: 13px;
+    border-radius: 8px;
+    font-size: 11px;
+}
+.chr-line .chr-box {
 }
 
-/* Samples. File names */
-.hm {
+/* -------------------------------------------- */
+/* Samples. Heat-maps */
+.hm-box {
+	position: relative;
+	border-radius: 0 0 3px 3px;
 	background-size: 100% 100%;
 	background-color: rgba(255, 255, 255, 0.8);
-	margin-top: 15px;
 }
-.hm .fn {
+.hm-box .fn {
 	font-size: 12px;
 	line-height: 12px;
-	height: 10px;
+	height: 12px;
 	position: relative;
 	z-index: 10
 }
-.hm .fn:first-child{
+.hm-box .fn:first-child {
 	margin-top: -1px;
 }
-.hm:hover .fn {
-	background: rgba(245,245,245,.8); 
+.hm-box:hover .fn {
+	background: rgba(245,245,245,.8);
 }
-.hm .fn:hover {
+.hm-box .fn:hover {
 	background: transparent !important;
 	border-bottom: 1px solid #ccc;
 	border-top: 1px solid #ccc;
 	z-index: 15
 }
-.hm .fn > span {
-	height: 16px; 
-	position: absolute; 
-	left: 0; 
-	top: -16px; 
-	background: rgba(245,245,245,.8); 
+.hm-box .fn > span {
+	height: 16px;
+	position: absolute;
+	left: 0;
+	top: -16px;
+	background: rgba(245,245,245,.8);
 	border-top: 1px solid #ccc;
 	border-right: 1px solid #ccc;
-	border-radius: 0 3px 0 0; 
-	padding: 2px 4px; 
+	border-radius: 0 3px 0 0;
+	padding: 2px 4px;
 	display: none 
 }
-.hm .fn:hover > span { 
-	display: block; 
+.hm-box .fn:hover > span { 
+	display: block;
+}
+.hm-box .hm {
+	display: none;
+	background-size: 100% 100%;
+	position: absolute;
+	width: 100%;
+}
+.chr-line { }
+.chr-line-names {
+	position: absolute;
+	top: 35px;
+	left: 0;
+	right: 2px;
+}
+.chr-line-names .fn {
+	height: 36px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+.chr-line-names .fn:last-child {
+	border: none;
+}
+.chr-line-names:hover .fn {
+    background: rgba(255, 255, 255, 0.4);
+}
+.chr-line-names .fn:hover {
+    background: none;
+}
+.chr-line-names .fn span {
+	font-size: 12px;
+	padding: 2px 3px;
+}
+.chr-line-names .fn:hover span {
+	opacity: 0.4
 }
 
+/* -------------------------------------------- */
+#content {
+	position: relative;;
+	z-index: 20;
+}
+
+/* Panels */
+.finder {
+	min-width: 420px;
+	position: absolute;
+	right: 0; 
+	top: 0
+}
+.check-block {
+	float: right
+}
+.newline-block {
+}
+
+@media (max-width:1140px) {
+	.finder {
+		min-width: 380px;
+	}
+	.clear {
+		float: right;
+	}
+	.check-block {
+		float: none;
+    	margin-top: 8px;
+	}
+	.newline-block {
+		float: right
+    }
+}
+@media (max-width:830px) {
+	.finder {
+		min-width: 40%;
+	}
+}
+
+/* Show Alu,Line,Others */
+.visible .glyphicon {
+	color: #ddd;
+}
+.visible-type-1 [data-id="1"] .glyphicon,
+.visible-type-2 [data-id="2"] .glyphicon,
+.visible-type-3 [data-id="3"] .glyphicon {
+	color: #000;
+}
+.visible-type-1 [data-id="1"].btn,
+.visible-type-2 [data-id="2"].btn,
+.visible-type-3 [data-id="3"].btn {
+	box-shadow: inset 0 0 2px rgba(0,0,0,0.05);
+	background: #F1F1F1;
+}
+.visible-type-1 .t1,
+.visible-type-2 .t2,
+.visible-type-3 .t3 {
+	display: block !important;
+}
+
+/* --------------------------- */
 /* Chromosome */
+.cs {
+	position: relative;
+	overflow: visible;
+	margin-top: 15px;
+}
+.cs .cs-box {
+	border: 1px solid #515151;
+	box-shadow: 0 0 12px rgba(0,0,0,0.15);
+}
+.visuale {
+	height: 35px;
+    margin: -2px 0 -3px 0;
+}
 .ch-zoom {
 	overflow: hidden;
-	width: 1100px;
-	margin: auto;
+	border-left: 1px solid #222;
+	border-right: 1px solid #222;
 }
-
 .ch-zoom-scroll {
 	cursor: move;
 }
@@ -294,11 +392,10 @@ hr {
 	border-bottom: 1px dotted #337ab7;
 }
 .spl.t1 > i {
-	background: rgba(0, 170, 0, 0.4);
-	
+	background: rgba(170, 0, 0, 0.4);
 }
 .spl.t2 > i {
-	background: rgba(170, 0, 0, 0.4);
+	background: rgba(0, 170, 0, 0.4);
 }
 .spl.t3 > i {
 	background: rgba(0, 0, 170, 0.4);
@@ -307,15 +404,6 @@ hr {
 	display: inline-block
 }
 
-.cs {
-	position: relative;
-	margin-bottom: 10px;
-	overflow: visible; 
-}
-.cs .cs-box {
-	border: 1px solid #515151;
-	box-shadow: 0 0 12px rgba(0,0,0,0.15);
-}
 
 #range {
 	z-index: 45;
@@ -327,19 +415,28 @@ hr {
 	cursor: text
 }
 .lh, .rh { 
-	position: absolute; 
-	top:0; 
-	bottom:0; 
-	background: rgba(0,0,0,0.45); 
+	position: absolute;
+	top:0;
+	bottom:0;
+	background: rgba(0,0,0,0.45);
 	z-index: 35 
 }
 .lh { border-right: 1px solid #000; border-radius: 4px 0 0 4px; left: -1px; }
 .rh { border-left:  1px solid #000; border-radius: 0 3px 2px 0; right: 0px; }
 .xh { position: absolute; z-index: 10; top:0;bottom:0;left:0;right:0; cursor: pointer }
 
-#cs-xh-F { cursor: text }
-#sel-box { position: absolute; z-index: 55; bottom: -1px; top: -1px; display: none; border: 1px solid rgba(0,115,20,0.5); background: rgba(0, 115, 20, 0.3) }
-
+#cs-xh-F {
+	cursor: text
+}
+#sel-box {
+	position: absolute;
+	z-index: 55;
+	bottom: -2px;
+	top: -2px;
+	display: none;
+	border: 1px solid rgba(0,115,20,0.5);
+	background: rgba(0, 115, 20, 0.3)
+}
 #genes {
 	min-height: 21px;
 	position: relative;
@@ -389,8 +486,63 @@ hr {
 	margin-bottom: 0;
 }
 
+.fixed-nav {
+	padding: 0 20px;
+}
+.fix .fixed-nav {
+	padding: 10px 20px 0 20px;
+	top: 0px;
+	width: 100%;
+	position: fixed;
+	z-index: 50;
+	box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+	background: #FFF;
+}
 
 /* --------------------------- */
+
+
+
+
+
+
+
+
+
+.selecter {
+	display: block;
+	width: 1050px;
+	margin: auto;
+	margin-top: 20px;
+}
+
+.selecter > * {
+	display: inline-block;
+}
+.chr-list, .chr-line {
+	padding-top: 20px;
+}
+.controls {
+	padding: 10px 0;
+}
+.controls .disabled {
+	color: #000;
+	font-weight: bold;
+}
+.controls .zoom-c .cnt {
+	font-family: monospace;
+}
+.glyphicon.ll {
+	margin-left: -9px;
+}
+
+
+
+
+
+
+
+
 
 
 
@@ -486,7 +638,7 @@ input[type=checkbox]{
 
 
 input[type=checkbox] + label{
-	height:20px; 
+	height:20px;
 	position: relative;
 	display: inline-block;
 	background-position: left;
@@ -536,11 +688,11 @@ input[type=checkbox]:checked + label{
 .map_name{
 	cursor: pointer;
 	font-size: 13px;
-	fill: #000;
+	fill: #585858;
 }
 
 .map_name:hover {
-	fill: #585858;
+	fill: #000;
 }
 
 /* Pop up table */
@@ -650,7 +802,7 @@ input[type=checkbox]:checked + label{
 }
 
 .group_wrap {
-	position: absolute; 
+	position: absolute;
 	top: 20px;
 	font-size: 20px;
 	text-align: center;
