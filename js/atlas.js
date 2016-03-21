@@ -1,4 +1,3 @@
-/* -------------------------------------------- */
 "use strict";
 
 const chrsSum = 3088269832;
@@ -13,20 +12,19 @@ const chrs = {
 	'chr22': 50818468,  'chrX':  156040895, 'chrY': 57227415
 };
 
-// Experiment ID 
-// (if specified, need to load samples of this experiment)
-var expID = '';
-// Experiment Samples Data
-var expData = {}, Group = {};
-// Page container
+var expData  = {}; // {chr1 : {file1 : [], ..}, chr2 ...}
+var expNames = []; // [file1, file2, file3]
+var Group = {};
+
+// Page containers
+var hdr = $('#header')[0];
 var doc = $('#content')[0];
-var nav = $('#samples-bar')[0];
-var one = $('#onechrs-bar')[0];
 
 // Cache for imagedata
-var cache = {'hm' : {}};
+var cache = {};
+var XHR = false;
+
 // Samples filter: checkboxes
-var visibleType = 0;
 var visibleMode = 0;
 
 /* -------------------------------------------- */
@@ -41,16 +39,15 @@ const density_len = {
 	'chr19': 30,	'chr20': 33,	'chr21': 24,
 	'chr22': 26,	'chrX': 79,	'chrY': 29
 };
-
 const TE_type = ["Alu", "Line", "Others"];
 var file_list = [], id_list = {}, group_list = [], n_group = 0;
 var n_file = 0;
 var density_map = {}, d_max = 0, g_density = {}, g_max;
 var tree = [];
-var color = ["grey", "green", "red", "blue"];
+var color = ["green", "red", "blue"];
+var line_view = true;
 
 /* -------------------------------------------- */
-/* Functions */
 
 // The template. Obtaining a template name and pasting data
 var Template = (function(classname){
@@ -68,134 +65,110 @@ var Template = (function(classname){
 	}
 }('.template'));
 
-// Actions log
+// Display mute
 function MuteMessage(txt){
+	$('body > *').addClass('animate');
 	$('body > *').addClass('blur');
 	$('body').append( Template('message', {txt : txt}) );
+	$('.background').fadeIn(300);
 }
 function MessageClose(){
 	$('.blur').removeClass('blur');
-	$('.background').fadeOut(300, function(){ $(this).remove() });
+	$('body > *').removeClass('animate');
+	$('.background').fadeOut(300, function(){
+		$(this).remove();	
+	});
 }
 
 // Routing based on location.hash
 function Route(loc){
-	if (loc) location.hash = loc + (expID ? ('/' + expID) : '');
+	if (loc) location.hash = loc;
 	// Show one chromosome
-	var chr = location.hash.match(/^\#?(chr[0-9XY]+)\:([0-9]+)\-([0-9]+)\/?([0-9a-z]+)?$/);
-	if (chr) {
-		if (chr[4]) Download(chr[4]);
-		return ShowChromosome(chr[1], parseInt(chr[2]), parseInt(chr[3]));
-	}
-	// Show chromosome list
-	var home = location.hash.match(/^\#?([a-z]+)?\/?([0-9a-z]+)?\/?$/);
+	var chr = location.hash.match(/^\#?(chr[0-9XY]+)\:([0-9]+)\-([0-9]+)$/);
+	if (chr) return ShowChromosome(chr[1], parseInt(chr[2]), parseInt(chr[3]));
 
-	if (home[2]) Download(home[2]);
-	return ShowAsLine();
+	var home = location.hash.match(/^\#?([a-z]+)?$/);
+	// Detail (Show chromosome list)
+	if (home[1] == 'detail')  ShowDetail();
+	// General (Show chromosome line)
+	if (home[1] == 'general') ShowGeneral();
 }
 
-// Sort of retrotransposons in the order on the chromosome
-function SamplesLoaded(){
-	// Clear cache
-	cache = {'hm' : {}};
-	nav.innerHTML = Template('samples-bar');
-
-
-	// View mode
-	$('.chr-view-mode .aslist').click(function(){ Route("chr1:0-5000000"); });
-	$('.chr-view-mode .asline').click(function(){ Route('#line'); });
-
-	// Comparision window
-	$('.samples-nav-pane .comparision .txt').html(n_group == 0 ? 'Group comparision' : 'qwe');
-	$('.samples-nav-pane .comparision').click(function(){
-		if (n_group == 0){
-			split_group();
-		} else {
-			delete_group();
-		}
+// Downloading samples
+function Download(samples, onload, onstop){
+	var onstop = onstop || function(){};
+	if (samples.length == 0) return onstop();
+	var name = samples.pop();
+	XHR = $.post('http://dev.mazepa.us/tea/app/sample/' + name, {}, function(csv){
+		Parse(csv, name);
+		if (onload) onload(name);
+		return Download(samples, onload, onstop);
 	});
-
-	$('.samples-nav-pane .showtree').click(function(){
-		Modal({ class : 'tree-dialog', data : '<div class="tree"></div>', title : 'Phylogenetic tree'})
-		draw_tree();
-	});
-
-	$('.type').click(function(e){
-		$('.type').removeClass('glyphicon glyphicon-ok')
-		$(this).addClass('glyphicon glyphicon-ok');
-		visibleType = $(this).data('map');
-
-		Route();
-	});
-	$('.mode').click(function(){
-		$('.mode').removeClass('glyphicon glyphicon-ok')
-		$(this).addClass('glyphicon glyphicon-ok');
-		visibleMode = $(this).data('map');
-
-		Route();
-	});
-
-	// Disable some function when number of file is lower than needed
-	if (n_file < 2)
-		$('.samples-nav-pane .comparision').addClass("disabled");
-	if (n_file <= 2)
-		$('.samples-nav-pane .showtree').addClass("disabled");
-
-	return true;
 }
 
-// Getting heatmap pictures for chromosome
-function SamplesHM(chr){
+// Heatmap pictures
+function _SamplesHMImage(chr, w, h, type, height){
+	var colors = [[220,0,0],[0,220,0],[0,0,220]];
+	var canvas = document.createElement('canvas');
+	canvas.width  = w, canvas.height = h;
+	var ctx = canvas.getContext('2d');
+	var cdt = ctx.getImageData(0, 0, w, h);
+	var Pixel = function(x, y, color, a){
+		var ind = (y * w + x) * 4;
+		cdt.data[ind + 0] = color[0]; // R
+		cdt.data[ind + 1] = color[1]; // G
+		cdt.data[ind + 2] = color[2]; // B
+		cdt.data[ind + 3] += a; // A
+	};
+	var Line = function(x, y1, y2, color){
+		while (y1 < y2) { Pixel(x, y1, color, 100); y1++; }
+	};
+	var y = 0;
+	var K = w / chrs[chr];
+	var F = Array.apply(null, Array(w)).map(Number.prototype.valueOf, 0); // [0,0,0..]
+	expNames.map(function(f){
+		if (!expData[chr][f]) return ;
+		expData[chr][f].map(function(sm){
+			if (type != sm[2]) return;
+			var col = colors[sm[2]-1],
+				xx = Math.floor(K * sm[0]), 
+				yy = y + height/2;
+			if (F[xx] < height/2) F[xx]++;
+			Line(xx, yy - F[xx], yy + F[xx], col);
+		});
+		y += height;
+	});
+	ctx.putImageData(cdt, 0, 0);
+	return canvas.toDataURL();
+}
+function SamplesHM(chr, size, samples){
 	if (!expData[chr]) return ;
-	var width = $('.' + chr).width() + 2; // +2 is border
-	var height = Object.keys(expData[chr]).length * 10;
-	
-	if (!(chr in cache.hm)){
-		var canvas = document.createElement('canvas');
-		canvas.width = width;
-		canvas.height = height;
-		var ctx = canvas.getContext('2d');
-		var cdt = ctx.getImageData(0, 0, width, height);	
-		var Pixel = function(x,y,color,a){
-			var ind = (y * width + x) * 4;
-			cdt.data[ind + 0] = color[0]; // R
-			cdt.data[ind + 1] = color[1]; // G
-			cdt.data[ind + 2] = color[2]; // B
-			cdt.data[ind + 3] = a; // A
-		};
-		var y = 0;
-		var K = width/chrs[chr];
-		var colors = [[220,0,0],[0,220,0],[0,0,220]];
-		for (var f in expData[chr]) {
-			expData[chr][f].map(function(sm){
-				if (!visibleType[sm[2]]) return;
-				var col = colors[sm[2]-1], 
-					xx = Math.floor(K * sm[0]), 
-					yy = y + parseInt(sm[2]-1) * 3;
-				Pixel(xx, yy+0, col, 255);
-				Pixel(xx, yy+1, col, 255);
-				Pixel(xx, yy+2, col, 255);
-				Pixel(xx+1, yy+0, col, 95);
-				Pixel(xx+1, yy+1, col, 95);
-				Pixel(xx+1, yy+2, col, 95);
-			});
-			y += 10;
-		}
-		ctx.putImageData(cdt, 0, 0);
-		cache.hm[chr] = canvas.toDataURL();
-	}
-	
-	$('.' + chr).append(Template('hm', {
-		image : cache.hm[chr],
-		height : height,
-		samples : Object.keys(expData[chr]).map(function(f){
-			return '<div class="fn"><span>'+f.split('.').slice(0,-1).join('.')+'</span></div>';
-		}).join('')
-	}));
+	if (!cache[size]) cache[size] = {};
+	var width = $('.' + chr).width();
+	var height = expNames.length * size;
+	if (!cache[size][chr]) cache[size][chr] = {
+		'height'  : height,
+		'type-1'  : _SamplesHMImage(chr, width, height, 1, size),
+		'type-2'  : _SamplesHMImage(chr, width, height, 2, size),
+		'type-3'  : _SamplesHMImage(chr, width, height, 3, size),
+		'samples' : samples
+	};
+	$('.' + chr).append( Template('hmd', cache[size][chr]) );
 }
 
 // Parse samples files. Separators: Col: "\t", Row: "\n"
+function ParseOLD(content, filename){
+	expNames.push(filename);
+	content.split('\n').map(function(line){
+		var c = line.split('\t');
+		if (!chrs[c[0]]) return ;
+		if (!expData[c[0]]) expData[c[0]] = {};
+		if (!expData[c[0]][filename]) expData[c[0]][filename] = [];
+		expData[c[0]][filename].push(c.slice(1));
+	});
+}
 function Parse(content, filename){
+	expNames.push(filename);
 	file_list.push(filename);
 	++n_file;
 
@@ -233,36 +206,31 @@ function Parse(content, filename){
 	});
 }
 
-// Get experiment data by ID
-function Download(id){
-	if (id == expID) return;
-	// Demo samples:
-	if (id == 'demo') {
-		var demo = ['demo1.csv','demo2.csv','demo3.csv'];
-		var loaded = 0;
-		demo.map(function(name){
-			$.get('/samples/' + name, function(content){
-				Parse(content, name);
-				loaded++;
-				if (loaded == demo.length){
-					get_max();
-					get_common();
-					contruct_tree();
-					SamplesLoaded();
-				}
-			});
-		});
-	}
-	expID = id;
+// Modal Box
+function Modal(data){
+	data['class'] = data['class'] ? data['class'] : 'default';
+	$('<div class="modal fade" id="modal" tabindex="-1"></div>').appendTo('body');
+	$('#modal').html( Template('modal', data) ).modal();
+	$('#modal').on('hide.bs.modal', function(){
+		$(this).remove();
+	});
 }
 
-// 
-function Modal(data){
-	$('#modal').html(Template('modal', data)).modal();
+// Sort of retrotransposons in the order on the chromosome
+function SamplesLoaded(){
+	// Disable some function when number of file is lower than needed
+	$('.samples-nav-pane .comparision').removeClass("disabled");
+	if (expNames.length < 2) $('.samples-nav-pane .comparision').addClass("disabled");
+	if (expNames.length < 3) $('.samples-nav-pane .showtree').addClass("disabled");
+
+	cache = {}; // Clear cache
+	if (location.hash == '') location.hash = '#general';
+	MessageClose();
+	Route();
+	return true;
 }
 
 /* -------------------------------------------- */
-/* Pages */
 
 // Mouse actions: select a chromosome
 function _ShowHelper(){
@@ -282,58 +250,74 @@ function _ShowHelper(){
 		});
 	});
 }
-	
-// Showing chromosomes in two vertical list [Igor]
-function ShowAsList(){
-	$("#onechrs-bar").attr("style", "display: none;");
-	$('.chr-view-mode a').removeClass('disabled');
-	$('.chr-view-mode .aslist').addClass('disabled');
-	// Html template:
+// Add samples pane, hide initial pane
+function _HideIntro(){
+	$('.mini-controls').remove();
+	$('.intro').addClass('pad').removeClass('intro');
+	$('.extended-controls').fadeIn();
+	$('.v-mode a').removeClass('disabled');
+}
+
+// Showing chromosomes in two vertical list
+function ShowDetail(){
+	_HideIntro();
+	$('.v-mode .detail').addClass('disabled');
 	doc.innerHTML = Template('chr-list');
 	Object.keys(chrs).map(function(name, i){
 		var chr = { title: name, name: name, style : '', width: chrs[name] * 100 / chrs.chr1, i: i };
-		$('.side-' + i%2).append(Template('chr', chr))
+		$('.side-' + i%2).append( Template('chr', chr) );
 	});
 	_ShowHelper();
-	// Heatmap of samples
-	Object.keys(expData).map(SamplesHM);
+	var samples = expNames.map(function(f){ return '<div class="fn"><span>' + f + '</span></div>'; }).join('');
+	Object.keys(expData).map(function(chr){
+		SamplesHM(chr, 12, samples);
+	}); // Heatmap of samples
 }
 
-// Showing chromosomes as one line [Thao]
-function ShowAsLine(){
-	$("#onechrs-bar").attr("style", "display: none;");
-	$('.chr-view-mode a').removeClass('disabled');
-	$('.chr-view-mode .asline').addClass('disabled');
-	// Html template:
-
-	$('.chr-line').html('');
+// Showing chromosomes as one line
+function ShowGeneral(){
+	_HideIntro();
+	$('.v-mode .general').addClass('disabled');
+	doc.innerHTML = Template('chr-line');
 	Object.keys(chrs).map(function(name, i){
-		var style = 'width:' + (density_len[name] * 100 /1558) + '%';
-		var title = name.substr(3);
+		var style = 'width:' + (chrs[name] * 100 / chrsSum - 0.15) + '%'; // 0.15 is margin
+		var title = i > 10 ? name.substr(3) : name;
 		var chr = { title: title, name: name, style : style, width: 100, i: i };
-		$('.chr-line').append(Template('chr', chr))
+		$('.chr-line').append( Template('chr', chr) )
 	});
 	_ShowHelper();
+	Object.keys(expData).map(function(chr){
+		SamplesHM(chr, 36, "");
+	}); // Heatmap of samples
+	// Sample-names:
+	$('.chr-line-names').html(expNames.map(function(f){
+		return '<div class="fn"><span>' + f + '</span></div>';
+	}).join(''));
+}
 
-	// This requires optimization =]
-	general_map();
+// SVG-Line
+function SVGline(p1, p2){
+	if (p1 < 0) p1 = 0;
+	var v = Math.abs((p1 - p2) * 30 / 1000);
+	var l = 15 + 8 * Math.log(v);
+	var shape = document.createElementNS("http://www.w3.org/2000/svg", "path");
+	shape.setAttributeNS(null, "d", "M"+p1+" 0 C "+p1+" "+(l)+", "+p2+" "+(30-l)+", "+p2+" 30");
+	shape.setAttributeNS(null, "fill", "none");
+	shape.setAttributeNS(null, "stroke", "#222");
+	return shape;	
 }
 
 // Selected region on chromosome
 function ShowChromosome(name, start, end){
-	var xhr;
-	$('.chr-view-mode a').addClass('disabled');
-	$('.chr-view-mode .asline').removeClass('disabled');
-
+	_HideIntro();
 	// Impossible states:
-	if (!chrs[name] || end < start + 50) return Route('#');
-
+	if (!chrs[name] || end < start + 50) return Route('#general');
 	// Html elements:
 	var samples = '';
 	if (expData[name]) {
 		Object.keys(expData[name]).map(function(f, i){
 			var samplefile = expData[name][f].map(function(spl, ind){
-				if (visibleType != 0 && visibleType != spl[2]) return '';
+				//if (!visibleType[spl[2]]) return '';
 				return Template('zoom-trs', {
 					id: i + '-' + ind, 
 					f: f,
@@ -346,10 +330,7 @@ function ShowChromosome(name, start, end){
 			samples += '<div class="spl-file">' + samplefile + '</div>';
 		});
 	}
-
-	$("#onechrs-bar").attr("style", "display: block; width: 1100px; margin: auto;");
-	$('.chr-line')[0].innerHTML = Template('chromosome', { name: name, samples: samples });
-	$('#content')[0].innerHTML = Template('zoom_table', { name: name, samples: samples });
+	doc.innerHTML = Template('chromosome', { name: name, samples: samples });
 
 	$('.spl a').click(function(){
 		var info = expData[name][$(this).data('f')][$(this).data('i')];
@@ -361,12 +342,13 @@ function ShowChromosome(name, start, end){
 
 	// Events
 	var size = chrs[name];
-	var sl = $('#range')[0], 
-		zoom = $('#ch-zoom-hm')[0], 
-		place = $('#chr-one')[0], 
-		box = $('#sel-box')[0];
+	var svg = $('#ch-svg')[0];
+	var sl = $('#range')[0], zoom = $('#ch-zoom-hm')[0], place = $('#chr-one')[0], box = $('#sel-box')[0];
 	var ww = sl.offsetWidth;
 	var current = [0,1], ora = [0,1], detail = 0;
+	
+	svg.setAttribute('viewBox', '0 0 '+ww+' 30');
+	svg.setAttribute('width', ww);
 	
 	var RangeParse = function(start, end){
 		// to pixels
@@ -390,8 +372,8 @@ function ShowChromosome(name, start, end){
 		zoom.classList.remove('det-3');
 		if (bp < 90000000) detail++, zoom.classList.add('det-' + detail); // L
 		if (bp <  8000000) detail++, zoom.classList.add('det-' + detail); // M
-		if (bp <  3500000) detail++, zoom.classList.add('det-' + detail); // S
-		if (bp <   900000) detail++, zoom.classList.add('det-' + detail); // XS
+		if (bp <  5500000) detail++, zoom.classList.add('det-' + detail); // S
+		if (bp <  3000000) detail++, zoom.classList.add('det-' + detail); // XS
 
 		// Detail-line
 		zoom.style.width = ww * 100 / (e[1] - e[0]) + '%';
@@ -399,6 +381,10 @@ function ShowChromosome(name, start, end){
 		// Select-range-box
 		box.style.left = e[0] + 'px';
 		box.style.width = e[1] - e[0] + 'px';
+		
+		svg.innerHTML = '';
+		svg.appendChild(SVGline(e[0]-1, 1));
+		svg.appendChild(SVGline(e[1], ww));
 	};
 
 	var Resized = function(xx){
@@ -406,7 +392,7 @@ function ShowChromosome(name, start, end){
 		console.log(xx);
 		if (xx[0] > xx[1]) xx = [xx[1], xx[0]];
 		var e = RangeParse(xx[0], xx[1]);
-		if (xhr) xhr.abort(), xhr = false;
+		if (XHR) XHR.abort(), XHR = false;
 		ResizePre(xx);
 		// black blur "blinds"
 		$('#cs-lh-F')[0].style.width = (e[0] * 100 / ww) + '%';
@@ -414,8 +400,8 @@ function ShowChromosome(name, start, end){
 		// Hash
 		var bp1 = parseInt(e[2]);
 		var bp2 = parseInt(e[3]);
-		location.hash = '#' + name + ':' + bp1 + '-' + bp2;
-		$('#position')[0].innerHTML = (name + ':' + bp1 + '-' + bp2);
+		location.hash = '#' + name + ':' + (bp1 > 0 ? bp1 : 0) + '-' + bp2;
+		$('#position')[0].innerHTML = (name + ':' + (bp1 > 0 ? bp1 : 0) + '-' + bp2);
 
 		// Samples
 		var KPX = ww * ww / (e[1] - e[0]) / size;
@@ -456,7 +442,7 @@ function ShowChromosome(name, start, end){
 		var req = [mode, name, from > 0 ? from : 0, bp2 + range].join('/');
 		var genes = $('#genes')[0];
 
-		xhr = $.post('http://dev.mazepa.us/tea/app/' + req, {}, function(csv){
+		XHR = $.post('http://dev.mazepa.us/tea/app/' + req, {}, function(csv){
 			genes.style.height = '23px';
 			var data = csv.split('\n').map(function(row){
 				var r = row.split('\t');
@@ -623,65 +609,4 @@ function ShowChromosome(name, start, end){
 	$(".status").css("visibility", "hidden");
 }
 
-$(function(){
-	Route(); 
-	// Reset all
-	$('.clear').click(function(){
-		location.href = ''
-	});
 
-	$("#find").keyup(function(e) {
-   		if (e.keyCode == 13) {
-			var loc = $(this).val();
-			if (loc) location.hash = loc + (expID ? ('/' + expID) : '');
-			// Show one chromosome
-			var chr = location.hash.match(/^\#?(chr[0-9XY]+)\:([0-9]+)\-([0-9]+)\/?([0-9a-z]+)?$/);
-			if (chr) {
-				return ShowChromosome(chr[1], parseInt(chr[2]), parseInt(chr[3]));
-			} else {
-				$(this).val('').attr("placeholder","Try again with search format. Ex: chr1:1000-5000000");
-			}
-		}
-	});
-
-	// Panel-fixed:
-	$(window).scroll(function(e) {
-		if ($(this).scrollTop() > 120) {
-			$('body').addClass('fix');
-			doc.style.marginTop = $('.fixed-nav')[0].offsetHeight + 'px';
-		} else {
-			$('body').removeClass('fix');
-			doc.style.marginTop = '0px';
-		}
-	});
-	// Samples uploader
-	$('#load').bootstrapFileInput();
-	$('#load').change(function(e){
-		if (n_group > 0)
-			delete_group();
-		var fs = e.target.files;
-		var ftotal = fs.length, itr = fs.length;
-		if (ftotal > 0)  $(".status").css("visibility", "visible").html("Loading files...");
-		for (var i = 0; i < fs.length; i++) { (function(f){
-			var reader = new FileReader();
-			reader.onload = function() {
-				itr--;
-				Parse(this.result, f.name);
-				if (itr == 0) {
-					get_max();
-					if (n_file > 1)
-						get_common();
-
-					if (n_file > 2){
-						contruct_tree();
-						$(".status").html("Contructing tree...");
-					}
-					SamplesLoaded();
-					Route(); 
-				}
-			};
-			reader.readAsText(f);
-		})(fs[i]); }
-	});
-
-});
