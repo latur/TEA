@@ -86,7 +86,7 @@ function split_group(){
 						})
 				});
 		});
-
+alert();
 	for (var i = 0; i < n_file; i++){
 		$("#group_I").append(function(){
 			return $("<option/>")
@@ -94,7 +94,7 @@ function split_group(){
 				.html(file_list[i]);
 		});
 	}	
-
+alert(n_file);
 	$(document).keyup(function(e) {
    		if (e.keyCode == 27) { 
 			$(".screen_blur").remove();

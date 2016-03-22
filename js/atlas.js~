@@ -21,7 +21,6 @@ var expData = {}, Group = {};
 // Page container
 var doc = $('#content')[0];
 var nav = $('#samples-bar')[0];
-var one = $('#onechrs-bar')[0];
 
 // Cache for imagedata
 var cache = {'hm' : {}};
@@ -98,7 +97,6 @@ function Route(loc){
 function SamplesLoaded(){
 	// Clear cache
 	cache = {'hm' : {}};
-	nav.innerHTML = Template('samples-bar');
 
 
 	// View mode
@@ -106,8 +104,8 @@ function SamplesLoaded(){
 	$('.chr-view-mode .asline').click(function(){ Route('#line'); });
 
 	// Comparision window
-	$('.samples-nav-pane .comparision .txt').html(n_group == 0 ? 'Group comparision' : 'qwe');
-	$('.samples-nav-pane .comparision').click(function(){
+	$('.comparision .txt').html(n_group == 0 ? 'Group comparision' : 'qwe');
+	$('.comparision').click(function(){
 		if (n_group == 0){
 			split_group();
 		} else {
@@ -115,7 +113,7 @@ function SamplesLoaded(){
 		}
 	});
 
-	$('.samples-nav-pane .showtree').click(function(){
+	$('.showtree').click(function(){
 		Modal({ class : 'tree-dialog', data : '<div class="tree"></div>', title : 'Phylogenetic tree'})
 		draw_tree();
 	});
@@ -137,9 +135,13 @@ function SamplesLoaded(){
 
 	// Disable some function when number of file is lower than needed
 	if (n_file < 2)
-		$('.samples-nav-pane .comparision').addClass("disabled");
+		$('.comparision').addClass("disabled");
+ 	else
+		$('.comparision').removeClass("disabled");
 	if (n_file <= 2)
-		$('.samples-nav-pane .showtree').addClass("disabled");
+		$('.showtree').addClass("disabled");
+	else
+		$('.showtree').removeClass("disabled");
 
 	return true;
 }
@@ -276,16 +278,18 @@ function _ShowHelper(){
 			var start = pt - offset < 0 ? 0 : pt - offset;
 			var stop  = pt + offset > chrs[name] ? chrs[name] : pt + offset;
 			e.children[0].innerHTML = name + ":" + start + "-" + stop;
+			$("#ruler_line").css({"left": event.pageX+ "px", "visibility": "visible" });
 		}).click(function(){
 			var loc = $(this).children('.helper').html();
 			Route(loc);
+		}).on("mouseout", function(){
+			$("#ruler_line").css({"visibility": "hidden"});
 		});
 	});
 }
 	
 // Showing chromosomes in two vertical list [Igor]
 function ShowAsList(){
-	$("#onechrs-bar").attr("style", "display: none;");
 	$('.chr-view-mode a').removeClass('disabled');
 	$('.chr-view-mode .aslist').addClass('disabled');
 	// Html template:
@@ -301,9 +305,10 @@ function ShowAsList(){
 
 // Showing chromosomes as one line [Thao]
 function ShowAsLine(){
-	$("#onechrs-bar").attr("style", "display: none;");
 	$('.chr-view-mode a').removeClass('disabled');
 	$('.chr-view-mode .asline').addClass('disabled');
+	$('.move-c').attr("style", "visibility:hidden");
+	$('.zoom-c').attr("style", "visibility:hidden");
 	// Html template:
 
 	$('.chr-line').html('');
@@ -319,7 +324,18 @@ function ShowAsLine(){
 	general_map();
 }
 
-function draw_element(name){
+// Selected region on chromosome
+function ShowChromosome(name, start, end){
+	var xhr;
+	$('.chr-view-mode a').addClass('disabled');
+	$('.chr-view-mode .asline').removeClass('disabled');
+	$('.move-c').attr("style", "visibility:visible");
+	$('.zoom-c').attr("style", "visibility:visible");
+
+	// Impossible states:
+	if (!chrs[name] || end < start + 50) return Route('#');
+
+	// Html elements:
 	var samples = '';
 	if (expData[name]) {
 		Object.keys(expData[name]).map(function(f, i){
@@ -338,30 +354,16 @@ function draw_element(name){
 		});
 	}
 
-	$('.spl a').click(function(){
-		var info = expData[name][$(this).data('f')][$(this).data('i')];
-		Modal({
-			title : '<b>'+info[3]+'</b>. Chromosome: <kbd>'+name+'</kbd>. Position: <kbd>'+info[0]+'</kbd>',
-			data  : '<pre>' + info[4].match(/.{1,60}/g).join('\n') + '</pre>'
-		});
-	});
-}
-
-// Selected region on chromosome
-function ShowChromosome(name, start, end){
-	var xhr;
-	$('.chr-view-mode a').addClass('disabled');
-	$('.chr-view-mode .asline').removeClass('disabled');
-
-	// Impossible states:
-	if (!chrs[name] || end < start + 50) return Route('#');
-
-	// Html elements:
-	draw_element(name);
-
-	$("#onechrs-bar").attr("style", "display: block; width: 1100px; margin: auto;");
 	$('.chr-line')[0].innerHTML = Template('chromosome', { name: name, samples: samples });
 	$('#content')[0].innerHTML = Template('zoom_table', { name: name, samples: samples });
+
+//	$('.spl a').click(function(){
+//		var info = expData[name][$(this).data('f')][$(this).data('i')];
+//		Modal({
+//			title : '<b>'+info[3]+'</b>. Chromosome: <kbd>'+name+'</kbd>. Position: <kbd>'+info[0]+'</kbd>',
+//			data  : '<pre>' + info[4].match(/.{1,60}/g).join('\n') + '</pre>'
+//		});
+//	});
 
 	// Events
 	var size = chrs[name];
@@ -419,7 +421,7 @@ function ShowChromosome(name, start, end){
 		var bp1 = parseInt(e[2]);
 		var bp2 = parseInt(e[3]);
 		location.hash = '#' + name + ':' + bp1 + '-' + bp2;
-		$('#position')[0].innerHTML = (name + ':' + bp1 + '-' + bp2);
+//		$('#position')[0].innerHTML = (name + ':' + bp1 + '-' + bp2);
 
 		// Samples
 		var KPX = ww * ww / (e[1] - e[0]) / size;
@@ -628,7 +630,8 @@ function ShowChromosome(name, start, end){
 }
 
 $(function(){
-	Route(); 
+	Route();
+
 	// Reset all
 	$('.clear').click(function(){
 		location.href = ''
@@ -680,6 +683,7 @@ $(function(){
 						contruct_tree();
 						$(".status").html("Contructing tree...");
 					}
+					visibleType = visibleMode = 0;
 					SamplesLoaded();
 					Route(); 
 				}

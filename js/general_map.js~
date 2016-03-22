@@ -31,8 +31,9 @@ function general_map(){
 	$("#content").html('');
 	map = d3.select("#content").append("svg")
 		.attr("width", 1100)
-		.attr("height", file_list.length*80)
+		.attr("height", file_list.length*80 + 10)
 		.attr("class", "general_map");
+
 
 	var step = 1100/1558;
 	for (var i = 0; i < n_file; i++){
@@ -65,6 +66,13 @@ function general_map(){
 			.text(name);
 
 		y += 60;
+		map.append("line")
+			.attr("x1", 0)
+			.attr("y1", y)
+			.attr("x2", 1100)
+			.attr("y2", y)
+			.attr("style", "stroke:" + color[visibleType] + "; stroke-width: 0.5px;");
+
 		for (var k in density_len){
 			if (k.localeCompare("map") == 0) continue;
 
@@ -90,17 +98,10 @@ function general_map(){
 					} 
 				}
 
-				if (value == 0){
-					map.append("line")
-						.attr("x1", x)
-						.attr("y1", y)
-						.attr("x2", x+step)
-						.attr("y2", y)
-						.attr("style", "stroke:" + color[visibleType]);
-				} else {
+				if (value > 0){
 					map.append("polyline")
 					 	.attr("points", (x-step) + "," + y + " " + (x+step/2) + "," + (y-60*value/d_max) + " " + (x+2*step) + "," + y)
-						.attr("style", "stroke:" + color[visibleType] + "; cursor: pointer")
+						.attr("style", "stroke:" + color[visibleType] + "; cursor: pointer; stroke-width: 0.5px; opacity: 0.8")
 						.attr("id", value + " sites")
 						.on("mouseover", function(){
 							var id = this.id;
@@ -122,6 +123,17 @@ function general_map(){
 
 	}
 
+	$("#content").append(function(){
+		return $("<div/>")
+			.attr("id", "ruler_line")
+			.attr("style", "position: absolute; width: 2px; height:" + n_file*80 + "px; border: 1px solid; top: 0; left: 10px; visibility: hidden");
+	});
+	$(".general_map").on("mouseover", function(){
+			$("#ruler_line").css({"left": event.pageX+ "px", "visibility": "visible" });
+		})
+		.on("mouseout", function(){
+			$("#ruler_line").css({"visibility": "hidden"});
+		})
 	$(".status").css("visibility", "hidden");
 }
 
@@ -131,7 +143,6 @@ function general_map(){
 
 function get_max(){
 	d_max = 0;
-
 	for (var chr in density_map){
 		if (chr.localeCompare("map") == 0) continue;
 
@@ -165,7 +176,7 @@ function remove_file(id){
 		if (chr.localeCompare("map") == 0) continue;
 		if (expData[chr][id]){
 			delete expData[chr][id];
-			delete chr[id];
+			delete density_map[chr][id];
 		}
 	}
 
@@ -184,8 +195,7 @@ function remove_file(id){
 	if (n_file > 2)
 		contruct_tree();
 
-	SamplesLoaded();
-	general_map();
+	Route();
 }
 
 /* Calculate common differenet & tree */

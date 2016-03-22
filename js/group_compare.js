@@ -93,7 +93,7 @@ function split_group(){
 				.attr("value", file_list[i])
 				.html(file_list[i]);
 		});
-	}	
+	}
 
 	$(document).keyup(function(e) {
    		if (e.keyCode == 27) { 
