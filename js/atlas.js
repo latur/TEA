@@ -357,7 +357,7 @@ function ShowChromosome(name, start, end){
 	var sl = $('#range')[0], zoom = $('#ch-zoom-hm')[0], place = $('#chr-one')[0], box = $('#sel-box')[0];
 	var ww = sl.offsetWidth;
 	var current = [0,1], ora = [0,1], detail = 0;
-	
+
 	svg.setAttribute('viewBox', '0 0 '+ww+' 30');
 	svg.setAttribute('width', ww);
 	
@@ -390,6 +390,7 @@ function ShowChromosome(name, start, end){
 		zoom.style.width = ww * 100 / (e[1] - e[0]) + '%';
 		zoom.style.marginLeft = - e[0] * 100 / (e[1] - e[0]) + '%';
 		// Select-range-box
+		
 		box.style.left = e[0] + 'px';
 		box.style.width = e[1] - e[0] + 'px';
 		
@@ -399,15 +400,16 @@ function ShowChromosome(name, start, end){
 	};
 
 	var Resized = function(xx){
-		console.log('Resized..');
-		console.log(xx);
+		console.log('Resized.. ' + xx.join('-'));
 		if (xx[0] > xx[1]) xx = [xx[1], xx[0]];
 		var e = RangeParse(xx[0], xx[1]);
 		if (XHR) XHR.abort(), XHR = false;
 		ResizePre(xx);
+		
 		// black blur "blinds"
 		$('#cs-lh-F')[0].style.width = (e[0] * 100 / ww) + '%';
 		$('#cs-rh-F')[0].style.left  = (e[1] * 100 / ww) + '%';
+
 		// Hash
 		var bp1 = parseInt(e[2]);
 		var bp2 = parseInt(e[3]);
@@ -608,7 +610,11 @@ function ShowChromosome(name, start, end){
 	};
 	
 	// Buttons:
-	$('.move-c a.cnt').click(function(){
+	$('.move-c a.cnt').hover(function(){
+		zoom.classList.add('animate');
+	},function(){
+		zoom.classList.remove('animate');
+	}).click(function(){
 		var inc = parseFloat($(this).data('e'));
 		var p = inc * (ora[1] - ora[0]);
 		var x1 = ora[0] + p, x2 = ora[1] + p;
@@ -616,7 +622,11 @@ function ShowChromosome(name, start, end){
 		if (x2 > size) { x2 = size; x1 = size - ora[1] + ora[0]; }
 		Resized([x1, x2]);
 	});
-	$('.zoom-c a.cnt').click(function(){
+	$('.zoom-c a.cnt').hover(function(){
+		zoom.classList.add('animate');
+	},function(){
+		zoom.classList.remove('animate');
+	}).click(function(){
 		var inc = parseFloat($(this).data('e'));
 		var cen = (ora[1] + ora[0])/2;
 		var upg = inc * (ora[1] - ora[0]) / 2;
