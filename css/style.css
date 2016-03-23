@@ -315,6 +315,31 @@ hr {
 	}
 }
 
+.zoom-c .dropdown-menu { 
+	min-width: 80px;
+	float: right;
+	left: auto;
+	right: 0;
+}
+.chr-btn {
+	text-transform: capitalize;
+}
+.chr-btn .dropdown-menu {
+	width: 310px;
+	padding: 4px;
+}
+.chr-btn .dropdown-menu a {
+	float: left;
+    text-decoration: none;
+    width: 50px;
+    padding: 4px 0 4px 5px;
+    font-size: 13px;
+}
+.chr-btn .dropdown-menu a:hover {
+	border-radius: 3px;
+	background: #eee;
+}
+
 /* --------------------------- */
 /* Show Alu, Line, Others && Compare */
 .hm-box .common, .hm-box.differ,

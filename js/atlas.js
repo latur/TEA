@@ -341,7 +341,14 @@ function ShowChromosome(name, start, end){
 			samples += '<div class="spl-file">' + samplefile + '</div>';
 		});
 	}
-	doc.innerHTML = Template('chromosome', { name: name, samples: samples });
+
+	var clist = Object.keys(chrs).map(function(chr){
+		var part = Math.round(chrs[chr]/50);
+		var center = [part * 25, part * 26].join('-');
+		return '<a href="#'+chr+':'+center+'">' + chr + '</a>';
+	}).join('');
+
+	doc.innerHTML = Template('chromosome', { name: name, samples: samples, clist : clist });
 
 	$('.spl a').click(function(){
 		var info = expData[name][$(this).data('f')][$(this).data('i')];
@@ -636,6 +643,11 @@ function ShowChromosome(name, start, end){
 		if (x2 > size) x2 = size;
 		Resized([x1, x2]);
 	});
+	$('.chr-btn .dropdown-menu a').click(function(){
+		Route($(this).attr('href'));
+	});
+	
+	
 	
 	// [px1, px2] = [ww * start / size, ww * end / size]
 	// px1 * size / ww = start;

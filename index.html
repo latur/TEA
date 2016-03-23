@@ -35,7 +35,7 @@
 			<hr />
 			<div class="btn-group btn-group-sm btn-group v-mode">
 				<a class="btn btn-default general"><span class="glyphicon glyphicon-home"></span> General</a>
-				<a class="btn btn-default detail"><span class="glyphicon glyphicon-search"></span> Detail</a>
+				<a class="btn btn-default detail"><span class="glyphicon glyphicon-equalizer"></span> Detail</a>
 			</div>
 			<a class="btn btn-default btn-sm clear"><span class="glyphicon glyphicon-refresh"></span> Clear all</a>
 			<div class="btn-group btn-group-sm samples-nav-pane">
@@ -115,19 +115,19 @@
 <script data-name="hmd" class="template" type="text/x-handlebars-template">
 	<div class="hm-box" style="height: {height}px">
 		<div class="common">
-		<div class="hm t3" style="background-image: url({type-3-common}); height: {height}px"></div>
-		<div class="hm t2" style="background-image: url({type-2-common}); height: {height}px"></div>
-		<div class="hm t1" style="background-image: url({type-1-common}); height: {height}px"></div>
+			<div class="hm t3" style="background-image: url({type-3-common}); height: {height}px"></div>
+			<div class="hm t2" style="background-image: url({type-2-common}); height: {height}px"></div>
+			<div class="hm t1" style="background-image: url({type-1-common}); height: {height}px"></div>
 		</div>
 		<div class="differ">
-		<div class="hm t3" style="background-image: url({type-3-differ}); height: {height}px"></div>
-		<div class="hm t2" style="background-image: url({type-2-differ}); height: {height}px"></div>
-		<div class="hm t1" style="background-image: url({type-1-differ}); height: {height}px"></div>
+			<div class="hm t3" style="background-image: url({type-3-differ}); height: {height}px"></div>
+			<div class="hm t2" style="background-image: url({type-2-differ}); height: {height}px"></div>
+			<div class="hm t1" style="background-image: url({type-1-differ}); height: {height}px"></div>
 		</div>
 		<div class="all">
-		<div class="hm t3" style="background-image: url({type-3-all}); height: {height}px"></div>
-		<div class="hm t2" style="background-image: url({type-2-all}); height: {height}px"></div>
-		<div class="hm t1" style="background-image: url({type-1-all}); height: {height}px"></div>
+			<div class="hm t3" style="background-image: url({type-3-all}); height: {height}px"></div>
+			<div class="hm t2" style="background-image: url({type-2-all}); height: {height}px"></div>
+			<div class="hm t1" style="background-image: url({type-1-all}); height: {height}px"></div>
 		</div>
 		{samples}
 	</div>
@@ -136,6 +136,13 @@
 <!-- [Pages] One chromosome -->
 <script data-name="chromosome" class="template" type="text/x-handlebars-template">
 	<div class="fixed-nav">
+		<div class="btn-group btn-group-sm chr-btn">
+			<a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				{name} <span class="caret"></span>
+			</a>
+			<div class="dropdown-menu">{clist}</div>
+		</div>
+
 		<div class="btn-group btn-group-sm move-c">
 			<a class="cnt btn btn-default" data-e="-0.7">
 				<span class="glyphicon glyphicon-chevron-left"></span>
@@ -154,24 +161,35 @@
 			</a>
 		</div>
 		<div class="btn-group btn-group-sm zoom-c">
-			<a class="btn btn-default disabled">
-				<span class="glyphicon glyphicon-plus"></span>
-				Zoom in:
+			<a class="btn btn-default cnt" data-e="0.666666666"><span class="glyphicon glyphicon-plus"></span> Zoom In</a>
+			<a class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<span class="caret"></span>
+				<span class="sr-only">Toggle Dropdown</span>
 			</a>
-			<a class="cnt btn btn-default" data-e="0.625">x1.6</a>
-			<a class="cnt btn btn-default" data-e="0.5">x2</a>
-			<a class="cnt btn btn-default" data-e="0.1">x10</a>
+			<ul class="dropdown-menu">
+				<li><a class="cnt" data-e="0.833333333" href="#">1.2x</a></li>
+				<li><a class="cnt" data-e="0.666666666" href="#">1.5x</a></li>
+				<li><a class="cnt" data-e="0.500000000" href="#">2.0x</a></li>
+				<li><a class="cnt" data-e="0.333333333" href="#">3.0x</a></li>
+				<li><a class="cnt" data-e="0.100000000" href="#">10x</a></li>
+			</ul>
 		</div>
 		<div class="btn-group btn-group-sm zoom-c">
-			<a class="btn btn-default disabled">
-				<span class="glyphicon glyphicon-minus"></span>
-				Zoom out:
+			<a class="btn btn-default cnt" data-e="1.6"><span class="glyphicon glyphicon-minus"></span> Zoom Out</a>
+			<a class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<span class="caret"></span>
+				<span class="sr-only">Toggle Dropdown</span>
 			</a>
-			<a class="cnt btn btn-default" data-e="1.6">x1.6</a>
-			<a class="cnt btn btn-default" data-e="2">x2</a>
-			<a class="cnt btn btn-default" data-e="10">x10</a>
-			<a class="cnt btn btn-default" data-e="50">x50</a>
+			<ul class="dropdown-menu">
+				<li><a class="cnt" data-e="1.2" href="#">1.2x</a></li>
+				<li><a class="cnt" data-e="1.5" href="#">1.5x</a></li>
+				<li><a class="cnt" data-e="2.0" href="#">2.0x</a></li>
+				<li><a class="cnt" data-e="3.2" href="#">3.0x</a></li>
+				<li><a class="cnt" data-e="10" href="#">10x </a></li>
+				<li><a class="cnt" data-e="30" href="#">30x </a></li>
+			</ul>
 		</div>
+
 		<div id="chr-one" class="chr-one cs nsel">
 			<div id="sel-box"></div>
 			<div class="chr-box {name}-full" data-name="{name}">
