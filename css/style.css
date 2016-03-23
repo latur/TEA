@@ -272,7 +272,7 @@ hr {
 	padding: 2px 3px;
 }
 .chr-line-names .fn:hover span {
-	opacity: 0.4
+	opacity: 0.2
 }
 
 /* -------------------------------------------- */
@@ -315,26 +315,47 @@ hr {
 	}
 }
 
-/* Show Alu,Line,Others */
+/* --------------------------- */
+/* Show Alu, Line, Others && Compare */
+.hm-box .common, .hm-box.differ,
+.compare-differ .hm-box .all,
+.compare-common .hm-box .all {
+	display: none;
+}
+
+.compare-differ .hm-box .differ,
+.compare-common .hm-box .common {
+	display: block;
+}
+
+.visible-type-1 .t1,
+.visible-type-2 .t2,
+.visible-type-3 .t3 {
+	display: block;
+}
+
 .visible .glyphicon {
 	color: #ddd;
 }
+
+body:not(.compare-common):not(.compare-differ) .all .glyphicon,
+.compare-differ .differ .glyphicon,
+.compare-common .common .glyphicon,
 .visible-type-1 [data-id="1"] .glyphicon,
 .visible-type-2 [data-id="2"] .glyphicon,
 .visible-type-3 [data-id="3"] .glyphicon {
 	color: #000;
 }
+body:not(.compare-common):not(.compare-differ) .all.btn,
+.compare-differ .differ.btn,
+.compare-common .common.btn,
 .visible-type-1 [data-id="1"].btn,
 .visible-type-2 [data-id="2"].btn,
 .visible-type-3 [data-id="3"].btn {
 	box-shadow: inset 0 0 2px rgba(0,0,0,0.05);
 	background: #F1F1F1;
 }
-.visible-type-1 .t1,
-.visible-type-2 .t2,
-.visible-type-3 .t3 {
-	display: block !important;
-}
+
 
 /* --------------------------- */
 /* Chromosome */
@@ -440,7 +461,6 @@ hr {
 #genes {
 	min-height: 21px;
 	position: relative;
-	
 }
 #genes .bx {
 	position: absolute;
@@ -475,6 +495,13 @@ hr {
 	background: #aaa;
 	height: 7px;
 }
+
+#bindlevel {
+	position: relative;
+	height: 50px; 
+	background: #eee
+}
+
 #modal .modal-dialog {
 	width: 500px;
 }

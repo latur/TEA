@@ -56,9 +56,9 @@
 					<a class="btn btn-default selected" data-id="3"><span class="glyphicon glyphicon-ok"></span> Others</a>
 				</div>
 				<div class="btn-group btn-group-sm visible mode">
-					<a data-map="1" class="btn btn-default"><span class="glyphicon glyphicon-record"></span> Common</a>
-					<a data-map="2" class="btn btn-default"><span class="glyphicon glyphicon-record"></span> Different</a>
-					<a data-map="0" class="btn btn-default selected"><span class="glyphicon glyphicon-record"></span> All</a>
+					<a class="btn btn-default common"><span class="glyphicon glyphicon-record"></span> Common</a>
+					<a class="btn btn-default differ"><span class="glyphicon glyphicon-record"></span> Different</a>
+					<a class="btn btn-default all"><span class="glyphicon glyphicon-record"></span> All</a>
 				</div>
 				</span>
 			</div>
@@ -114,9 +114,21 @@
 <!-- [Pages] Chromosome heatmap of samples -->
 <script data-name="hmd" class="template" type="text/x-handlebars-template">
 	<div class="hm-box" style="height: {height}px">
-		<div class="hm t3" style="background-image: url({type-3}); height: {height}px"></div>
-		<div class="hm t2" style="background-image: url({type-2}); height: {height}px"></div>
-		<div class="hm t1" style="background-image: url({type-1}); height: {height}px"></div>
+		<div class="common">
+		<div class="hm t3" style="background-image: url({type-3-common}); height: {height}px"></div>
+		<div class="hm t2" style="background-image: url({type-2-common}); height: {height}px"></div>
+		<div class="hm t1" style="background-image: url({type-1-common}); height: {height}px"></div>
+		</div>
+		<div class="differ">
+		<div class="hm t3" style="background-image: url({type-3-differ}); height: {height}px"></div>
+		<div class="hm t2" style="background-image: url({type-2-differ}); height: {height}px"></div>
+		<div class="hm t1" style="background-image: url({type-1-differ}); height: {height}px"></div>
+		</div>
+		<div class="all">
+		<div class="hm t3" style="background-image: url({type-3-all}); height: {height}px"></div>
+		<div class="hm t2" style="background-image: url({type-2-all}); height: {height}px"></div>
+		<div class="hm t1" style="background-image: url({type-1-all}); height: {height}px"></div>
+		</div>
 		{samples}
 	</div>
 </script>
@@ -180,6 +192,7 @@
 					<div class="hm" id="ghmap"></div>
 					<div id="genes"></div>
 				</div>
+				<div id="bindlevel"></div>
 				<div class="samples">{samples}</div>
 			</div>
 		</div>
@@ -201,6 +214,11 @@
 <script data-name="zoom-XS" class="template" type="text/x-handlebars-template">
 	<div class="bx" style="left:{left}%; top:{top}px"><i style="width:{width}px;">{exons}</i><a>{title}</a></div>
 </script>
+<script data-name="bindlevel" class="template" type="text/x-handlebars-template">
+	<div class="BL" style="left:{left}px; width:{width}px"></div>
+</script>
+
+
 
 <script data-name="message" class="template" type="text/x-handlebars-template">
 	<div class="background">

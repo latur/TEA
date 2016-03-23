@@ -73,6 +73,18 @@ $(function(){
 		var c = 'visible-type-' + $(this).data('id');
 		$('body')[$('body').hasClass(c) ? 'removeClass' : 'addClass'](c);
 	});
+	// Compare
+	$('.visible.mode .common').click(function(){
+		$('body').removeClass('compare-differ');
+		$('body').addClass('compare-common');
+	});
+	$('.visible.mode .differ').click(function(){
+		$('body').removeClass('compare-common');
+		$('body').addClass('compare-differ');
+	});
+	$('.visible.mode .all').click(function(){
+		$('body').removeClass('compare-differ compare-common');
+	});
 
 	// Reset all
 	$('.clear').click(function(){
@@ -81,6 +93,7 @@ $(function(){
 
 	// Panel-fixed:
 	$(window).scroll(function(e) {
+		if ($('.fixed-nav').length == 0) return;
 		if ($(this).scrollTop() > $('#header').height() + 10) {
 			$('body').addClass('fix');
 			doc.style.marginTop = $('.fixed-nav')[0].offsetHeight + 'px';
@@ -104,12 +117,6 @@ $(function(){
 	$('.samples-nav-pane .showtree').click(function(){
 		Modal({ class : 'tree-dialog', data : '<div class="tree"></div>', title : 'Phylogenetic tree'})
 		draw_tree();
-	});
-	$('.visible.mode a').click(function(){
-		$('.visible.mode a').removeClass('selected')
-		$(this).addClass('selected');
-		visibleMode = $(this).data('map');
-		general_map(visibleMode);
 	});
 	// Disable some function when number of file is lower than needed
 	// if (n_file < 2) $('.samples-nav-pane .comparision').addClass("disabled");

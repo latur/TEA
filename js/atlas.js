@@ -1,5 +1,6 @@
 "use strict";
 
+const server  = 'http://dev.mazepa.us/tea/app/';
 const chrsSum = 3088269832;
 const chrs = {
 	'chr1': 248956422,  'chr2':  242193529, 'chr3': 198295559, 
@@ -22,10 +23,9 @@ var doc = $('#content')[0];
 
 // Cache for imagedata
 var cache = {};
+// Cache for position
+var cachePoints = {};
 var XHR = false;
-
-// Samples filter: checkboxes
-var visibleMode = 0;
 
 /* -------------------------------------------- */
 
@@ -99,7 +99,7 @@ function Download(samples, onload, onstop){
 	var onstop = onstop || function(){};
 	if (samples.length == 0) return onstop();
 	var name = samples.pop();
-	XHR = $.post('http://dev.mazepa.us/tea/app/sample/' + name, {}, function(csv){
+	XHR = $.post(server + 'sample/' + name, {}, function(csv){
 		Parse(csv, name);
 		if (onload) onload(name);
 		return Download(samples, onload, onstop);
@@ -107,7 +107,7 @@ function Download(samples, onload, onstop){
 }
 
 // Heatmap pictures
-function _SamplesHMImage(chr, w, h, type, height){
+function _SamplesHMImage(chr, w, h, _filter, height){
 	var colors = [[220,0,0],[0,220,0],[0,0,220]];
 	var canvas = document.createElement('canvas');
 	canvas.width  = w, canvas.height = h;
@@ -125,17 +125,18 @@ function _SamplesHMImage(chr, w, h, type, height){
 	};
 	var y = 0;
 	var K = w / chrs[chr];
-	var F = Array.apply(null, Array(w)).map(Number.prototype.valueOf, 0); // [0,0,0..]
 	expNames.map(function(f){
-		if (!expData[chr][f]) return ;
-		expData[chr][f].map(function(sm){
-			if (type != sm[2]) return;
-			var col = colors[sm[2]-1],
-				xx = Math.floor(K * sm[0]), 
-				yy = y + height/2;
-			if (F[xx] < height/2) F[xx]++;
-			Line(xx, yy - F[xx], yy + F[xx], col);
-		});
+		if (expData[chr][f]) {
+			var F = Array.apply(null, Array(w)).map(Number.prototype.valueOf, 1); // [0,0,0..]
+			expData[chr][f].map(function(sm){
+				if (!_filter(sm, sm[0] + chr)) return;
+				var col = colors[sm[2]-1],
+					xx = Math.floor(K * sm[0]), 
+					yy = y + height/2;
+				if (F[xx] < height/2) F[xx]++;
+				Line(xx, yy - F[xx], yy + F[xx], col);
+			});
+		}
 		y += height;
 	});
 	ctx.putImageData(cdt, 0, 0);
@@ -148,16 +149,22 @@ function SamplesHM(chr, size, samples){
 	var height = expNames.length * size;
 	if (!cache[size][chr]) cache[size][chr] = {
 		'height'  : height,
-		'type-1'  : _SamplesHMImage(chr, width, height, 1, size),
-		'type-2'  : _SamplesHMImage(chr, width, height, 2, size),
-		'type-3'  : _SamplesHMImage(chr, width, height, 3, size),
+		'type-1-common' : _SamplesHMImage(chr, width, height, function(e,id){ return e[2] == 1 && cachePoints[id] > 1; }, size),
+		'type-2-common' : _SamplesHMImage(chr, width, height, function(e,id){ return e[2] == 2 && cachePoints[id] > 1; }, size),
+		'type-3-common' : _SamplesHMImage(chr, width, height, function(e,id){ return e[2] == 3 && cachePoints[id] > 1; }, size),
+		'type-1-differ' : _SamplesHMImage(chr, width, height, function(e,id){ return e[2] == 1 && cachePoints[id] == 1; }, size),
+		'type-2-differ' : _SamplesHMImage(chr, width, height, function(e,id){ return e[2] == 2 && cachePoints[id] == 1; }, size),
+		'type-3-differ' : _SamplesHMImage(chr, width, height, function(e,id){ return e[2] == 3 && cachePoints[id] == 1; }, size),
+		'type-1-all'    : _SamplesHMImage(chr, width, height, function(e,id){ return e[2] == 1; }, size),
+		'type-2-all'    : _SamplesHMImage(chr, width, height, function(e,id){ return e[2] == 2; }, size),
+		'type-3-all'    : _SamplesHMImage(chr, width, height, function(e,id){ return e[2] == 3; }, size),
 		'samples' : samples
 	};
 	$('.' + chr).append( Template('hmd', cache[size][chr]) );
 }
 
 // Parse samples files. Separators: Col: "\t", Row: "\n"
-function ParseOLD(content, filename){
+function Parse(content, filename){
 	expNames.push(filename);
 	content.split('\n').map(function(line){
 		var c = line.split('\t');
@@ -165,9 +172,12 @@ function ParseOLD(content, filename){
 		if (!expData[c[0]]) expData[c[0]] = {};
 		if (!expData[c[0]][filename]) expData[c[0]][filename] = [];
 		expData[c[0]][filename].push(c.slice(1));
+		var ID = c[1] + c[0];
+		if (!cachePoints[ID]) cachePoints[ID] = 0;
+		cachePoints[ID]++;
 	});
 }
-function Parse(content, filename){
+function ParseNEW(content, filename){
 	expNames.push(filename);
 	file_list.push(filename);
 	++n_file;
@@ -223,7 +233,8 @@ function SamplesLoaded(){
 	if (expNames.length < 2) $('.samples-nav-pane .comparision').addClass("disabled");
 	if (expNames.length < 3) $('.samples-nav-pane .showtree').addClass("disabled");
 
-	cache = {}; // Clear cache
+	cache = {}; // Clear cache	
+
 	if (location.hash == '') location.hash = '#general';
 	MessageClose();
 	Route();
@@ -299,7 +310,7 @@ function ShowGeneral(){
 function SVGline(p1, p2){
 	if (p1 < 0) p1 = 0;
 	var v = Math.abs((p1 - p2) * 30 / 1000);
-	var l = 15 + 8 * Math.log(v);
+	var l = 15 + 8 * Math.log(v+0.001);
 	var shape = document.createElementNS("http://www.w3.org/2000/svg", "path");
 	shape.setAttributeNS(null, "d", "M"+p1+" 0 C "+p1+" "+(l)+", "+p2+" "+(30-l)+", "+p2+" 30");
 	shape.setAttributeNS(null, "fill", "none");
@@ -442,16 +453,20 @@ function ShowChromosome(name, start, end){
 		var req = [mode, name, from > 0 ? from : 0, bp2 + range].join('/');
 		var genes = $('#genes')[0];
 
-		XHR = $.post('http://dev.mazepa.us/tea/app/' + req, {}, function(csv){
+		XHR = $.post(server + req, {}, function(inf){
+			var inf = inf.split('\n')
+			//var t = inf[1].split(':');
+			//var bindlevel = {init : parseInt(t[0]), step: parseInt(t[1]), arr : t[2].split(',')};
+
 			genes.style.height = '23px';
-			var data = csv.split('\n').map(function(row){
-				var r = row.split('\t');
+			var data = inf[0].split(';').map(function(row){
+				var r = row.split(':');
 				r[0] = parseInt(r[0], 32);
 				if (r[1]) r[1] = parseInt(r[1], 32);
 				return r;
 			});
 			// L - inits
-			if (detail == 1) {
+			if (mode == 'L') {
 				genes.innerHTML = data.map(function(t){
 					return Template('zoom-L', { left : t[0] * 100 / size });
 				}).join('');
@@ -459,7 +474,7 @@ function ShowChromosome(name, start, end){
 			}
 			// M - intrvals
 			var lines = [0], ins, val;
-			if (detail == 2) {
+			if (mode == 'M') {
 				genes.innerHTML = data.map(function(t){
 					var w = t[1] * KPX;
 					ins = Place(lines, t[0] * KPX);
@@ -479,8 +494,8 @@ function ShowChromosome(name, start, end){
 				}).join('');
 			}
 			// S - intrvals + names
-			if (detail == 3) {
-				$('#genes')[0].innerHTML = data.map(function(t){
+			if (mode == 'S') {
+				genes.innerHTML = data.map(function(t){
 					var w = t[1] * KPX + 2;
 					var title = (t[4] == '+' ? '&gt;' : '&lt;') + t[2];
 					if (t[3]) title += ', ' + t[3];
@@ -502,8 +517,20 @@ function ShowChromosome(name, start, end){
 				}).join('');
 			}
 			// XS - intrvals + names + exons
-			if (detail == 4) {
-				$('#genes')[0].innerHTML = data.map(function(t){
+			if (mode == 'XS') {
+				// var level = bindlevel.arr.map(function(t){
+				// 	var l = parseInt(t, 36)/100;
+				// 	l = Math.round(Math.log(l));
+				// });
+				// var X1 = bindlevel.init * KPX;
+				// var WW = bindlevel.arr.length * bindlevel.step * KPX
+				// $('#bindlevel')[0].innerHTML = Template('bindlevel', {left : X1, width : WW });
+				
+				// <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+				// 	<polyline points="10,2  60,2  35,52" style="stroke:#006600; stroke-width: 2; fill: #33cc33;"/>
+				// </svg>
+				
+				genes.innerHTML = data.map(function(t){
 					var w = t[1] * KPX + 2;
 					var title = (t[4] == '+' ? '&gt; ' : '&lt; ') + t[2];
 					if (t[3]) title += ', ' + t[3];
@@ -524,8 +551,6 @@ function ShowChromosome(name, start, end){
 						exons += '<div class="exon bx" style="left:' + exleft + 'px; width:'+exwidth+'px"></div>';
 					}
 
-
-					console.log()
 					if (bp2 > t[0] && t[0] > bp1) genes.style.height = lines.length * 13 + 6 + 'px';
 					return Template('zoom-XS', {
 						left  : t[0] * 100 / size,
