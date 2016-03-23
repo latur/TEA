@@ -31,6 +31,10 @@ hr {
 	user-select: auto;
 	cursor: text;
 }
+.btn.sel {
+	cursor: text !important;
+}
+
 .blur {
 	-webkit-filter: blur(2px);
 	-moz-filter: blur(2px);
@@ -40,7 +44,7 @@ hr {
 }
 .pad {
 	margin: 0 20px 10px 20px;
-    position: relative;
+	position: relative;
 }
 
 /* -------------------------------------------- */
@@ -84,7 +88,7 @@ hr {
 	filter: alpha(opacity=0);
 	z-index: 99;
 	width: 100%;
-    height: 100%;
+	height: 100%;
 }
 
 /* -------------------------------------------- */
@@ -140,15 +144,11 @@ hr {
 /* Chromosomes-2-lists */
 .chr {
 	position: relative;
-	margin-left: 45px;
 	margin-bottom: 7px 
 }
 .chr-name {
 	text-transform: capitalize;
 	line-height: 20px;
-	position: absolute;
-	left: -45px;
-	width: 45px 
 }
 .chr-box { 
 	cursor: pointer;
@@ -188,13 +188,14 @@ hr {
 	float: left;
 }
 .chr-line .chr-name {
-    left: 0;
+	position: absolute;
+	left: 0;
 	top: -13px;
-    text-align: left;
-    width: auto;
-    line-height: 13px;
-    border-radius: 8px;
-    font-size: 11px;
+	text-align: left;
+	width: auto;
+	line-height: 13px;
+	border-radius: 8px;
+	font-size: 11px;
 }
 .chr-line .chr-box {
 }
@@ -247,10 +248,16 @@ hr {
 	position: absolute;
 	width: 100%;
 }
-.chr-line { }
+.chr-line {
+	margin: 30px 0;
+}
+.chr-list {
+	margin-top: 10px;
+	margin-bottom: 30px;
+}
 .chr-line-names {
 	position: absolute;
-	top: 35px;
+	top: 15px;
 	left: 0;
 	right: 2px;
 }
@@ -262,10 +269,10 @@ hr {
 	border: none;
 }
 .chr-line-names:hover .fn {
-    background: rgba(255, 255, 255, 0.4);
+	background: rgba(255, 255, 255, 0.4);
 }
 .chr-line-names .fn:hover {
-    background: none;
+	background: none;
 }
 .chr-line-names .fn span {
 	font-size: 12px;
@@ -291,8 +298,6 @@ hr {
 .check-block {
 	float: right
 }
-.newline-block {
-}
 
 @media (max-width:1140px) {
 	.finder {
@@ -303,11 +308,11 @@ hr {
 	}
 	.check-block {
 		float: none;
-    	margin-top: 8px;
+		margin-top: 8px;
 	}
 	.newline-block {
 		float: right
-    }
+	}
 }
 @media (max-width:830px) {
 	.finder {
@@ -330,15 +335,22 @@ hr {
 }
 .chr-btn .dropdown-menu a {
 	float: left;
-    text-decoration: none;
-    width: 50px;
-    padding: 4px 0 4px 5px;
-    font-size: 13px;
+	text-decoration: none;
+	width: 50px;
+	padding: 4px 0 4px 5px;
+	font-size: 13px;
 }
 .chr-btn .dropdown-menu a:hover {
 	border-radius: 3px;
 	background: #eee;
 }
+.glyphicon.ll {
+	margin-left: -9px;
+}
+.zoom-c {
+	margin-left: 5px;
+}
+
 
 /* --------------------------- */
 /* Show Alu, Line, Others && Compare */
@@ -395,7 +407,7 @@ body:not(.compare-common):not(.compare-differ) .all.btn,
 }
 .visuale {
 	height: 35px;
-    margin: -2px 0 -3px 0;
+	margin: -2px 0 -3px 0;
 }
 .ch-zoom {
 	overflow: hidden;
@@ -460,17 +472,33 @@ body:not(.compare-common):not(.compare-differ) .all.btn,
 	bottom: 0;
 	cursor: text
 }
-.lh, .rh { 
+.lh,
+.rh {
 	position: absolute;
-	top:0;
-	bottom:0;
-	background: rgba(0,0,0,0.45);
-	z-index: 35 
+	top: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.45);
+	z-index: 35
 }
-.lh { border-right: 1px solid #000; border-radius: 4px 0 0 4px; left: -1px; }
-.rh { border-left:  1px solid #000; border-radius: 0 3px 2px 0; right: 0px; }
-.xh { position: absolute; z-index: 10; top:0;bottom:0;left:0;right:0; cursor: pointer }
-
+.lh {
+	border-right: 1px solid #000;
+	border-radius: 4px 0 0 4px;
+	left: -1px;
+}
+.rh {
+	border-left: 1px solid #000;
+	border-radius: 0 3px 2px 0;
+	right: 0px;
+}
+.xh {
+	position: absolute;
+	z-index: 10;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	cursor: pointer
+}
 #cs-xh-F {
 	cursor: text
 }
@@ -480,7 +508,7 @@ body:not(.compare-common):not(.compare-differ) .all.btn,
 	bottom: -2px;
 	top: -2px;
 	display: none;
-	border: 1px solid rgba(0,115,20,0.5);
+	border: 1px solid rgba(0, 115, 20, 0.5);
 	background: rgba(0, 115, 20, 0.3)
 }
 #genes {
@@ -511,7 +539,7 @@ body:not(.compare-common):not(.compare-differ) .all.btn,
 	background: rgba(0, 10, 200, 0.5);
 }
 #genes .bx.gene {
-	background: rgba(0,0,0,0.3);
+	background: rgba(0, 0, 0, 0.3);
 	width: 2px;
 	height: 15px;
 	top: 3px;
@@ -520,13 +548,11 @@ body:not(.compare-common):not(.compare-differ) .all.btn,
 	background: #aaa;
 	height: 7px;
 }
-
 #bindlevel {
 	position: relative;
-	height: 50px; 
+	height: 50px;
 	background: #eee
 }
-
 #modal .modal-dialog {
 	width: 500px;
 }
@@ -537,7 +563,6 @@ body:not(.compare-common):not(.compare-differ) .all.btn,
 	border: none;
 	margin-bottom: 0;
 }
-
 .fixed-nav {
 	padding: 0 20px;
 }
@@ -547,46 +572,13 @@ body:not(.compare-common):not(.compare-differ) .all.btn,
 	width: 100%;
 	position: fixed;
 	z-index: 50;
-	box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 	background: #FFF;
 }
-
 /* --------------------------- */
 
 
 
-
-
-
-
-
-
-.selecter {
-	display: block;
-	width: 1050px;
-	margin: auto;
-	margin-top: 20px;
-}
-
-.selecter > * {
-	display: inline-block;
-}
-.chr-list, .chr-line {
-	padding-top: 20px;
-}
-.controls {
-	padding: 10px 0;
-}
-.controls .disabled {
-	color: #000;
-	font-weight: bold;
-}
-.controls .zoom-c .cnt {
-	font-family: monospace;
-}
-.glyphicon.ll {
-	margin-left: -9px;
-}
 
 
 

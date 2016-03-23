@@ -45,12 +45,13 @@ $(function(){
 	$('.load-samples input').change(function(e){
 		var fs = e.target.files;
 		var ftotal = fs.length, itr = fs.length;
-		if (ftotal > 0) MuteMessage('Loading files...');
+		if (ftotal > 0) Msg.Show('Loading files...');
 		for (var i = 0; i < fs.length; i++) { 
 			(function(f){
 				var reader = new FileReader();
 				reader.onload = function() {
 					Parse(this.result, f.name); itr--;
+					Msg.Update('Loading files: ' + i + '/' + ftotal);
 					if (itr == 0) SamplesLoaded();
 				};
 				reader.readAsText(f);
@@ -60,7 +61,7 @@ $(function(){
 
 	// Demo data
 	$('.load-demo').click(function(e){
-		MuteMessage('Loading demo files...');
+		Msg.Show('Loading demo files...');
 		Download(['2ns-ready','2s-ready','2sready','SRR12','SRR16'], function(){}, SamplesLoaded);
 	});
 
@@ -88,7 +89,8 @@ $(function(){
 
 	// Reset all
 	$('.clear').click(function(){
-		location.href = ''
+		location.href = '#new';
+		location.reload();
 	});
 
 	// Panel-fixed:
@@ -103,42 +105,10 @@ $(function(){
 		}
 	});
 
-	// Minimal screen width: 780px 
-	// ... //
-
-	$('.samples-nav-pane .comparision .txt').html(n_group == 0 ? 'Group comparision' : 'qwe');
-	$('.samples-nav-pane .comparision').click(function(){
-		if (n_group == 0){
-			split_group();
-		} else {
-			delete_group();
-		}
-	});
-	$('.samples-nav-pane .showtree').click(function(){
-		Modal({ class : 'tree-dialog', data : '<div class="tree"></div>', title : 'Phylogenetic tree'})
-		draw_tree();
-	});
-	// Disable some function when number of file is lower than needed
-	// if (n_file < 2) $('.samples-nav-pane .comparision').addClass("disabled");
-	// if (n_file <= 2) $('.samples-nav-pane .showtree').addClass("disabled");
-
-
 	$("#find").keyup(function(e) {
    		if (e.keyCode == 13) {
-			var loc = $(this).val();
-			if (loc) location.hash = loc + (expID ? ('/' + expID) : '');
-			// Show one chromosome
-			var chr = location.hash.match(/^\#?(chr[0-9XY]+)\:([0-9]+)\-([0-9]+)\/?([0-9a-z]+)?$/);
-			if (chr) {
-				return ShowChromosome(chr[1], parseInt(chr[2]), parseInt(chr[3]));
-			} else {
-				$(this).val('').attr("placeholder","Try again with search format. Ex: chr1:1000-5000000");
-			}
 		}
 	});
-
-	
-
 });
 
 
