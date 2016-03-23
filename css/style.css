@@ -160,7 +160,7 @@ hr {
 	background-size: 100% 100%;
 	box-shadow: 0 0 0 1px #888, 0 0 8px rgba(0,0,0,0.3);
 	box-sizing: border-box;
-	padding-top: 15px;
+	padding-top: 20px;
 }
 .chr-box .helper {
 	display: none;
@@ -180,6 +180,15 @@ hr {
 }
 .chr-box:hover .helper {
 	display: block;
+}
+#hovrline {
+	position: absolute;
+	top:20px;
+	bottom:0px;
+	z-index: 10;
+	width: 2px;
+	background: rgba(0,0,0,.5);
+	display: none;
 }
 
 /* Chromosomes-general */
@@ -257,7 +266,7 @@ hr {
 }
 .chr-line-names {
 	position: absolute;
-	top: 15px;
+	top: 20px;
 	left: 0;
 	right: 2px;
 }
@@ -287,7 +296,6 @@ hr {
 	position: relative;;
 	z-index: 20;
 }
-
 /* Panels */
 .finder {
 	min-width: 420px;

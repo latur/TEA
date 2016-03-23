@@ -1,7 +1,12 @@
 // Mouse actions: select a chromosome
 function _ShowHelper(){
 	var offset = 5000000;
-	$('.chr-box').each(function(){
+	var hovrline = $('#hovrline')[0];
+	$('.chr-box').hover(function(){
+		hovrline.style.display = 'block';
+	}, function(){
+		hovrline.style.display = 'none';
+	}).each(function(){
 		var e = $(this)[0], name = $(this).data('name');
 		var K = chrs[name]/$(this).width();
 		$(this).mousemove(function(h){
@@ -10,6 +15,7 @@ function _ShowHelper(){
 			var start = pt - offset < 0 ? 0 : pt - offset;
 			var stop  = pt + offset > chrs[name] ? chrs[name] : pt + offset;
 			e.children[0].innerHTML = name + ":" + start + "-" + stop;
+			hovrline.style.left = h.pageX - 20 + 'px';
 		}).click(function(){
 			var loc = $(this).children('.helper').html();
 			Route(loc);
