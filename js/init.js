@@ -96,7 +96,7 @@ $(function(){
 	// Panel-fixed:
 	$(window).scroll(function(e) {
 		if ($('.fixed-nav').length == 0) return;
-		if ($(this).scrollTop() > $('#header').height() + 10) {
+		if ($(this).scrollTop() > $('#header').height() + 20) {
 			$('body').addClass('fix');
 			doc.style.marginTop = $('.fixed-nav')[0].offsetHeight + 'px';
 		} else {
