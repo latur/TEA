@@ -54,6 +54,7 @@ function ShowChromosome(name, start, end){
 		Object.keys(expData[name]).map(function(f, i){
 			var filedata = expData[name][f].map(function(spl, ind){
 				return Template('zoom-trs', {
+					comp: expPoints[spl[0] + name] > 1 ? '-common' : '-differ',
 					id: i + '-' + ind, 
 					f: f,
 					ind: ind,

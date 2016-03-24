@@ -404,6 +404,17 @@ body:not(.compare-common):not(.compare-differ) .all.btn,
 	background: #F1F1F1;
 }
 
+.spl { opacity: 0.1 }
+.visible-type-1 .spl.t1,
+.visible-type-2 .spl.t2,
+.visible-type-3 .spl.t3 { opacity: 1 }
+
+.compare-differ .spl.comp-common { opacity: 0.1 }
+.compare-common .spl.comp-differ { opacity: 0.1 }
+
+.comp-common {}
+.comp-differ {}
+
 
 /* --------------------------- */
 /* Chromosome */
@@ -461,10 +472,10 @@ body:not(.compare-common):not(.compare-differ) .all.btn,
 	border-bottom: 1px dotted #337ab7;
 }
 .spl.t1 > i {
-	background: rgba(170, 0, 0, 0.4);
+	background: rgba(0, 170, 0, 0.4);
 }
 .spl.t2 > i {
-	background: rgba(0, 170, 0, 0.4);
+	background: rgba(170, 0, 0, 0.4);
 }
 .spl.t3 > i {
 	background: rgba(0, 0, 170, 0.4);
