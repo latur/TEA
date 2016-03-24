@@ -306,6 +306,9 @@ hr {
 .check-block {
 	float: right
 }
+#position {
+	width: 180px;
+}
 
 @media (max-width:1140px) {
 	.finder {
@@ -561,6 +564,47 @@ body:not(.compare-common):not(.compare-differ) .all.btn,
 	height: 50px;
 	background: #eee
 }
+#ruler {
+	position: relative;
+	height: 24px;
+	background: #FFF;
+	overflow: hidden
+}
+.rule {
+	height: 24px;
+	float: left;
+	border-top: 1px solid #999;
+	background: #FFF;
+}
+.rule.k0 {
+	background: #F8F8F8;
+}
+.rule .bp {
+	border-left: 1px solid #999;
+	box-sizing: border-box;
+	height: 14px;
+	padding: 0 3px;
+	line-height: 13px;
+	font-size: 11px;
+	font-family: monospace
+}
+.rule .bp span {
+	padding-right: 3px;
+}
+.rule .r-sub {
+	background: #222;
+	height: 10px;
+}
+.rule .r-sub > i, .rule .r-sub > s {
+	float: left;
+	display: block;
+	width: 10%;
+	height: 10px;
+}
+.rule .r-sub > i {
+	background: #666;
+}
+
 #modal .modal-dialog {
 	width: 500px;
 }
@@ -583,6 +627,15 @@ body:not(.compare-common):not(.compare-differ) .all.btn,
 	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 	background: #FFF;
 }
+
+.seg {
+	float: left;
+	height: 20px;
+	background: #eee;
+	border-right: 1px solid #000;
+}
+
+
 /* --------------------------- */
 
 
