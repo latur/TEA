@@ -86,21 +86,22 @@ function split_group(){
 						})
 				});
 		});
-alert();
+
 	for (var i = 0; i < n_file; i++){
 		$("#group_I").append(function(){
 			return $("<option/>")
 				.attr("value", file_list[i])
 				.html(file_list[i]);
 		});
-	}	
-alert(n_file);
+	}
+
 	$(document).keyup(function(e) {
    		if (e.keyCode == 27) { 
 			$(".screen_blur").remove();
 			$(".split_group").remove();
     		}
 	});	
+
 }
 
 function no_member_alert(name){
@@ -153,9 +154,9 @@ function progress_group(){
 		return;
 	}
 
-
-	Group = expData;
-	g_density = density_map;
+alert(density_map["chr1"]["2ns.csv"][0]);
+	Group = (JSON.parse(JSON.stringify(expData)));
+	g_density = (JSON.parse(JSON.stringify(density_map))); 
 	expData = {};
 	density_map = {};
 
@@ -175,7 +176,7 @@ function progress_group(){
 
 			if (first == g[i].length) continue;
 			if (!expData[chr]) expData[chr] = {};
-			expData[chr][name] = Group[chr][g[i][first].value];
+			expData[chr][name] = (JSON.parse(JSON.stringify(Group[chr][g[i][first].value])));
 
 			if (!density_map[chr]) density_map[chr]= {};
 			density_map[chr][name] = [];
@@ -184,7 +185,6 @@ function progress_group(){
 
 			for (var k = 0; k < expData[chr][name].length; k++){
 				expData[chr][name][k][4] = "Present in samples: " + g[i][first].value;
-				expData[chr][name][k][1] = 1;
 				var cell = Math.ceil(expData[chr][name][k][0]/2000000)-1;
 				if (cell >= density_len[chr]) cell = density_len[chr]-1;
 
@@ -196,35 +196,32 @@ function progress_group(){
 				if (!Group[chr][n]) continue;
 
 				for (pos = 0; pos < Group[chr][n].length; pos++){
+					var has = 0;
 					for (p = 0; p < expData[chr][name].length; p++){
-						if (Math.abs(Group[chr][n][pos][0] - expData[chr][name][p][0]) < 50){
+						if (Math.abs(Group[chr][n][pos][0] - expData[chr][name][p][0]) < 50 &&
+							Group[chr][n][pos][2] == expData[chr][name][p][2]){
 							expData[chr][name][p][4] += ", " + n;
-							var cell = Math.ceil(expData[chr][name][p][0]/2000000)-1;
-							if (cell >= density_len[chr]) cell = density_len[chr]-1;
-
-							if (Group[chr][n][pos][2] != expData[chr][name][p][2]){
-								expData[chr][name][p][3] += "/" + Group[chr][n][pos][2];
-							}	++density_map[chr][name][cell][expData[chr][name][p][2]-1]
-
-							break;
-						} else if (Group[chr][n][pos][0] -  expData[chr][name][p][0] >= 50){
-							expData[chr][name].splice(p+1, 0, Group[chr][n][pos]);
-							expData[chr][name][p+1][4] = "Present in samples: " + n;
-							expData[chr][name][p+1][1] = 1;
-
-							var cell = Math.ceil(expData[chr][name][p+1][0]/2000000)-1;
-							if (cell >= density_len[chr]) cell = density_len[chr]-1;
-							++density_map[chr][name][cell][expData[chr][name][p+1][2]-1];
+							has = 1;
 							break;
 						}
+					}
+					if (has == 0){
+						var itr = expData[chr][name].length;
+						expData[chr][name].splice(itr, 0, Group[chr][n][pos]);
+						expData[chr][name][itr][4] = "Present in samples: " + n;
+
+						var cell = Math.ceil(expData[chr][name][itr][0]/2000000)-1;
+						if (cell >= density_len[chr]) cell = density_len[chr]-1;
+						++density_map[chr][name][cell][expData[chr][name][itr][2]-1];
 					}
 				}
 			}
 		}
 	}
+alert(density_map["chr1"]["Group I"][0]);
 	n_group = n_file;
 	n_file = 2;
-	group_list = file_list;
+	group_list = file_list.slice();
 	g_max = d_max;
 	file_list = ["Group I", "Group II"];
 
@@ -240,13 +237,13 @@ function progress_group(){
 }
 
 function delete_group(){
-	expData = Group;
+	expData = (JSON.parse(JSON.stringify(Group)));
 	Group = {};
-	density_map = g_density;
+	density_map =  (JSON.parse(JSON.stringify(g_density)));
 	g_density = {};
 	n_file = n_group;
 	n_group = 0;
-	file_list = group_list;
+	file_list = group_list.slice();
 	group_list = [];
 	d_max = g_max;
 	g_max = 0;

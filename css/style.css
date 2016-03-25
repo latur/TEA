@@ -75,9 +75,8 @@ hr {
 }
 .selecter {
 	display: block;
-	width: 1050px;
+	width: 1100px;
 	margin: auto;
-	margin-top: 20px;
 }
 
 .selecter > * {
@@ -136,6 +135,7 @@ hr {
 
 .form-control {
 	float: right;
+	width: 300px;
 }
 
 .container, .chr-line {
@@ -379,14 +379,24 @@ hr {
 	height: 7px;
 }
 #modal .modal-dialog {
-	width: 500px;
+	width: 650px;
 }
 #modal .tree-dialog {
 	width: 650px;
 }
+
+#modal .contig_align {
+	width: 800px;
+}
 #modal pre {
 	border: none;
 	margin-bottom: 0;
+}
+
+.tab {
+	display: inline-block;
+	position: relative;
+	width: 50px;
 }
 
 
@@ -657,6 +667,8 @@ input[type=checkbox]:checked + label{
 }
 
 .status {
+	display: inline-block;
+	margin-left: 10px;
 	width: 150px;
 	height: 25px;
 	background: url('./loading.gif') left bottom no-repeat;
@@ -664,3 +676,104 @@ input[type=checkbox]:checked + label{
 	text-align: center;
 	visibility: hidden;
 }
+
+.TSD {
+	display: block;
+	position: relative;
+	margin: auto;
+}
+
+.mini_wrap {
+	display: block;
+	position: relative;
+	margin-right: 10px;
+	margin: auto;
+	margin-bottom:10px ;
+	width: 780px;
+	height: 200px;
+	overflow: hidden;
+}
+
+.mini_browser {
+	position: relative;
+	left: 0;
+	cursor: move;
+}
+
+.title {
+	position: absolute;
+	left: 10px;
+	top: 15px;
+	font-weight: bold;
+	font-size: 10px;
+	color: grey;
+}
+#ruler {
+	position: relative;
+	height: 24px;
+	background: #FFF;
+	overflow: hidden
+}
+.rule {
+	height: 24px;
+	float: left;
+	border-top: 1px solid #999;
+	background: #FFF;
+}
+.rule.k0 {
+	background: #F8F8F8;
+}
+.rule .bp {
+	border-left: 1px solid #999;
+	box-sizing: border-box;
+	height: 14px;
+	padding: 0 3px;
+	line-height: 13px;
+	font-size: 11px;
+	font-family: monospace
+}
+.rule .bp span {
+	padding-right: 3px;
+}
+.rule .r-sub {
+	background: #222;
+	height: 10px;
+}
+.rule .r-sub > i, .rule .r-sub > s {
+	float: left;
+	display: block;
+	width: 10%;
+	height: 10px;
+}
+.rule .r-sub > i {
+	background: #666;
+}
+/* Library */
+#modal .modal-dialog.library {
+	width: 380px;
+}
+.sample-names {
+	margin-bottom: 0;
+}
+.sample-names li {
+	border-radius: 0 !important;
+	cursor: pointer;
+	border: none;
+}
+.sample-names li span {
+	float: right;
+	color: #eee
+}
+.sample-names li.selected, .sample-names li.loaded {
+	background: rgba(0,0,0,0.03)
+}
+.sample-names li.selected span {
+	color: #000
+}
+.sample-names li.loaded span {
+	color: #20B100;
+}
+.sample-names li:hover {
+	background: rgba(0,0,80,0.04)
+}
+

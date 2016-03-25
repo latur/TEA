@@ -84,7 +84,7 @@ function general_map(){
 							value = density_map[k][name][j][0] + density_map[k][name][j][1] + density_map[k][name][j][2];
 						else 
 							value = density_map[k][name][j][visibleType-1];
-					} else if (visibleMode == 1){
+					} else if (visibleMode == 2){
 						if (visibleType == 0)
 							value = density_map[k][name][j][3] + density_map[k][name][j][4] + density_map[k][name][j][5];
 						else 
@@ -166,6 +166,10 @@ function get_idlist(){
 }
 
 function remove_file(id){
+	for (var i in expName){
+		if (expName[i] == id)
+			expName.splice(i, 1);
+	}
 	for (var chr in expData){
 		if (chr.localeCompare("map") == 0) continue;
 		if (expData[chr][id]){
@@ -193,17 +197,13 @@ function remove_file(id){
 }
 
 /* Calculate common differenet & tree */
-function add_common(chr, pos, type, id){
+function add_common(chr, pos, type, id, name){
 	var cell = Math.ceil(pos/2000000)-1;
 	if (cell >= density_len[chr]) cell = density_len[chr]-1;
 
-	for (var name in density_map[chr]){
-		if (name.localeCompare("map") == 0 ) continue;
-		++density_map[chr][name][cell][type+3];
-	}
+	++density_map[chr][name][cell][type+3];
 
-	for (var i = 0; i < id.length; i++)
-		id_list[id[i]] = 1;
+	id_list[id] = 1;
 }
 
 function init(){
@@ -227,30 +227,32 @@ function init(){
 function get_common(){
 	init();
 
-	var name = file_list[0];
+	for (var x in file_list){
+		var name = file_list[x];
+		for (var chr in expData){
+			if (chr.localeCompare("map") == 0 || !expData[chr][name]) continue;
 
-	for (var chr in expData){
-		if (chr.localeCompare("map") == 0 || !expData[chr][name]) continue;
-
-		for (var pos = 0; pos < expData[chr][name].length; pos++){
-			var id = [expData[chr][name][pos][5]];
-			var count = 0;
-			for (var i = 1; i < n_file; i++){
-				var n = file_list[i];
-				if (!expData[chr][n]) break;
-
-				for (var k = 0; k < expData[chr][n].length; k++){
-					if (Math.abs(expData[chr][name][pos][0] - expData[chr][n][k][0]) < 50 &&
-							expData[chr][name][pos][2] == expData[chr][n][k][2]){
-						id.push(expData[chr][n][k][0][5]);
-						++count;
-						break;
+			for (var pos = 0; pos < expData[chr][name].length; pos++){
+				var id = expData[chr][name][pos][7];
+				var count = 0;
+				var has = 0;
+				for (var y in file_list){
+					if (x == y) continue;
+					var n = file_list[y];
+					if (!expData[chr][n]) break;
+	
+					for (var k = 0; k < expData[chr][n].length; k++){
+						if (Math.abs(expData[chr][name][pos][0] - expData[chr][n][k][0]) < 50){
+							++count;
+							has = 1;
+							break;
+						}
 					}
+					if (has == 0) break;
 				}
-				if (count < i) break;
+				if (count != n_file - 1)
+					add_common(chr, expData[chr][name][pos][0], expData[chr][name][pos][2]-1, id, name);
 			}
-			if (count == n_file - 1)
-				add_common(chr, expData[chr][name][pos][0], expData[chr][name][pos][2]-1, id);
-		};
-	};
+		}
+	}
 }

@@ -12,41 +12,48 @@
 </head>
 <body>
 <div class="container page">
-	<h2 align="center">Transposable Elements Atlas</h2>
-	<hr/>
+	<h2>Transposable Elements Atlas
+	<input type="text" id="find" placeholder="Find region/gene. Ex: chr1:1000-400000" class="form-control">
+	</h2><hr/>
 </div>
 <div class="fixed-nav">
-	<div class="form-inline selecter">
-		<div class="btn-group input-group">
-			<a class="btn btn-default aslist"><span class="glyphicon glyphicon-book"></span> Sample Library</a>
-			<input type="file" id="load" title= " Add sample(s)" multiple="true">
-			<a class="btn btn-default clear"><span class="glyphicon glyphicon-refresh"></span> Clear all</a>
-		</div>
-		<div class="status"> Loading files...</div>
-		<input type="text" id="find" placeholder="Find region/gene. Ex: chr1:1000-400000" class="form-control">
-	</div>
-<div class="container">
+	<div class="container">
 		<div class="btn-group chr-view-mode">
 			<a class="btn btn-default asline"><span class="glyphicon glyphicon-home"></span> General</a>
 			<a class="btn btn-default aslist"><span class="glyphicon glyphicon-equalizer"></span> Detail</a>
 		</div>
-		<div class="btn-group">
-  			<button class="btn btn-default dropdown-toggle " type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="border-radius: 5px 1px 1px 5px; border-right:none;">
-			<span class="glyphicon glyphicon-eye-open"></span> View mode
-    				<span class="caret"></span>
+		<div class="btn-group chr-view-mode">
+		<div class="dropdown" style="display: inline-block">
+			<button class="btn btn-default dropdown-toggle " type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+				<span class="glyphicon glyphicon-filter"></span> Filter <span class="caret"></span>
 			</button>
-  			<ul class="dropdown-menu">
-				<li class="dropdown-header">Show type:</li>
-    				<li><a data-map="1" class="type"> Alu</a></li>
-    				<li><a data-map="2" class="type"> Line</a></li>
-    				<li><a data-map="3" class="type"> Others</a></li>
-    				<li><a data-map="0" class="type glyphicon glyphicon-ok"></span> All</a></li>
-				<li class="dropdown-header">Show compare:</li>
-    				<li><a data-map="1" class="mode"> Common</a></li>
-    				<li><a data-map="2" class="mode"> Different</a></li>
-    				<li><a data-map="0" class="mode glyphicon glyphicon-ok"> All</a></li>
-  			</ul>
-			<a class="btn btn-default comparision"><span class="glyphicon glyphicon-adjust"></span> <span class="txt">Group comparision</span></a>
+			<ul class="dropdown-menu">
+				<li><a data-map="1" class="type"> Alu</a></li>
+				<li><a data-map="2" class="type"> Line</a></li>
+				<li><a data-map="3" class="type"> Others</a></li>
+				<li><a data-map="0" class="type glyphicon glyphicon-ok"></span> All</a></li>
+			</ul>
+		</div>
+		<div class="dropdown" style="display: inline-block">
+			<button class="btn btn-default dropdown-toggle " type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+				<span class="glyphicon glyphicon-object-align-bottom"></span> Compare <span class="caret"></span>
+			</button>
+		 		<ul class="dropdown-menu">
+				<li><a data-map="1" class="mode"> Common</a></li>
+				<li><a data-map="2" class="mode"> Different</a></li>
+				<li><a data-map="0" class="mode glyphicon glyphicon-ok"> All</a></li>
+			</ul>
+		</div>
+		</div>
+		<div class="btn-group ">
+			<a class="btn btn-default library-open"><span class="glyphicon glyphicon-book"></span> Sample Library</a>
+			<input type="file" id="load" title= " Add sample(s)" multiple="true">
+			<a class="btn btn-default clear"><span class="glyphicon glyphicon-refresh"></span> Clear all</a>
+			<div class="status"> Loading files...</div>
+		</div>
+
+		<div class="btn-group ">
+			<a class="btn btn-default comparision"><span class="glyphicon glyphicon-adjust"></span> <span class="txt">Group compare</span></a>
 			<a class="btn btn-default showtree"><span class="glyphicon glyphicon-grain"></span> Phylogenetic tree</a>
 		</div>
 		<div class="btn-group btn-group move-c">
@@ -82,21 +89,34 @@
   			</ul>
 			<a class="cnt btn btn-default" data-e="0.15"><span class="glyphicon glyphicon-chevron-right"></span></a>
 		</div>
-		<div class="btn-group btn-group zoom-c">
-			<button class="btn btn-default dropdown-toggle " type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-				<span class="glyphicon glyphicon-search"></span> Zoom <span class="caret"></span>
-			</button>
-  			<ul class="dropdown-menu zoom-c">
-				<li class="dropdown-header">Zoom in:</li>
-    				<li><a data-map="1" data-e="0.625" class="cnt"> x1.6</a></li>
-    				<li><a data-map="2" data-e="0.5" class="cnt"> x2</a></li>
-    				<li><a data-map="3" data-e="0.1" class="cnt"> x10</a></li>
-				<li class="dropdown-header">Zoom out:</li>
-    				<li><a data-map="1" data-e="1.6" class="cnt"> x1.6</a></li>
-    				<li><a data-map="2" data-e="2" class="cnt"> x2</a></li>
-    				<li><a data-map="2" data-e="10" class="cnt"> x10</a></li>
-    				<li><a data-map="3" data-e="50"class="cnt"> x50</a></li>
-  			</ul>
+		<div class="btn-group btn-group-sm zoom-c">
+			<a class="btn btn-default cnt" data-e="0.666666666"><span class="glyphicon glyphicon-plus"></span> Zoom In</a>
+			<a class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<span class="caret"></span>
+				<span class="sr-only">Toggle Dropdown</span>
+			</a>
+			<ul class="dropdown-menu">
+				<li><a class="cnt" data-e="0.833333333" href="#">1.2x</a></li>
+				<li><a class="cnt" data-e="0.666666666" href="#">1.5x</a></li>
+				<li><a class="cnt" data-e="0.500000000" href="#">2.0x</a></li>
+				<li><a class="cnt" data-e="0.333333333" href="#">3.0x</a></li>
+				<li><a class="cnt" data-e="0.100000000" href="#">10x</a></li>
+			</ul>
+		</div>
+		<div class="btn-group btn-group-sm zoom-c">
+			<a class="btn btn-default cnt" data-e="1.6"><span class="glyphicon glyphicon-minus"></span> Zoom Out</a>
+			<a class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<span class="caret"></span>
+				<span class="sr-only">Toggle Dropdown</span>
+			</a>
+			<ul class="dropdown-menu">
+				<li><a class="cnt" data-e="1.2" href="#">1.2x</a></li>
+				<li><a class="cnt" data-e="1.5" href="#">1.5x</a></li>
+				<li><a class="cnt" data-e="2.0" href="#">2.0x</a></li>
+				<li><a class="cnt" data-e="3.2" href="#">3.0x</a></li>
+				<li><a class="cnt" data-e="10" href="#">10x </a></li>
+				<li><a class="cnt" data-e="30" href="#">30x </a></li>
+			</ul>
 		</div>
 	</div>
 
@@ -141,15 +161,22 @@
 	<div class="ch-zoom nsel">
 		<div id="ch-zoom-hm" class="ch-zoom-scroll">
 			<div style="height: 100px; overflow-y: scroll;">
-				<div class="genes">
+				<div class="genes ">
 					<div class="hm" id="ghmap"></div>
 					<div id="genes"></div>
 				</div>
 			</div>
+			<div id="ruler"></div>
 			<div style="height: 500px; overflow-y: scroll;">
 				<div class="samples">{samples}</div>
 			</div>
 		</div>
+	</div>
+</script>
+<script data-name="rule" class="template" type="text/x-handlebars-template">
+	<div class="rule k{key}" style="width:{width}px">
+		<div class="bp">{bp}</div>
+		<div class="r-sub"><i></i><s></s><i></i><s></s><i></i><s></s><i></i><s></s><i></i><s></s></div>
 	</div>
 </script>
 <script data-name="zoom-trs" class="template" type="text/x-handlebars-template">
@@ -188,7 +215,25 @@
 	</div>
 </script>
 
-
+<!-- Samples Library -->
+<script data-name="library" class="template" type="text/x-handlebars-template">
+	<ul class="list-group sample-names">
+		<!-- Temporary solution -->
+		<li class="list-group-item" data-name="1s-ready">1s-ready <span class="glyphicon glyphicon-ok"></span></li>
+		<li class="list-group-item " data-name="1ns-ready">1ns-ready <span class="glyphicon glyphicon-ok"></span></li>
+		<li class="list-group-item selected" data-name="2sready">2sready <span class="glyphicon glyphicon-ok"></span></li>
+		<li class="list-group-item selected" data-name="2nsready">2nsready <span class="glyphicon glyphicon-ok"></span></li>
+		<li class="list-group-item selected" data-name="3s_merged">3s_merged <span class="glyphicon glyphicon-ok"></span></li>
+		<li class="list-group-item" data-name="3ns_merged">3ns_merged <span class="glyphicon glyphicon-ok"></span></li>
+		<li class="list-group-item" data-name="61">61 <span class="glyphicon glyphicon-ok"></span></li>
+		<li class="list-group-item" data-name="81">81 <span class="glyphicon glyphicon-ok"></span></li>	
+		<li class="list-group-item selected" data-name="91c">91c <span class="glyphicon glyphicon-ok"></span></li>	
+	</ul>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+		<button type="button" class="btn btn-primary get-samples">Load selected samples</button>
+	</div>
+</script>
 </body>
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/ocanvas-2.8.3.js"></script>
@@ -199,6 +244,9 @@
 <script type="text/javascript" src="js/general_map.js"></script>
 <script type="text/javascript" src="js/phylogenetic_tree.js"></script>
 <script type="text/javascript" src="js/group_compare.js"></script>
+<script type="text/javascript" src="js/TE_data.js"></script>
+<script type="text/javascript" src="js/contig_align.js"></script>
+<script type="text/javascript" src="js/samples_list.js"></script>
 
 <script type="text/javascript" src="js/atlas.js"></script>
 </html>
