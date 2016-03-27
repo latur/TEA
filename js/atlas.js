@@ -440,8 +440,11 @@ function ShowChromosome(name, start, end){
 	// Impossible states:
 	if (!chrs[name])
 		name = 'chr1';
-	if (end < start + 10000)
-		end = start + 10000;
+	if (end < start + 25000){
+		end = start + 25000;
+		location.hash = "#" + name + ":" + start + "-" + end;
+
+	}
 
 	// Html elements:
 	var samples = '';

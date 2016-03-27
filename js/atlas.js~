@@ -112,6 +112,8 @@ function SamplesLoaded(){
 			location.hash = loc + (expID ? ('/' + expID) : '');
 			// Show one chromosome
 			var chr = location.hash.match(/^\#?(chr[0-9XY]+)\:([0-9]+)\-([0-9]+)\/?([0-9a-z]+)?$/);
+			if (parseInt(chr[3]) - parseInt(chr[2]) < 25000) chr[3] = parseInt(chr[3]) + 25000;
+			location.hash = "#" + chr[1] + ":" + chr[2] + "-" + chr[3];
 			if (chr) {
 				return ShowChromosome(chr[1], parseInt(chr[2]), parseInt(chr[3]));
 			} else {
@@ -440,8 +442,8 @@ function ShowChromosome(name, start, end){
 	// Impossible states:
 	if (!chrs[name])
 		name = 'chr1';
-	if (end < start + 10000)
-		end = start + 10000;
+	if (end < start + 25000)
+		end = start + 25000;
 
 	// Html elements:
 	var samples = '';
