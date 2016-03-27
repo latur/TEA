@@ -324,7 +324,7 @@ hr {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	cursor: text
+	cursor: crosshair;
 }
 .lh, .rh { 
 	position: absolute; 
@@ -401,125 +401,6 @@ hr {
 
 
 /* --------------------------- */
-
-
-
-.navigator{
-	position: relative;
-	width: 100%;
-	height: 60px;
-}
-
-.quick_jump {
-	position: relative;
-	display: inline-block;
-	top: 5px;
-		height: 40px;
-	margin-left: 10px;
-	font-size: 30px;
-	line-height: 40px;
-}
-
-.quick_jump input {
-	width: 200px;
-	height: 30px;
-	font-size: 15px;
-	line-height: 30px;
-	border:none;
-	background: transparent;
-}
-
-.add_file, .but{
-		position: relative;
-	display: inline-block;
-	margin-top: 5px;
-	padding-top: 5px;
-	margin-left: 15px;
-		cursor: pointer;
-		width: 40px;
-		height: 40px;
-	font-size: 28px;
-	text-align: center;
-	vertical-align: middle;
-}
-
-.but:hover{
-	border: 1px solid #cbcbcb;
-	box-shadow: 0 1px 5px rgba(0,0,0,.09);
-	border-radius: 3px;
-}
-
-.add_file{
-	margin-right: 10px;
-}
-
-.inputfile {
-	width: 0.1px;
-	height: 0.1px;
-	opacity: 0;
-	overflow: hidden;
-	position: absolute;
-	z-index: -1;
-}
-
-.inputfile + label {
-	display: inline-block;
-	cursor: pointer;
-	overflow: hidden;
-	width: 40px;
-	height: 40px;
-	background: url('../images/add_file.png') center no-repeat;
-	background-size: 40px 40px;
-}
-
-.inputfile:focus + label,
-.inputfile.has-focus + label,
-.inputfile + label:hover {
-	border: 1px solid #cbcbcb;
-	box-shadow: 0 1px 5px rgba(0,0,0,.09);
-	border-radius: 3px;
-}
-/* position list */
-
-select {
-   background: transparent;
-   border: none;
-   font-size: 15px;
-   line-height: 100%;
-}
-
-input[type=checkbox]{
-	width: 15px;
-	height: 15px;
-	visibility: hidden;
-}
-
-
-input[type=checkbox] + label{
-	height:20px; 
-	position: relative;
-	display: inline-block;
-	background-position: left;
-	cursor:pointer;
-	font-size: 15px;
-	margin-left: 5px;
-}
-
-.check_box {
-	padding-left: 20px;
-	background: transparent;
-}
-
-.check_box:hover {
-	color: #a2cac2;
-	background: url('../images/check_hover.png') 3px no-repeat;
-	background-size: 14px 14px;
-}
-
-input[type=checkbox]:checked + label{
-	background: url('../images/check.png') 3px no-repeat;
-	background-size: 14px 14px;
-}
 
 /* General map */
 .general_map {
@@ -777,3 +658,26 @@ input[type=checkbox]:checked + label{
 	background: rgba(0,0,80,0.04)
 }
 
+.chr-btn {
+	width: 240px;
+	padding: 15px;
+}
+.chr-btn  a {
+	cursor: pointer;
+	float: left;
+	color: grey;
+	text-decoration: none;
+	width: 50px;
+	padding: 5px 0 4px 5px;
+	word-spacing: 10px;
+	font-size: 13px;
+}
+.chr-btn a:hover {
+	color: #000;
+	border-radius: 5px;
+	background: #eee;
+}
+
+
+.zoom_in, .zoom_out {
+}

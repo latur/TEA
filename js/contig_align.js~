@@ -297,7 +297,7 @@ function align_contig(info, name, file){
 	if (n_group > 0){
 		Modal({
 			title : '<b> Chromosome: </b>'+name.substr(3)+'<div class="tab"></div><b>Position: </b>'+info[0]+'<div class="tab"></div><b>Type: </b>'+info[5] + '<br><b>File name: </b>' + file,
-			data  : '<pre>' info[4] '</div>',
+			data  : '<pre>'+ info[4] +'</pre>',
 		});
 		return;
 	}
@@ -323,8 +323,9 @@ function align_contig(info, name, file){
 	} else if (info[6] != "Unknown"){
 		var seq = info[6].split("/");
 		height = seq.length*25 + 90
+		len = 10;
 		for (var i = 0; i < seq.length; i++)
-			len += seq[i].length;
+			len += seq[i].length*11;
 	} else {
 		height = 90;
 		len = 780;

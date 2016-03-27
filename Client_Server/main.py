@@ -23,7 +23,7 @@ class MainHandler(tornado.web.RequestHandler):
 
 def make_app():
     return tornado.web.Application([
-        (r"/teatlas_ajax", MainHandler),
+        (r"/", MainHandler),
     ])
 
 if __name__ == "__main__":

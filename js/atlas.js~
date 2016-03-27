@@ -80,7 +80,6 @@ function MessageClose(){
 // Routing based on location.hash
 function Route(loc){
 	if (loc) location.hash = loc + (expID ? ('/' + expID) : '');
-
 	disable_button();
 
 	// Show one chromosome
@@ -224,6 +223,11 @@ function SamplesLoaded(){
 		});
 	});
 
+	$('.chr-btn a').click(function(){
+		var chr = location.hash.match(/^\#?(chr[0-9XY]+)\:([0-9]+)\-([0-9]+)\/?([0-9a-z]+)?$/);
+		return ShowChromosome($(this).data('map'), parseInt(chr[2]), parseInt(chr[3]));
+	});
+
 }
 
 function disable_button(){
@@ -324,8 +328,9 @@ function Parse(content, filename){
 			c[2] = parseInt(c[2]);
 			c[3] = parseInt(c[3]);
 			var id = c[0] + '-' + filename + '-' + c[1] + '-' + c[2];
-			if (c.length < 8)
-				c.push("Unknown");
+			if (c[7] == '')
+				c[7] = "Unknown";
+
 			c.push(id);
 			expData[c[0]][filename].push(c.slice(1));
 
@@ -421,16 +426,22 @@ function ShowAsLine(){
 	_ShowHelper();
 
 	// This requires optimization =]
+	$("#content").html('');
 	if (n_file > 0)
 		general_map();
 }
 
 // Selected region on chromosome
 function ShowChromosome(name, start, end){
+	$(".list_name").html(name.charAt(0).toUpperCase() + name.substr(1) + '<span class="caret"></span>');
+
 	var xhr;
 
 	// Impossible states:
-	if (!chrs[name] || end < start + 50) return Route('#general');
+	if (!chrs[name])
+		name = 'chr1';
+	if (end < start + 10000)
+		end = start + 10000;
 
 	// Html elements:
 	var samples = '';
@@ -800,9 +811,9 @@ function run_demo(){
 
 $(function(){
 	SamplesLoaded();
-	var home = location.hash.match(/^\#?([a-z]+)?$/);
-	if (home[0] == '')
+	if (location.hash == '')
 		run_demo();
-	else
+	else {
 		Route();
+	}
 });

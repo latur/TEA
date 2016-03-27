@@ -57,37 +57,45 @@
 			<a class="btn btn-default showtree"><span class="glyphicon glyphicon-grain"></span> Phylogenetic tree</a>
 		</div>
 		<div class="btn-group btn-group move-c">
+			<a class="cnt btn btn-default" data-e="-0.7">
+				<span class="glyphicon glyphicon-chevron-left"></span>
+				<span class="glyphicon glyphicon-chevron-left ll"></span>
+			</a>
 			<a class="cnt btn btn-default" data-e="-0.15"><span class="glyphicon glyphicon-chevron-left"></span></a>
-			<button class="btn btn-default dropdown-toggle " type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="border-radius: 0; border-right: none">
+			<button class="btn btn-default dropdown-toggle list_name" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="border-radius: 0; border-right: none">
 				Chr1 <span class="caret"></span>
 			</button>
-  			<ul class="dropdown-menu">
-    				<li><a data-map="chr1"> Chr1</a></li>
-    				<li><a data-map="chr2"> Chr2</a></li>
-    				<li><a data-map="chr3"> Chr3</a></li>
-    				<li><a data-map="chr4"> Chr4</a></li>
-    				<li><a data-map="chr5"> Chr5</a></li>
-    				<li><a data-map="chr6"> Chr6</a></li>
-    				<li><a data-map="chr7"> Chr7</a></li>
-    				<li><a data-map="chr8"> Chr8</a></li>
-    				<li><a data-map="chr9"> Chr9</a></li>
-    				<li><a data-map="chr10"> Chr10</a></li>
-    				<li><a data-map="chr11"> Chr11</a></li>
-    				<li><a data-map="chr12"> Chr12</a></li>
-    				<li><a data-map="chr13"> Chr13</a></li>
-    				<li><a data-map="chr14"> Chr14</a></li>
-    				<li><a data-map="chr15"> Chr15</a></li>
-    				<li><a data-map="chr16"> Chr16</a></li>
-    				<li><a data-map="chr17"> Chr17</a></li>
-    				<li><a data-map="chr18"> Chr18</a></li>
-    				<li><a data-map="chr19"> Chr19</a></li>
-    				<li><a data-map="chr20"> Chr20</a></li>
-    				<li><a data-map="chr21"> Chr21</a></li>
-    				<li><a data-map="chr22"> Chr22</a></li>
-    				<li><a data-map="chrX"> ChrX</a></li>
-    				<li><a data-map="chrY"> ChrY</a></li>
-  			</ul>
+  			<div class="dropdown-menu chr-btn">
+    				<a data-map="chr1"> Chr1</a>
+    				<a data-map="chr2"> Chr2</a>
+    				<a data-map="chr3"> Chr3</a>
+    				<a data-map="chr4"> Chr4</a>
+    				<a data-map="chr5"> Chr5</a>
+    				<a data-map="chr6"> Chr6</a>
+    				<a data-map="chr7"> Chr7</a>
+    				<a data-map="chr8"> Chr8</a>
+    				<a data-map="chr9"> Chr9</a>
+    				<a data-map="chr10"> Chr10</a>
+    				<a data-map="chr11"> Chr11</a>
+    				<a data-map="chr12"> Chr12</a>
+    				<a data-map="chr13"> Chr13</a>
+    				<a data-map="chr14"> Chr14</a>
+    				<a data-map="chr15"> Chr15</a>
+    				<a data-map="chr16"> Chr16</a>
+    				<a data-map="chr17"> Chr17</a>
+    				<a data-map="chr18"> Chr18</a>
+    				<a data-map="chr19"> Chr19</a>
+    				<a data-map="chr20"> Chr20</a>
+    				<a data-map="chr21"> Chr21</a>
+    				<a data-map="chr22"> Chr22</a>
+    				<a data-map="chrX"> ChrX</a>
+    				<a data-map="chrY"> ChrY</a>
+  			</div>
 			<a class="cnt btn btn-default" data-e="0.15"><span class="glyphicon glyphicon-chevron-right"></span></a>
+			<a class="cnt btn btn-default" data-e="0.7">
+				<span class="glyphicon glyphicon-chevron-right"></span>
+				<span class="glyphicon glyphicon-chevron-right ll"></span>
+			</a>
 		</div>
 		<div class="btn-group btn-group-sm zoom-c">
 			<a class="btn btn-default cnt" data-e="0.666666666"><span class="glyphicon glyphicon-plus"></span> Zoom In</a>
@@ -95,7 +103,7 @@
 				<span class="caret"></span>
 				<span class="sr-only">Toggle Dropdown</span>
 			</a>
-			<ul class="dropdown-menu">
+			<ul class="dropdown-menu zoom_in">
 				<li><a class="cnt" data-e="0.833333333" href="#">1.2x</a></li>
 				<li><a class="cnt" data-e="0.666666666" href="#">1.5x</a></li>
 				<li><a class="cnt" data-e="0.500000000" href="#">2.0x</a></li>
@@ -109,7 +117,7 @@
 				<span class="caret"></span>
 				<span class="sr-only">Toggle Dropdown</span>
 			</a>
-			<ul class="dropdown-menu">
+			<ul class="dropdown-menu zoom_out">
 				<li><a class="cnt" data-e="1.2" href="#">1.2x</a></li>
 				<li><a class="cnt" data-e="1.5" href="#">1.5x</a></li>
 				<li><a class="cnt" data-e="2.0" href="#">2.0x</a></li>
@@ -160,14 +168,14 @@
 <script data-name="zoom_table" class="template" type="text/x-handlebars-template">
 	<div class="ch-zoom nsel">
 		<div id="ch-zoom-hm" class="ch-zoom-scroll">
-			<div style="height: 100px; overflow-y: scroll;">
+			<div style="height: 100px; overflow: hidden;">
 				<div class="genes ">
 					<div class="hm" id="ghmap"></div>
 					<div id="genes"></div>
 				</div>
 			</div>
 			<div id="ruler"></div>
-			<div style="height: 500px; overflow-y: scroll;">
+			<div style="height: 100%; overflow: hidden;">
 				<div class="samples">{samples}</div>
 			</div>
 		</div>

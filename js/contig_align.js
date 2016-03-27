@@ -285,8 +285,8 @@ function draw_seq(info, len){
 					draw_text(x, 90, "15px sans-serif", txt_color[seq[i][k]], seq[i][k], canvas)
 					draw_line(x+5.5, 53, x+5.5, 90-17, 1, canvas)
 				}
-				x += 11;
 				draw_text(x, 45, "15px sans-serif", "#6E6E6E", "N", canvas);
+				x += 11;
 			}
 		}
 	}
@@ -323,8 +323,9 @@ function align_contig(info, name, file){
 	} else if (info[6] != "Unknown"){
 		var seq = info[6].split("/");
 		height = seq.length*25 + 90
+		len = 10;
 		for (var i = 0; i < seq.length; i++)
-			len += seq[i].length;
+			len += seq[i].length*11;
 	} else {
 		height = 90;
 		len = 780;

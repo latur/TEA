@@ -154,7 +154,6 @@ function progress_group(){
 		return;
 	}
 
-alert(density_map["chr1"]["2ns.csv"][0]);
 	Group = (JSON.parse(JSON.stringify(expData)));
 	g_density = (JSON.parse(JSON.stringify(density_map))); 
 	expData = {};
@@ -218,7 +217,7 @@ alert(density_map["chr1"]["2ns.csv"][0]);
 			}
 		}
 	}
-alert(density_map["chr1"]["Group I"][0]);
+
 	n_group = n_file;
 	n_file = 2;
 	group_list = file_list.slice();
@@ -227,7 +226,6 @@ alert(density_map["chr1"]["Group I"][0]);
 
 	get_max();
 	get_common();
-
 	Route();
 	$(".split_group").remove();
 	$(".screen_blur").remove();
