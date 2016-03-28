@@ -27,6 +27,7 @@ function ShowChromosome(name, start, end){
 
 	// Variables: Chromosome
 	var size = chrs[name];
+	var heightGenes = 1;
 	var box = $('#sel-box')[0], sel = $('#range')[0];
 	var blurL = $('#blur-l')[0], blurR = $('#blur-r')[0];
 	// Variables: Zoom-box
@@ -128,29 +129,51 @@ function ShowChromosome(name, start, end){
 
 		XHR = $.post(server + [mode, name, x1, x2].join('/'), {}, function(inf){
 			var inf  = inf.split('\n');
-			
+			heightGenes = 1;
 			// Genes
 			var genesInfo = inf[0].split(';').map(function(row){
-				var r = row.split(':');
-				r[0] = parseInt(r[0], 32);
-				if (r[1]) r[1] = parseInt(r[1], 32);
-				return r;
+				var t = row.split(':');
+				t[0] = parseInt(t[0], 32);
+				var gene = {
+					left  : t[0] * H.kpx,
+					dir   : t[4] == '+' ? 'dirR' : 'dirL',
+					width : 1,
+					name  : '',
+					exons : '',
+					space : 1,
+					windx : ''
+				};
+				if (t[1]){
+					gene.width = parseInt(t[1], 32) * H.kpx;
+				}
+				if (t[2]) {
+					gene.name = t[2] + (t[3] ? ', ' : '') + (t[3] || '');
+					gene.space = gene.width + name.length * 6.63 + 150;
+				}
+
+				if (t[0] > H.bp[0] && t[0] < H.bp[1]) gene.windx = 'inw';
+				if (t[1] > H.bp[0] && t[0] < H.bp[1]) gene.windx = 'inw';
+				if (t[0] < H.bp[0] && t[1] > H.bp[1]) gene.windx = 'inw';
+				
+				var ex1 = t[5] ? t[5].split(',') : [];
+				var ex2 = t[6] ? t[6].split(',') : [];
+				for (var k = 0; k < ex1.length - 1; k++) {
+					var exleft  = (ex1[k] - t[0]) * H.kpx;
+					var exwidth = (ex2[k] - ex1[k]) * H.kpx + 1;
+					gene.exons += '<div class="exon bx" style="left:' + exleft + 'px; width:'+exwidth+'px"></div>';
+				}
+				console.log(gene)
+				return gene;
 			});
-			// L - points
-			if (mode == 'L'){
-				genes.innerHTML = genesInfo.map(function(t){
-					return Template('zoom-L', { left : t[0] * H.kpx });
-				}).join('');
-			}
-			// M - intrvals
-			if (mode == 'M') {
-			}
-			// S - intrvals + names
-			if (mode == 'S') {
-			}
-			// XS - intrvals + names + exons
-			if (mode == 'XS') {
-			}
+
+			genes.innerHTML = Align(genesInfo, 12).map(function(e){ 
+				return Template('zoom-' + mode, e);
+			}).join('');
+			var max = 0;
+			$('.inw').each(function(){ max = Math.max(max, parseInt($(this)[0].style.top)); });
+			genes.style.height = (max + 12 + 3) + 'px';
+			bpanel.style.top = (Math.max(94, max + 12 + 3 + 24)) + 'px';
+
 			
 			// Bind-levels
 			var bingPanel = '', bingGraph = '';
@@ -185,11 +208,20 @@ function ShowChromosome(name, start, end){
 		});
 	}
 	
-	function Align(vars){
+	function Align(elements, one){
 		var lines = [0];
-		// vars
+		var Can = function(p){
+			for (var i in lines) if (p > lines[i]) return i;
+			return false;
+		}
+		for (var k in elements) {
+			var e = elements[k], level = Can(e.left);
+			if (level) lines[level] = e.left + e.space;
+			if (level === false) lines.push(e.left + e.space), level = lines.length;
+			elements[k].top = level * one;
+		}
+		return elements;
 	}
-
 
 	// Events:
 	var px,ox,dx, tx,vx,ix;

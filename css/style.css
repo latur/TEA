@@ -545,6 +545,7 @@ body:not(.compare-common):not(.compare-differ) .all.btn,
 	background: rgba(0, 115, 20, 0.3)
 }
 #genes {
+	overflow: hidden;
 	min-height: 70px;
 	position: relative;
 }
@@ -559,17 +560,29 @@ body:not(.compare-common):not(.compare-differ) .all.btn,
 	position: relative;
 	float: left;
 	margin: 3px 7px 0px 0;
-	background: #eee;
-	border-left: 1px solid #aaa;
-	border-right: 1px solid #aaa;
+	border-left: 1px solid rgba(0, 0, 0, 0.7);
+	border-right: 1px solid rgba(0, 0, 0, 0.7);
+	background-color: rgba(89, 0, 255, 0.06);
 	height: 10px;
 }
-#genes .bx a {
+.dirR i {
+	background-repeat: repeat-x;
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAQAAAAnOwc2AAAAXUlEQVQI12O4xACETJeCLvmDWWAIoYQuPbj041IwqiDDpcBLby99hAkzXJK6JAmEApdyL/2+9OFS6CWxSxIMQBWvgfDlpWeX/lz6D5R4fekuDkGs2rFahNNJaI4HAHJZddtulkERAAAAAElFTkSuQmCC);
+}
+.dirL i {
+	background-repeat: repeat-x;
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAQAAAAnOwc2AAAAXUlEQVQI12O4xACH/peCLjGBWAih4Es/Lj24JIQsGHzp46W3lwIhPIZLEpfELoVe+nDp96XcSwKXJIFQiuHS3UuvgQL/L/259OzSSyD79aW3OASxasdqER4noTgeAG/1ddukKtMQAAAAAElFTkSuQmCC);
+}
+
+
+
+#genes .bx e {
+	color: #777;
 	text-decoration: none;
 }
 #genes .bx.exon {
 	height: 10px;
-	background: rgba(0, 10, 200, 0.5);
+	background: rgba(27, 0, 154, 0.5);
 }
 #genes .bx.gene {
     background: rgba(0, 0, 0, 0.1);
@@ -586,8 +599,8 @@ body:not(.compare-common):not(.compare-differ) .all.btn,
     background-size: 100%;
 }
 #genes .bx.trsk {
-	background: #aaa;
-	height: 7px;
+	background-color: rgba(89, 0, 255, 0.06);
+	height: 10px;
 }
 #bind-graph {
 	position: relative;
@@ -597,7 +610,7 @@ body:not(.compare-common):not(.compare-differ) .all.btn,
 #bind-panel {
 	text-shadow: 0 0 1px #FFF, 0 0 2px #FFF;
     position: absolute;
-    top: 94px;
+    top: 124px;
     left: 0;
     padding: 5px;
     font-size: 11px;
@@ -731,9 +744,6 @@ body:not(.compare-common):not(.compare-differ) .all.btn,
 
 
 /* --------------------------- */
-
-
-
 
 
 
