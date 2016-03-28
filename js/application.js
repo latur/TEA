@@ -164,6 +164,7 @@ function Parse(content, filename){
 		if (!chrs[c[0]]) return ;
 		if (!expData[c[0]]) expData[c[0]] = {};
 		if (!expData[c[0]][filename]) expData[c[0]][filename] = [];
+		c[1] = parseInt(c[1]);
 		expData[c[0]][filename].push(c.slice(1));
 		var ID = c[1] + c[0];
 		if (!expPoints[ID]) expPoints[ID] = 0;

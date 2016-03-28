@@ -79,6 +79,18 @@
 		<li class="list-group-item" data-name="SRR14">SRR14.csv <span class="glyphicon glyphicon-ok"></span></li>
 		<li class="list-group-item selected" data-name="SRR15">SRR15.csv <span class="glyphicon glyphicon-ok"></span></li>
 		<li class="list-group-item selected" data-name="SRR16">SRR16.csv <span class="glyphicon glyphicon-ok"></span></li>	
+		<!-- NEW version? -->
+		<!--
+		<li class="list-group-item selected" data-name="1ns-ready">1ns-ready <span class="glyphicon glyphicon-ok"></span></li>
+		<li class="list-group-item selected" data-name="1s-ready">1s-ready <span class="glyphicon glyphicon-ok"></span></li>
+		<li class="list-group-item selected" data-name="2nsready">2nsready <span class="glyphicon glyphicon-ok"></span></li>
+		<li class="list-group-item selected" data-name="2sready">2sready <span class="glyphicon glyphicon-ok"></span></li>
+		<li class="list-group-item selected" data-name="3ns_merged">3ns_merged <span class="glyphicon glyphicon-ok"></span></li>
+		<li class="list-group-item" data-name="3s_merged">3s_merged <span class="glyphicon glyphicon-ok"></span></li>
+		<li class="list-group-item" data-name="61">68 <span class="glyphicon glyphicon-ok"></span></li>
+		<li class="list-group-item" data-name="81">81 <span class="glyphicon glyphicon-ok"></span></li>
+		<li class="list-group-item" data-name="91c">91c <span class="glyphicon glyphicon-ok"></span></li>
+		-->
 	</ul>
 	<div class="modal-footer">
 		<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
@@ -96,7 +108,7 @@
 <script data-name="chr" class="template" type="text/x-handlebars-template">
 	<div class="chr" style="{style}">
 		<div class="chr-name">{title}</div>
-		<div class="chr-box {name} {title}" data-name="{title}" style="width: {width}%;">
+		<div class="chr-box {name} {title}" data-name="{name}" style="width: {width}%;">
 			<div class="helper"></div>
 		</div>
 	</div>
@@ -220,11 +232,11 @@
 	</div>
 </script>
 
+<script data-name="zoom-trs" class="template" type="text/x-handlebars-template">
+	<div id="trs-{id}" class="spl t{type} comp{comp} inw" style="left: {left}px; top:{top}px"><i></i><a data-f="{f}" data-i="{ind}">{name}</a></div>
+</script>
 <script data-name="zoom-Zero" class="template" type="text/x-handlebars-template">
 	<div class="placeholder contrast grayscale {name}-full"></div>
-</script>
-<script data-name="zoom-trs" class="template" type="text/x-handlebars-template">
-	<div id="trs-{id}" class="spl t{type} comp{comp}" style="left: {left}"><i></i><a data-f="{f}" data-i="{ind}">{name}</a></div>
 </script>
 <script data-name="zoom-L" class="template" type="text/x-handlebars-template">
 	<div class="bx gene" style="left:{left}px"></div>
@@ -276,17 +288,17 @@
 </script>
 
 </body>
-<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/ocanvas/2.0.0/ocanvas.min.js"></script>
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/d3/d3.min.js"></script>
 
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/ocanvas/2.0.0/ocanvas.min.js"></script>
+<script type="text/javascript" src="js/d3/d3.min.js"></script>
 <script type="text/javascript" src="js/general_map.js"></script>
 <script type="text/javascript" src="js/phylogenetic_tree.js"></script>
 <script type="text/javascript" src="js/group_compare.js"></script>
 
-<script type="text/javascript" src="js/showChromosome.js"></script>
 <script type="text/javascript" src="js/showMain.js"></script>
+<script type="text/javascript" src="js/showChromosome.js"></script>
 <script type="text/javascript" src="js/application.js"></script>
 <script type="text/javascript" src="js/init.js"></script>
 </html>

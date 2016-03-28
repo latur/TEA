@@ -27,7 +27,6 @@ function ShowChromosome(name, start, end){
 
 	// Variables: Chromosome
 	var size = chrs[name];
-	var heightGenes = 1;
 	var box = $('#sel-box')[0], sel = $('#range')[0];
 	var blurL = $('#blur-l')[0], blurR = $('#blur-r')[0];
 	// Variables: Zoom-box
@@ -113,7 +112,7 @@ function ShowChromosome(name, start, end){
 			p1 += inc;
 		}
 		rule.html(R);
-		
+
 		// Genes + Bind-levels
 		detail = 0, bp = H.bp[1] - H.bp[0];
 		if (bp < 90000000) detail++; // L
@@ -122,59 +121,53 @@ function ShowChromosome(name, start, end){
 		if (bp <  2000000) detail++; // XS
 		var genes = $('#genes')[0], bgraph = $('#bind-graph')[0], bpanel = $('#bind-panel')[0];
 		var mode = ['L','L','M','S','XS'][detail];
-		if (detail == 0) {
-			genes.innerHTML = Template('zoom-Zero', {name : name});
-			//return 
+
+		// Samples
+		spls.innerHTML = '';
+		if (expData[name]) {
+			Object.keys(expData[name]).map(function(f,i){
+				console.log(expData[name][f]);
+				var prepare = expData[name][f].sort(function(a,b){
+					if (a[0] > b[0]) return 1;
+					if (a[0] < b[0]) return -1;
+					return 0
+				}).map(function(spl, ind){
+					var tr = {
+						id   : i + '-' + ind, 
+						f    : f,
+						ind  : ind,
+						type : spl[2], 
+						vis  : false,
+						comp : expPoints[spl[0] + name] > 1 ? '-common' : '-differ',
+						left : (spl[0] * H.kpx)
+					};
+					tr.name = detail > 0 ? (spl[3] + '  ') : '';
+					tr.space = tr.name.length * 6.65;
+
+					if (spl[0] > H.bp[0] && spl[0] < H.bp[1]) tr.vis = 'inw';
+					if (spl[1] > H.bp[0] && spl[0] < H.bp[1]) tr.vis = 'inw';
+					if (spl[0] < H.bp[0] && spl[1] > H.bp[1]) tr.vis = 'inw';
+					return tr;
+				});
+				var _ = Align(prepare, 12);
+				var html = _.el.map(function(e){ return Template('zoom-trs', e); }).join('');
+				spls.innerHTML += '<div class="spl-file" style="height: '+_.h+'px">'+html+'</div>';
+			});
 		}
+
+		$('.spl a').click(function(){
+			var info = expData[name][$(this).data('f')][$(this).data('i')];
+			Modal({
+				title : '<b>' + info[3] + '</b>. Chromosome: <kbd>' + name + '</kbd>. Position: <kbd>' + info[0] + '</kbd>',
+				data  : '<pre>' + info[4].match(/.{1,60}/g).join('\n') + '</pre>'
+			});
+		});
+
+		
 
 		XHR = $.post(server + [mode, name, x1, x2].join('/'), {}, function(inf){
 			var inf  = inf.split('\n');
-			heightGenes = 1;
-			// Genes
-			var genesInfo = inf[0].split(';').map(function(row){
-				var t = row.split(':');
-				t[0] = parseInt(t[0], 32);
-				var gene = {
-					left  : t[0] * H.kpx,
-					dir   : t[4] == '+' ? 'dirR' : 'dirL',
-					width : 1,
-					name  : '',
-					exons : '',
-					space : 1,
-					windx : ''
-				};
-				if (t[1]){
-					gene.width = parseInt(t[1], 32) * H.kpx;
-				}
-				if (t[2]) {
-					gene.name = t[2] + (t[3] ? ', ' : '') + (t[3] || '');
-					gene.space = gene.width + name.length * 6.63 + 150;
-				}
 
-				if (t[0] > H.bp[0] && t[0] < H.bp[1]) gene.windx = 'inw';
-				if (t[1] > H.bp[0] && t[0] < H.bp[1]) gene.windx = 'inw';
-				if (t[0] < H.bp[0] && t[1] > H.bp[1]) gene.windx = 'inw';
-				
-				var ex1 = t[5] ? t[5].split(',') : [];
-				var ex2 = t[6] ? t[6].split(',') : [];
-				for (var k = 0; k < ex1.length - 1; k++) {
-					var exleft  = (ex1[k] - t[0]) * H.kpx;
-					var exwidth = (ex2[k] - ex1[k]) * H.kpx + 1;
-					gene.exons += '<div class="exon bx" style="left:' + exleft + 'px; width:'+exwidth+'px"></div>';
-				}
-				console.log(gene)
-				return gene;
-			});
-
-			genes.innerHTML = Align(genesInfo, 12).map(function(e){ 
-				return Template('zoom-' + mode, e);
-			}).join('');
-			var max = 0;
-			$('.inw').each(function(){ max = Math.max(max, parseInt($(this)[0].style.top)); });
-			genes.style.height = (max + 12 + 3) + 'px';
-			bpanel.style.top = (Math.max(94, max + 12 + 3 + 24)) + 'px';
-
-			
 			// Bind-levels
 			var bingPanel = '', bingGraph = '';
 			var bindInfo = inf[1].split(';').map(function(btype, k){
@@ -204,23 +197,69 @@ function ShowChromosome(name, start, end){
 			$('.bind-swith').click(function(){
 				var nm = 'bl-hide' + $(this).data('k');
 				$('body')[$('body').hasClass(nm) ? 'removeClass' : 'addClass'](nm);
-			})
+			});
+			
+			genes.style.height = 'auto';
+			if (detail == 0) return genes.innerHTML = Template('zoom-Zero', {name : name});;
+			// Genes
+			var genesInfo = inf[0].split(';').map(function(row){
+				var t = row.split(':');
+				t[0] = parseInt(t[0], 32);
+				var gene = {
+					left  : t[0] * H.kpx,
+					dir   : t[4] == '+' ? 'dirR' : 'dirL',
+					width : 1,
+					name  : '',
+					exons : '',
+					space : 1,
+					vis   : ''
+				};
+				if (t[1]){
+					gene.width = parseInt(t[1], 32) * H.kpx;
+				}
+				if (t[2]) {
+					gene.name = t[2] + (t[3] ? ', ' : '') + (t[3] || '');
+					gene.space = gene.width + name.length * 6.63 + 150;
+				}
+
+				if (t[0] > H.bp[0] && t[0] < H.bp[1]) gene.vis = 'inw';
+				if (t[1] > H.bp[0] && t[0] < H.bp[1]) gene.vis = 'inw';
+				if (t[0] < H.bp[0] && t[1] > H.bp[1]) gene.vis = 'inw';
+				
+				var ex1 = t[5] ? t[5].split(',') : [];
+				var ex2 = t[6] ? t[6].split(',') : [];
+				for (var k = 0; k < ex1.length - 1; k++) {
+					var exleft  = (ex1[k] - t[0]) * H.kpx;
+					var exwidth = (ex2[k] - ex1[k]) * H.kpx + 1;
+					gene.exons += '<div class="exon bx" style="left:' + exleft + 'px; width:'+exwidth+'px"></div>';
+				}
+				return gene;
+			});
+			
+			var _ = Align(genesInfo, 12);
+			genes.innerHTML = _.el.map(function(e){ return Template('zoom-' + mode, e); }).join('');
+			genes.style.height = Math.max(70, _.h) + 'px';
+			bpanel.style.top = Math.max(70, _.h) + 24 + 'px';
 		});
 	}
 	
+	// HTML-helpers: multiple lines
 	function Align(elements, one){
+		var visHeight = one;
 		var lines = [0];
 		var Can = function(p){
 			for (var i in lines) if (p > lines[i]) return i;
 			return false;
-		}
+		};
 		for (var k in elements) {
 			var e = elements[k], level = Can(e.left);
+			if (e.width == 1) continue ;
 			if (level) lines[level] = e.left + e.space;
 			if (level === false) lines.push(e.left + e.space), level = lines.length;
+			if (e.vis) visHeight = Math.max(visHeight, level * one + one + 3);
 			elements[k].top = level * one;
 		}
-		return elements;
+		return { el : elements, h : visHeight };
 	}
 
 	// Events:
