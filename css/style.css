@@ -42,6 +42,20 @@ hr {
 	-o-filter: blur(2px);
 	filter: blur(2px);
 }
+.contrast {
+	-webkit-filter: contrast(150%);
+	-moz-filter: contrast(150%);
+	-ms-filter: contrast(150%);
+	-o-filter: contrast(150%);
+	filter: contrast(150%);
+}
+.grayscale {
+	-webkit-filter: grayscale(50%);
+	-moz-filter: grayscale(50%);
+	-ms-filter: grayscale(50%);
+	-o-filter: grayscale(50%);
+	filter: grayscale(50%);
+}
 .pad {
 	margin: 0 20px 10px 20px;
 	position: relative;
@@ -437,7 +451,6 @@ body:not(.compare-common):not(.compare-differ) .all.btn,
 	border-right: 1px solid #222;
 }
 .ch-zoom-scroll {
-	cursor: move;
 }
 
 .spl-file {
@@ -499,16 +512,14 @@ body:not(.compare-common):not(.compare-differ) .all.btn,
 	position: absolute;
 	top: 0;
 	bottom: 0;
-	background: rgba(0, 0, 0, 0.45);
+	background: rgba(0, 0, 0, 0.25);
 	z-index: 35
 }
 .lh {
-	border-right: 1px solid #000;
 	border-radius: 4px 0 0 4px;
 	left: -1px;
 }
 .rh {
-	border-left: 1px solid #000;
 	border-radius: 0 3px 2px 0;
 	right: 0px;
 }
@@ -534,7 +545,7 @@ body:not(.compare-common):not(.compare-differ) .all.btn,
 	background: rgba(0, 115, 20, 0.3)
 }
 #genes {
-	min-height: 21px;
+	min-height: 70px;
 	position: relative;
 }
 #genes .bx {
@@ -561,10 +572,18 @@ body:not(.compare-common):not(.compare-differ) .all.btn,
 	background: rgba(0, 10, 200, 0.5);
 }
 #genes .bx.gene {
-	background: rgba(0, 0, 0, 0.3);
-	width: 2px;
-	height: 15px;
-	top: 3px;
+    background: rgba(0, 0, 0, 0.1);
+    width: 2px;
+    height: 64px;
+    top: 3px;
+    border-radius: 2px;
+}
+#genes .placeholder {
+	position: absolute;
+	width: 100%;
+	height: 60px;
+	top:5px;
+    background-size: 100%;
 }
 #genes .bx.trsk {
 	background: #aaa;
@@ -572,23 +591,36 @@ body:not(.compare-common):not(.compare-differ) .all.btn,
 }
 #bindlevel {
 	position: relative;
-	height: 50px;
-	background: #eee
+	height: 100px;
+	border-top: 1px dashed #eee;
 }
-#ruler {
+.blevel {
+	position: absolute;
+}
+#samples {
+	position: relative;
+	min-height: 100px;
+}
+.rules {
+	width: 200%;
 	position: relative;
 	height: 24px;
 	background: #FFF;
-	overflow: hidden
+	overflow: hidden;
+	cursor: ew-resize;
+    cursor: -webkit-grab;
+}
+.rules:active {
+    cursor: -webkit-grabbing;
 }
 .rule {
-	height: 24px;
+	height: 22px;
 	float: left;
 	border-top: 1px solid #999;
 	background: #FFF;
 }
-.rule.k0 {
-	background: #F8F8F8;
+.rule:nth-child(even) {
+	background: #F1F1F1;
 }
 .rule .bp {
 	border-left: 1px solid #999;
@@ -603,17 +635,17 @@ body:not(.compare-common):not(.compare-differ) .all.btn,
 	padding-right: 3px;
 }
 .rule .r-sub {
-	background: #222;
-	height: 10px;
+	background: #888;
+	height: 8px;
 }
-.rule .r-sub > i, .rule .r-sub > s {
+.rule .r-sub > i {
 	float: left;
 	display: block;
 	width: 10%;
-	height: 10px;
+	height: 8px;
 }
-.rule .r-sub > i {
-	background: #666;
+.rule .r-sub > i:nth-child(even) {
+	background: #aaa;
 }
 
 #modal .modal-dialog {
