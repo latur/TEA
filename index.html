@@ -210,7 +210,8 @@
 					<div class="hm" id="ghmap"></div>
 					<div id="genes"></div>
 				</div>
-				<div id="bindlevel"></div>
+				<div id="bind-graph"></div>
+				<div id="bind-panel"></div>
 				<div class="rules"></div>
 				<div id="samples" class="samples"></div>
 				<div class="rules"></div>
@@ -245,10 +246,14 @@
 </script>
 
 <script data-name="bindlevel" class="template" type="text/x-handlebars-template">
-	<svg class="blevel" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="100" style="left: {left}px; width: {width}px">
-		<polyline points="{points}" style="stroke-width: 0; fill: rgba({color}, 0.3);"/>
+	<svg id="b-gr{key}" class="blevel" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="100" style="left: {left}px; width: {width}px">
+		<polyline points="{points}" style="stroke-width: 0; fill: rgba({color}, 0.5);"/>
 	</svg>
 </script>
+<script data-name="bindpanel" class="template" type="text/x-handlebars-template">
+	<div class="bind-swith b-sw{key}" data-k="{key}"><span class="round" style="background-color: rgb({color});"></span> <a>{name}</a></div>
+</script>
+
 
 <script data-name="message" class="template" type="text/x-handlebars-template">
 	<div class="background">

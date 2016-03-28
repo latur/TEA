@@ -114,44 +114,28 @@ function ShowChromosome(name, start, end){
 		rule.html(R);
 		
 		// Genes + Bind-levels
-		detail = 0, bp = H.bp[0] - H.bp[1];
+		detail = 0, bp = H.bp[1] - H.bp[0];
 		if (bp < 90000000) detail++; // L
 		if (bp <  8000000) detail++; // M
 		if (bp <  5500000) detail++; // S
 		if (bp <  2000000) detail++; // XS
-		var genes = $('#genes')[0], blevel = $('#bindlevel')[0];
-		var mode = ['-','L','M','S','XS'][detail];
-		if (detail == 0) return genes.innerHTML = Template('zoom-Zero', {name : name});
+		var genes = $('#genes')[0], bgraph = $('#bind-graph')[0], bpanel = $('#bind-panel')[0];
+		var mode = ['L','L','M','S','XS'][detail];
+		if (detail == 0) {
+			genes.innerHTML = Template('zoom-Zero', {name : name});
+			//return 
+		}
 
 		XHR = $.post(server + [mode, name, x1, x2].join('/'), {}, function(inf){
 			var inf  = inf.split('\n');
+			
+			// Genes
 			var genesInfo = inf[0].split(';').map(function(row){
 				var r = row.split(':');
 				r[0] = parseInt(r[0], 32);
 				if (r[1]) r[1] = parseInt(r[1], 32);
 				return r;
 			});
-
-			var bindInfo = inf[1].split(';').map(function(btype){
-				if (btype == 0) return false;
-				var BT = btype.split(':');
-				BT[2] = BT[2].split(',').map(function(v){ return parseInt(v, 36); });
-				return BT;
-			});
-			blevel.innerHTML = bindInfo.map(function(BT, k){
-				if (!BT) return '';
-				var line = '0,100';
-				for (var i in BT[2]) line += ' ' + (BT[1] * i * H.kpx) + ',' + Math.min(100,(100 - BT[2][i]/100));
-				var send = Math.round(BT[1] * BT[2].length * H.kpx) + 1;
-				line += ' ' + send + ',100';
-				return Template('bindlevel', {
-					color  : H3K27Ac[k].col,
-					points : line,
-					left   : BT[0] * H.kpx,
-					width  : send
-				});
-			}).join('');
-			
 			// L - points
 			if (mode == 'L'){
 				genes.innerHTML = genesInfo.map(function(t){
@@ -167,6 +151,37 @@ function ShowChromosome(name, start, end){
 			// XS - intrvals + names + exons
 			if (mode == 'XS') {
 			}
+			
+			// Bind-levels
+			var bingPanel = '', bingGraph = '';
+			var bindInfo = inf[1].split(';').map(function(btype, k){
+				if (btype == 0) return false;
+				var BT = btype.split(':');
+				BT[2] = BT[2].split(',').map(function(v){ return parseInt(v, 36); });
+				// Draw:
+				var line = '0,100';
+				for (var i in BT[2]) line += ' ' + (BT[1] * i * H.kpx) + ',' + Math.min(100,(100 - BT[2][i]/100));
+				var send = Math.round(BT[1] * BT[2].length * H.kpx) + 1;
+				line += ' ' + send + ',100';
+				bingGraph += Template('bindlevel', {
+					color  : H3K27Ac[k].col,
+					points : line,
+					left   : BT[0] * H.kpx,
+					key    : k,
+					width  : send
+				});
+				bingPanel += Template('bindpanel', {
+					color  : H3K27Ac[k].col,
+					name   : H3K27Ac[k].name,
+					key    : k
+				});
+			});
+			bgraph.innerHTML = bingGraph;
+			bpanel.innerHTML = bingPanel;
+			$('.bind-swith').click(function(){
+				var nm = 'bl-hide' + $(this).data('k');
+				$('body')[$('body').hasClass(nm) ? 'removeClass' : 'addClass'](nm);
+			})
 		});
 	}
 	

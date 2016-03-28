@@ -589,14 +589,65 @@ body:not(.compare-common):not(.compare-differ) .all.btn,
 	background: #aaa;
 	height: 7px;
 }
-#bindlevel {
+#bind-graph {
 	position: relative;
 	height: 100px;
 	border-top: 1px dashed #eee;
 }
-.blevel {
+#bind-panel {
+	text-shadow: 0 0 1px #FFF, 0 0 2px #FFF;
+    position: absolute;
+    top: 94px;
+    left: 0;
+    padding: 5px;
+    font-size: 11px;
+    line-height: 15px;
+}
+#bind-panel .round {
+	float: left;
+	width: 10px;
+	height: 10px;
+	margin: 2px 5px 2px 0;
+	border-radius: 5px;
+}
+#bind-panel a:hover {
+	text-decoration: none;
+	border-bottom: 1px dotted #337ab7
+}
+#bind-graph .blevel {
 	position: absolute;
 }
+
+.bl-hide0 #b-gr0,
+.bl-hide1 #b-gr1,
+.bl-hide2 #b-gr2,
+.bl-hide3 #b-gr3,
+.bl-hide4 #b-gr4,
+.bl-hide5 #b-gr5 {
+	display: none
+}
+
+.bl-hide0 .b-sw0 a,
+.bl-hide1 .b-sw1 a,
+.bl-hide2 .b-sw2 a,
+.bl-hide3 .b-sw3 a,
+.bl-hide4 .b-sw4 a,
+.bl-hide5 .b-sw5 a {
+	color: #888
+}
+
+.bl-hide0 .b-sw0 span,
+.bl-hide1 .b-sw1 span,
+.bl-hide2 .b-sw2 span,
+.bl-hide3 .b-sw3 span,
+.bl-hide4 .b-sw4 span,
+.bl-hide5 .b-sw5 span {
+	background-color: #fff !important;
+	border: 1px solid #555;
+}
+
+
+
 #samples {
 	position: relative;
 	min-height: 100px;
@@ -680,7 +731,6 @@ body:not(.compare-common):not(.compare-differ) .all.btn,
 
 
 /* --------------------------- */
-
 
 
 
