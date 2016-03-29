@@ -575,8 +575,6 @@ function ShowChromosome(name, start, end){
 		var bp2 = parseInt(e[3]);
 		location.hash = '#' + name + ':' + bp1 + '-' + bp2;
 		load_detail_content(name, bp1, bp2);
-		var obj = getBwtWeb('svgHolderT0');
-    	obj.search(name.substr(3) + ":" + start + ".." + end, function(err) {});
 	};
 
 	var px,ox,dx, tx,vx,ix;
@@ -611,9 +609,13 @@ function ShowChromosome(name, start, end){
 	document.onmouseup = function(e){
 		if (!isNaN(dx)) {
 			Resized([(ox)*size/1100, (ox + dx)*size/1100]);
+			var obj = getBwtWeb('svgHolderT0');
+    		obj.search(name.substr(3) + ":" + start + ".." + end, function(err) {});
 		}
 		if (!isNaN(vx)) {
 			Resized([(ix[0] + vx*3)*size/ww, (ix[1] + vx*3)*size/ww]);
+			var obj = getBwtWeb('svgHolderT0');
+    		obj.search(name.substr(3) + ":" + start + ".." + end, function(err) {});
 		}
 		box.style.display = 'none';
 		ox = NaN, px = NaN, dx = NaN, tx = NaN, vx = NaN;
