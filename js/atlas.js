@@ -582,6 +582,28 @@ function ShowChromosome(name, start, end){
 
 	var px,ox,dx, tx,vx,ix;
 	// Select range (chromosome)
+	$("#svgHolderT0")[0].onmousedown = function(e){
+		tx = e.pageX;
+		ix = current;
+	};
+
+	$("#svgHolderT0")[0].onmousemove = function(e){
+		if (!isNaN(tx)) {
+			if (isNaN(vx)) box.style.display = 'block';
+			vx = -(e.pageX - tx) * (ix[1] - ix[0]) / ww;
+			$(".detail_content").css("margin-left", (e.pageX - tx - 1100) + "px");
+			ResizePre([(ix[0] + vx) * size / ww, (ix[1] + vx) * size / ww]);
+		}
+	};
+
+	document.onmouseup = function(e){
+		if (!isNaN(vx)) {
+			Resized([(ix[0] + vx*3)*size/ww, (ix[1] + vx*3)*size/ww]);
+		}
+		box.style.display = 'none';
+		ox = NaN, px = NaN, dx = NaN, tx = NaN, vx = NaN;
+	};
+
 	$("#range")[0].onmousedown = function(e){
 		ox = e.offsetX;
 		px = e.pageX;
@@ -676,7 +698,5 @@ $(document).ready(function() {
 		} else {
 			Route();
 		}
-	}, function(newChr, newStart, newEnd) {
-		console.log(newChr, newStart, newEnd);
 	});	
 });

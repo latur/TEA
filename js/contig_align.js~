@@ -318,7 +318,7 @@ function align_contig(id){
 	var len = 0, height = 0, ref = '';
 	if (info[5] != "Unknown"){
 		if (TE_ref[info[5]].length > 600){
-			ref = TE_ref[info[5]].substr(300) + "..." + TE_ref[info[5]].substr(-300, 300);
+			ref = TE_ref[info[5]].substr(0, 300) + "..." + TE_ref[info[5]].substr(-300, 300);
 		alert(ref);
 
 		} else

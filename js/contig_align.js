@@ -319,8 +319,6 @@ function align_contig(id){
 	if (info[5] != "Unknown"){
 		if (TE_ref[info[5]].length > 600){
 			ref = TE_ref[info[5]].substr(0, 300) + "..." + TE_ref[info[5]].substr(-300, 300);
-		alert(ref);
-
 		} else
 			ref = TE_ref[info[5]];
 

@@ -1,4 +1,4 @@
-var TE_data = {
+var TE_ref = {
 "AluJo": "\
 ggccgggcgcggtggctcacgcctgtaatcccagcactttgggaggccgaggcgggaggattgcttgagcccaggagttcgagaccagcctgggcaacatagcgagaccccgtctctacaaaaaatacaaaaattagccgggcgtggtggcgcgcgcctgtagtcccagctactcgggaggctgaggcaggaggatcgcttgagcccaggagttcgaggctgcagtgagctatgatcgcgccactgcactccagcctgggcgacagagcgagaccctgtctca",
 "AluJb": "\

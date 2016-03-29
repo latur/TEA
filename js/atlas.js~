@@ -582,6 +582,31 @@ function ShowChromosome(name, start, end){
 
 	var px,ox,dx, tx,vx,ix;
 	// Select range (chromosome)
+	$("#svgHolderT0")[0].onmousedown = function(e){
+		tx = e.pageX;
+		ix = current;
+	};
+
+	$("#svgHolderT0")[0].onmousemove = function(e){
+		if (!isNaN(tx)) {
+			if (isNaN(vx)) box.style.display = 'block';
+			vx = -(e.pageX - tx) * (ix[1] - ix[0]) / ww;
+			$(".detail_content").css("margin-left", (e.pageX - tx - 1100) + "px");
+			ResizePre([(ix[0] + vx) * size / ww, (ix[1] + vx) * size / ww]);
+		}
+	};
+
+	document.onmouseup = function(e){
+		if (!isNaN(dx)) {
+			Resized([(ox)*size/1100, (ox + dx)*size/1100]);
+		}
+		if (!isNaN(vx)) {
+			Resized([(ix[0] + vx*3)*size/ww, (ix[1] + vx*3)*size/ww]);
+		}
+		box.style.display = 'none';
+		ox = NaN, px = NaN, dx = NaN, tx = NaN, vx = NaN;
+	};
+
 	$("#range")[0].onmousedown = function(e){
 		ox = e.offsetX;
 		px = e.pageX;
@@ -669,11 +694,12 @@ function run_demo(){
 
 $(document).ready(function() {
     SamplesLoaded();
-	createSmallBwtWebByAl('svgHolderT0', 'sml0', '1', 5000000, 10000000);
-	if (location.hash == ''){
-		Route("#general");
-	//	run_demo();
-	} else {
-		Route();
-	}
+	createSmallBwtWebByAl('svgHolderT0', 'sml0', '1', 5000000, 10000000, function() {
+		if (location.hash == ''){
+			Route("#general");
+		//	run_demo();
+		} else {
+			Route();
+		}
+	});	
 });
