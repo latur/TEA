@@ -440,7 +440,9 @@ function _ShowHelper2(){
 
 // Showing chromosomes as one line [Thao]
 function ShowAsLine(){
-	doc.style.marginTop = '230px';
+	$('.fixed-nav')[0].offsetHeight = ($('.fixed-nav')[0].offsetHeight - 80) + 'px';
+	doc.style.marginTop =  $('.fixed-nav')[0].offsetHeight + 'px';
+
 	$('.chr-line').html('');
 	$("#svgHolderT0").css("display", "none");
 	Object.keys(chrs).map(function(name, i){
