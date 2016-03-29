@@ -170,7 +170,6 @@ function remove_file(id){
 		if (expName[i] == id)
 			expName.splice(i, 1);
 	}
-alert(expName);
 	for (var chr in expData){
 		if (chr.localeCompare("map") == 0) continue;
 		if (expData[chr][id]){

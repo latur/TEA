@@ -8,6 +8,8 @@
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/heatmap.css">
 	<link rel="icon" href="favicon.ico" type="image/x-icon" />
+	<link rel="stylesheet" href="http://static.bioturing.com/css/bwtweb.css?t=18">
+	<link rel="stylesheet" href="http://static.bioturing.com/v20151221.57/b/css/font-awesome.min.css"/>
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/ocanvas/2.0.0/ocanvas.min.js"></script>
 </head>
 <body>
@@ -143,10 +145,6 @@
 		</div>
 	</div>
 </script>
-<!-- Chromosomes as line -->
-<script data-name="chr-line" class="template" type="text/x-handlebars-template">
-	<div class="chr-line"></div>
-</script>
 
 <!-- Chromosome heatmap of samples -->
 <script data-name="hm" class="template" type="text/x-handlebars-template">
@@ -157,6 +155,7 @@
 	<div id="chr-one" class="chr-one cs nsel">
 		<div id="sel-box"></div>
 		<div class="chr-box {name}-full" data-name="{name}">
+			<div class="helper"></div>
 			<div id="range"></div>
 			<div class="ss" id="cs-ss-F"></div>
 			<div class="lh" id="cs-lh-F"></div>
@@ -169,7 +168,7 @@
 	<div class="ch-zoom nsel">
 		<div id="ch-zoom-hm" class="ch-zoom-scroll">
 			<div style="height: 100px; overflow: hidden;">
-				<div class="genes ">
+				<div class="genes">
 					<div class="hm" id="ghmap"></div>
 					<div id="genes"></div>
 				</div>
@@ -181,6 +180,16 @@
 		</div>
 	</div>
 </script>
+<script data-name="detail_table" class="template" type="text/x-handlebars-template">
+	<div class="detail_wrap">
+		<div class="detail_content">
+			<div class="genes "></div>
+			<svg class="samples"></svg>
+		</div>
+	</div>
+</script>
+
+
 <script data-name="rule" class="template" type="text/x-handlebars-template">
 	<div class="rule k{key}" style="width:{width}px">
 		<div class="bp">{bp}</div>
@@ -188,7 +197,7 @@
 	</div>
 </script>
 <script data-name="zoom-trs" class="template" type="text/x-handlebars-template">
-	<div id="trs-{id}" class="spl t{type}" style="left: {left}%"><i></i><a data-f="{f}" data-i="{ind}">{name}</a></div>
+	<div id="trs-{id}" class="spl t{type}" style="left: {left}px"><i></i><a data-f="{f}" data-i="{ind}">{name}</a></div>
 </script>
 <script data-name="zoom-L" class="template" type="text/x-handlebars-template">
 	<div class="bx gene" style="left:{left}%"></div>
@@ -248,6 +257,7 @@
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.file-input.js"></script>
 <script type="text/javascript" src="js/d3/d3.min.js"></script>
+<script language="javascript" src="./bwtweb-all-min.js?t=324"></script>
 
 <script type="text/javascript" src="js/general_map.js"></script>
 <script type="text/javascript" src="js/phylogenetic_tree.js"></script>

@@ -238,7 +238,6 @@ function draw_seq(info, len){
 	canvas.strokeStyle = "#6E6E6E";
 	if (info[6] != "Unknown")
 		draw_ruler(canvas, len);
-
 	var ref = '';
 	if (info[5] != "Unknown"){
 		ref = TE_ref[info[5]].toUpperCase().split("");

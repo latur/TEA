@@ -47,6 +47,7 @@ function general_map(){
 			.attr("id", name)
 			.on("click", function(){
 				remove_file(this.id);
+				$(".pop_up").remove();
 			})
 			.on("mouseover", function(){
 				$("body").append(function(){

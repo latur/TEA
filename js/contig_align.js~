@@ -238,8 +238,8 @@ function draw_seq(info, len){
 	canvas.strokeStyle = "#6E6E6E";
 	if (info[6] != "Unknown")
 		draw_ruler(canvas, len);
-
-	var ref = '';
+alert(len);
+/*	var ref = '';
 	if (info[5] != "Unknown"){
 		ref = TE_ref[info[5]].toUpperCase().split("");
 		var start = ref.length, end = 0;
@@ -285,12 +285,12 @@ function draw_seq(info, len){
 					draw_text(x, 90, "15px sans-serif", txt_color[seq[i][k]], seq[i][k], canvas)
 					draw_line(x+5.5, 53, x+5.5, 90-17, 1, canvas)
 				}
-				x += 11;
 				draw_text(x, 45, "15px sans-serif", "#6E6E6E", "N", canvas);
+				x += 11;
 			}
 		}
 	}
-	
+*/	
 }
 
 function align_contig(info, name, file){
