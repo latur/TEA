@@ -580,28 +580,28 @@ function ShowChromosome(name, start, end){
 		load_detail_content(name, bp1, bp2);
 	};
 
-	var px,ox,dx, tx,vx,ix;
+	var px,ox,dx, tx,vx,ix2, tx2, vx2;
 	// Select range (chromosome)
 	$("#svgHolderT0")[0].onmousedown = function(e){
-		tx = e.pageX;
-		ix = current;
+		tx2 = e.pageX;
+		ix2 = current;
 	};
 
 	$("#svgHolderT0")[0].onmousemove = function(e){
-		if (!isNaN(tx)) {
-			if (isNaN(vx)) box.style.display = 'block';
-			vx = -(e.pageX - tx) * (ix[1] - ix[0]) / ww;
-			$(".detail_content").css("margin-left", (e.pageX - tx - 1100) + "px");
-			ResizePre([(ix[0] + vx) * size / ww, (ix[1] + vx) * size / ww]);
+		if (!isNaN(tx2)) {
+			if (isNaN(vx2)) box.style.display = 'block';
+			vx2 = -(e.pageX - tx2) * (ix2[1] - ix2[0]) / ww;
+			$(".detail_content").css("margin-left", (e.pageX - tx2 - 1100) + "px");
+			ResizePre([(ix2[0] + vx2) * size/ww, (ix2[1] + vx2)*size/ww]);
 		}
 	};
 
 	document.onmouseup = function(e){
-		if (!isNaN(vx)) {
-			Resized([(ix[0] + vx*3)*size/ww, (ix[1] + vx*3)*size/ww]);
+		if (!isNaN(vx2)) {
+			Resized([(ix2[0] + vx2*3)*size/ww, (ix2[1] + vx2*3)*size/ww]);
 		}
 		box.style.display = 'none';
-		ox = NaN, px = NaN, dx = NaN, tx = NaN, vx = NaN;
+		tx2 = NaN, vx2 = NaN;
 	};
 
 	$("#range")[0].onmousedown = function(e){
@@ -625,7 +625,7 @@ function ShowChromosome(name, start, end){
 			if (isNaN(vx)) box.style.display = 'block';
 			vx = -(e.pageX - tx) * (ix[1] - ix[0]) / ww;
 			$(".detail_content").css("margin-left", (e.pageX - tx - 1100) + "px");
-			ResizePre([(ix[0] + vx) * size / ww, (ix[1] + vx) * size / ww]);
+			ResizePre([(ix[0] + vx)*size/ww, (ix[1] + vx)*size/ww]);
 			var obj = getBwtWeb('svgHolderT0');
     		obj.search(name.substr(3) + ":" + start + ".." + end, function(err) {});
 		}
