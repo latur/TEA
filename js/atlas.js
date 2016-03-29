@@ -116,9 +116,12 @@ function SamplesLoaded(){
 			var chr = loc.match(/^\#?(chr[0-9XY]+)\:([0-9]+)\-([0-9]+)\/?([0-9a-z]+)?$/);
 			if (chr) {
 				disable_button();
+				var start = parseInt(chr[2]);
+				var end = parseInt(chr[3]);
+				if (end < start + 50) end = start + 50;
 				var obj = getBwtWeb('svgHolderT0');
- 				obj.search(chr[1].substr(3)+ ":" + parseInt(chr[2]) + ".." + parseInt(chr[3]), function(err) {});
-				return ShowChromosome(chr[1], parseInt(chr[2]), parseInt(chr[3]));
+ 				obj.search(chr[1].substr(3)+ ":" + start + ".." + end, function(err) {});
+				return ShowChromosome(chr[1], start, end);
 			} else {
 				$(this).val('').attr("placeholder","Try again with search format. Ex: chr1:1000-5000000");
 			}
@@ -563,8 +566,8 @@ function ShowChromosome(name, start, end){
 	// Impossible states:
 	if (!chrs[name])
 		name = 'chr1';
-	if (end < start + 25000){
-		end = start + 25000;
+	if (end < start + 50){
+		end = start + 50;
 	}
 
 	// chromosome bar:
