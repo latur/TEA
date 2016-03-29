@@ -604,6 +604,8 @@ function ShowChromosome(name, start, end){
 			vx = -(e.pageX - tx) * (ix[1] - ix[0]) / ww;
 			$(".detail_content").css("margin-left", (e.pageX - tx - 1100) + "px");
 			ResizePre([(ix[0] + vx) * size / ww, (ix[1] + vx) * size / ww]);
+			var obj = getBwtWeb('svgHolderT0');
+    		obj.search(name.substr(3) + ":" + start + ".." + end, function(err) {});
 		}
 	};
 
@@ -667,11 +669,14 @@ function run_demo(){
 
 $(document).ready(function() {
     SamplesLoaded();
-	createSmallBwtWebByAl('svgHolderT0', 'sml0', '1', 5000000, 10000000);
-	if (location.hash == ''){
-		Route("#general");
-	//	run_demo();
-	} else {
-		Route();
-	}
+	createSmallBwtWebByAl('svgHolderT0', 'sml0', '1', 5000000, 10000000, function() {
+		if (location.hash == ''){
+			Route("#general");
+		//	run_demo();
+		} else {
+			Route();
+		}
+	}, function(newChr, newStart, newEnd) {
+		console.log(newChr, newStart, newEnd);
+	});	
 });

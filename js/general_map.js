@@ -235,7 +235,7 @@ function get_common(){
 
 			for (var pos = 0; pos < expData[chr][name].length; pos++){
 				var id = expData[chr][name][pos][7];
-				var count = 0;
+				var count = 1;
 				var has = 0;
 				for (var y in file_list){
 					if (x == y) continue;
@@ -243,8 +243,7 @@ function get_common(){
 					if (!expData[chr][n]) break;
 	
 					for (var k = 0; k < expData[chr][n].length; k++){
-						if (Math.abs(expData[chr][name][pos][0] - expData[chr][n][k][0]) < 50 &&
-							expData[chr][name][pos][2] == expData[chr][name][pos][2]){
+						if (Math.abs(expData[chr][name][pos][0] - expData[chr][n][k][0]) < 50 ){
 							++count;
 							has = 1;
 							break;
@@ -252,7 +251,7 @@ function get_common(){
 					}
 					if (has == 0) break;
 				}
-				if (count != n_file - 1)
+				if (count != n_file)
 					add_common(chr, expData[chr][name][pos][0], expData[chr][name][pos][2]-1, id, name);
 			}
 		}
