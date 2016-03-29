@@ -690,8 +690,7 @@ $(document).ready(function() {
 	var loc = location.hash;
 	createSmallBwtWebByAl('svgHolderT0', 'sml0', '1', 5000000, 10000000, function() {
 		if (loc == ''){
-			Route("#general");
-		//	run_demo();
+			run_demo();
 		} else {
 			Route(loc);
 		}

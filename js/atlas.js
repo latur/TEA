@@ -682,6 +682,7 @@ function get_server_file(id){
 
 function run_demo(){
 	var expName = ["2nsready", "2sready", "3s_merged", "91c"]
+	$(".status").css("visibility", "visible").html("Loading files...");
 	get_server_file(expName)
 }
 
@@ -690,8 +691,7 @@ $(document).ready(function() {
 	var loc = location.hash;
 	createSmallBwtWebByAl('svgHolderT0', 'sml0', '1', 5000000, 10000000, function() {
 		if (loc == ''){
-			Route("#general");
-		//	run_demo();
+			run_demo();
 		} else {
 			Route(loc);
 		}

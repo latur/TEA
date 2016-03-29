@@ -170,6 +170,7 @@ function remove_file(id){
 	for (var i in expName){
 		if (expName[i] == id)
 			expName.splice(i, 1);
+		$('[data-name="'+name+'"]').removeClass('selected');
 	}
 	for (var chr in expData){
 		if (chr.localeCompare("map") == 0) continue;
