@@ -233,14 +233,15 @@ function draw_ruler(canvas, len){
 	}
 }
 
-function draw_seq(info, len){
+function draw_seq(info, ref, len){
 	var canvas = document.getElementsByClassName("mini_browser")[0].getContext("2d");
 	canvas.strokeStyle = "#6E6E6E";
+
 	if (info[6] != "Unknown")
 		draw_ruler(canvas, len);
-	var ref = '';
+
 	if (info[5] != "Unknown"){
-		ref = TE_ref[info[5]].toUpperCase().split("");
+		ref = ref.toUpperCase().split("");
 		var start = ref.length, end = 0;
 
 		var x = 10;
@@ -314,9 +315,14 @@ function align_contig(id){
 	$("#detail")
 		.append("<div class='mini_wrap'><div/>")
 
-	var len = 0, height = 0;
+	var len = 0, height = 0, ref = '';
 	if (info[5] != "Unknown"){
-		len = TE_ref[info[5]].length*11 + 10;
+		if (TE_ref[info[5]].length > 1000){
+			ref = TE_ref[info[5]].substr(500) + "..." + TE_ref[info[5]].substr(-500, 500);
+		} else
+			ref = TE_ref[info[5]];
+		alert(ref);
+		len = ref*11 + 10;
 		if (info[6] != "Unknown")
 			height = info[6].split("/").length*25 + 90;
 		else
@@ -338,7 +344,7 @@ function align_contig(id){
 				.attr("height", height)
 				.attr("class", "mini_browser")
 	});
-	draw_seq(info, len);
+	draw_seq(info, ref, len);
 
 	if (info[6] != "Unknown")
 		$(".mini_wrap")
