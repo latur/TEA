@@ -204,6 +204,7 @@ function SamplesLoaded(){
 
 		// Loading
 		$('.get-samples').click(function(){
+			$(".status").css("visibility", "visible").html("Loading files...");
 			$(this).addClass('disabled').html('Loading...')
 			var samples = [];
 			$('.library li.selected').each(function(){
@@ -211,7 +212,6 @@ function SamplesLoaded(){
 				expName.push($(this).data('name'));
 				$('[data-name="'+name+'"]').addClass('loaded');
 			});
-			$(".status").css("visibility", "visible").html("Loading files...");
 			get_server_file(samples)
 			$('#modal').modal('hide');
 		});
@@ -683,13 +683,18 @@ function get_server_file(id){
 
 function run_demo(){
 	var expName = ["2nsready", "2sready", "3s_merged", "91c"]
-	$(".status").css("visibility", "visible").html("Loading files...");
 	get_server_file(expName)
 }
 
 $(document).ready(function() {
     SamplesLoaded();
+
 	var loc = location.hash;
+	if (loc == '')
+			$(".status").css("visibility", "visible").html("Running demo...");
+	else 
+		$(".status").css("visibility", "visible").html("Initialize...");
+
 	createSmallBwtWebByAl('svgHolderT0', 'sml0', '1', 5000000, 10000000, function() {
 		if (loc == ''){
 			run_demo();

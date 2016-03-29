@@ -204,6 +204,7 @@ function SamplesLoaded(){
 
 		// Loading
 		$('.get-samples').click(function(){
+			$(".status").css("visibility", "visible").html("Loading files...");
 			$(this).addClass('disabled').html('Loading...')
 			var samples = [];
 			$('.library li.selected').each(function(){
@@ -682,12 +683,13 @@ function get_server_file(id){
 
 function run_demo(){
 	var expName = ["2nsready", "2sready", "3s_merged", "91c"]
-	$(".status").css("visibility", "visible").html("Loading files...");
 	get_server_file(expName)
 }
 
 $(document).ready(function() {
     SamplesLoaded();
+	$(".status").css("visibility", "visible").html("Initialize...");
+
 	var loc = location.hash;
 	createSmallBwtWebByAl('svgHolderT0', 'sml0', '1', 5000000, 10000000, function() {
 		if (loc == ''){
