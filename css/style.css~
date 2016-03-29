@@ -148,6 +148,11 @@ hr {
 	height: 50px;
 }
 
+#svgHolderT0 {
+	display: block;
+	width: 1100px;
+	margin: auto;
+}
 /* Chromosome-list */
 .chr {
 	position: relative;
@@ -680,7 +685,6 @@ hr {
 	overflow: hidden;
 	width: 1100px;
 	margin: auto;
-	border: 1px solid;
 }
 
 .detail_content {
@@ -688,7 +692,6 @@ hr {
 	display: block;
 	margin-left: -1100px;
 	width: 3300px;
-	border: 1px solid;
 }
 
 .samples {
