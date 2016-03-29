@@ -435,7 +435,7 @@ function ShowAsLine(){
 
 function load_detail_content(name, start, end){
 	$(".detail_content").css("margin-left", "-1100px");
-	
+
 	var screen = end-start;
 	start -= screen;
 	end += screen;
@@ -668,7 +668,6 @@ function run_demo(){
 	get_server_file(expName)
 }
 
-var iTimeout = -1;
 $(document).ready(function() {
     SamplesLoaded();
 	createSmallBwtWebByAl('svgHolderT0', 'sml0', '1', 5000000, 10000000, function() {
@@ -679,6 +678,6 @@ $(document).ready(function() {
 			Route();
 		}
 	}, function(newChr, newStart, newEnd) {
-			load_detail_content('chr1' + newChr, newStart, newEnd);
+		load_detail_content('chr1' + newChr, newStart, newEnd);
 	});	
 });
