@@ -614,6 +614,7 @@ hr {
 	font-weight: bold;
 	font-size: 10px;
 	color: grey;
+	background: #fff;
 }
 .rule {
 	height: 24px;

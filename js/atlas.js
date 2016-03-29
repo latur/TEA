@@ -248,7 +248,7 @@ function SamplesLoaded(){
 		var name = $(".list_name").text().toLowerCase();
 		var cen = (ora[1] + ora[0])/2;
 		var upg = inc * (ora[1] - ora[0]) / 2;
-		if (upg < 100) upg = 100;
+		if (upg < 50) upg = 50;
 		var x1 = cen - upg, x2 = cen + upg;
 		if (x1 < 0) x1 = 0;
 		if (x2 > chrs[name]) x2 = chrs[name];

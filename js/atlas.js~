@@ -118,7 +118,7 @@ function SamplesLoaded(){
 				disable_button();
 				var start = parseInt(chr[2]);
 				var end = parseInt(chr[3]);
-				if (end < start + 200) end = start + 200;
+				if (end < start + 50) end = start + 50;
 				var obj = getBwtWeb('svgHolderT0');
  				obj.search(chr[1].substr(3)+ ":" + start + ".." + end, function(err) {});
 				return ShowChromosome(chr[1], start, end);
