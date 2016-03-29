@@ -675,13 +675,14 @@ function get_server_file(id){
 			get_common();
 			contruct_tree();
 			visibleType = visibleMode = 0;
-			Route("#general");
+			Route();
 		}
 	})
 }
 
 function run_demo(){
 	var expName = ["2nsready", "2sready", "3s_merged", "91c"]
+	$(".status").css("visibility", "visible").html("Loading files...");
 	get_server_file(expName)
 }
 

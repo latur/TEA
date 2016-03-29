@@ -211,6 +211,7 @@ function SamplesLoaded(){
 				expName.push($(this).data('name'));
 				$('[data-name="'+name+'"]').addClass('loaded');
 			});
+			$(".status").css("visibility", "visible").html("Loading files...");
 			get_server_file(samples)
 			$('#modal').modal('hide');
 		});
@@ -675,7 +676,7 @@ function get_server_file(id){
 			get_common();
 			contruct_tree();
 			visibleType = visibleMode = 0;
-			Route("#general");
+			Route();
 		}
 	})
 }
