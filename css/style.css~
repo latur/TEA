@@ -694,5 +694,6 @@ hr {
 .samples {
 	position:relative;
 	width: 3300px;
+	cursor: pointer;
 }
 

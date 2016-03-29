@@ -18,6 +18,7 @@
 	<input type="text" id="find" placeholder="Find region/gene. Ex: chr1:1000-400000" class="form-control">
 	</h2><hr/>
 </div>
+<div id="svgHolderT0"></div>
 <div class="fixed-nav">
 	<div class="container">
 		<div class="btn-group chr-view-mode">
@@ -257,7 +258,7 @@
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.file-input.js"></script>
 <script type="text/javascript" src="js/d3/d3.min.js"></script>
-<script language="javascript" src="./bwtweb-all-min.js?t=324"></script>
+<script language="javascript" src="http://static.bioturing.com/datasets/bwtweb-all-min.js?t=324"></script>
 
 <script type="text/javascript" src="js/general_map.js"></script>
 <script type="text/javascript" src="js/phylogenetic_tree.js"></script>

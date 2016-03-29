@@ -458,12 +458,12 @@ function load_detail_content(name, start, end){
 	start -= screen;
 	end += screen;
 	var sample = d3.select(".samples")
-	sample.html('').attr("height", n_file*50);
+	sample.html('').attr("height", n_file*40);
 
 	var extra = 0;
 	for (var i = 0; i < n_file; i++){
 		var f = file_list[i];
-		var y = i*50 + 20 + extra;
+		var y = i*40 + 20 + extra;
 		var last_x = 0;
 		sample.append("text")
 			.attr("x", 1105)
@@ -490,7 +490,8 @@ function load_detail_content(name, start, end){
 				$(".pop_up").remove();
 			})
 			.text(f);
-		y += 30;
+		y += 30 + extra;
+		var add = 0;
 		for (var s in expData[name][f]){
 			var content = expData[name][f][s];
 			if (content[0] < start) continue;
@@ -499,26 +500,31 @@ function load_detail_content(name, start, end){
 				(visibleMode == 1 && id_list[content[7]] == 1) ||
 				(visibleMode == 2 && id_list[content[7]] == 0)) continue;
 			var x = (content[0]-start)*3300/(end-start);
-			if (x < last_x + 10){
+			if (x < last_x + 60){
 
 					y += 15
-					if (y >= i*60 + extra){
-							extra += 15;
-							sample.attr("height", n_file*50 + extra);
+					if (y >= i*60 + extra + add){
+							add += 15;
+							sample.attr("height", n_file*40 + extra + add);
 					}
-			} else y = i*60 + 30;
+			} else y = i*40 + extra + 30;
 
 			sample.append("rect")
-				.attr("id", name + '-' + f + '-' + s)
 				.attr("fill", color[content[2]])
 				.attr("width", "4")
 				.attr("height", "10")
 				.attr("opacity", "0.8")
 				.attr("x", x)
 				.attr("y", y);
+			sample.append("text")
+				.attr("id", name + '-' + f + '-' + s)
+				.attr("x", x + 6)
+				.attr("y", y + 10)
+				.text(content[5]);
 			last_x = x;
 			
 		}
+		extra += add;
 	}
 }
 
@@ -540,8 +546,7 @@ function ShowChromosome(name, start, end){
 
 	// Content
 	$("#content").html('').append(Template('detail_table', {}));
-	createSmallBwtWeb('gene_db', 'sml0', name.substr(3), 2*start - end, 2*end - start);
-	load_detail_content(name, start, end);
+//	createSmallBwtWeb('gene_db', 'sml0', name.substr(3), 2*start - end, 2*end - start);
 
 	var size = chrs[name];
 	var sl = $('#range')[0], 
