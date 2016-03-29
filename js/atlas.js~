@@ -436,9 +436,6 @@ function ShowAsLine(){
 function load_detail_content(name, start, end){
 	$(".detail_content").css("margin-left", "-1100px");
 	
-	var obj = getBwtWeb('svgHolderT0');
-    obj.search(name.substr(3) + ":" + start + ".." + end, function(err) {});
-
 	var screen = end-start;
 	start -= screen;
 	end += screen;
@@ -678,11 +675,6 @@ $(document).ready(function() {
 			Route();
 		}
 	}, function(newChr, newStart, newEnd) {
-		if(iTimeout > 0) {
-			clearTimeout(iTimeout);
-		}
-		iTimeout = setTimeout(function() {
-			load_detail_content(newChr, newStart, newEnd);
-		}, 100);		
+			load_detail_content('chr1' + newChr, newStart, newEnd);
 	});	
 });

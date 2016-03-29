@@ -436,9 +436,6 @@ function ShowAsLine(){
 function load_detail_content(name, start, end){
 	$(".detail_content").css("margin-left", "-1100px");
 	
-//	var obj = getBwtWeb('svgHolderT0');
-//    obj.search(name.substr(3) + ":" + start + ".." + end, function(err) {});
-
 	var screen = end-start;
 	start -= screen;
 	end += screen;
@@ -578,6 +575,8 @@ function ShowChromosome(name, start, end){
 		var bp2 = parseInt(e[3]);
 		location.hash = '#' + name + ':' + bp1 + '-' + bp2;
 		load_detail_content(name, bp1, bp2);
+		var obj = getBwtWeb('svgHolderT0');
+    	obj.search(name.substr(3) + ":" + start + ".." + end, function(err) {});
 	};
 
 	var px,ox,dx, tx,vx,ix;
@@ -678,11 +677,6 @@ $(document).ready(function() {
 			Route();
 		}
 	}, function(newChr, newStart, newEnd) {
-		if(iTimeout > 0) {
-			clearTimeout(iTimeout);
-		}
-		iTimeout = setTimeout(function() {
-			load_detail_content(newChr, newStart, newEnd);
-		}, 100);		
+			load_detail_content('chr1' + newChr, newStart, newEnd);
 	});	
 });
