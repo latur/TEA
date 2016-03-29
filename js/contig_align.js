@@ -280,10 +280,11 @@ function draw_seq(info, ref, len){
 			var seq = info[6].split("/");
 			for (var i = 0; i < seq.length; i++){
 				seq[i] = seq[i].split("");
-				for (var k = 0; k < seq[i].length; k++, x += 11){
+				for (var k = 0; k < seq[i].length; k++){
 					draw_text(x, 45, "15px sans-serif", "#6E6E6E", "N", canvas);
 					draw_text(x, 90, "15px sans-serif", txt_color[seq[i][k]], seq[i][k], canvas)
 					draw_line(x+5.5, 53, x+5.5, 90-17, 1, canvas)
+					x += 11;
 				}
 				draw_text(x, 45, "15px sans-serif", "#6E6E6E", "N", canvas);
 				x += 11;

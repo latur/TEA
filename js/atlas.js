@@ -86,7 +86,7 @@ function Route(loc){
 	var chr = location.hash.match(/^\#?(chr[0-9XY]+)\:([0-9]+)\-([0-9]+)\/?([0-9a-z]+)?$/);
 	if (chr) {
 		var obj = getBwtWeb('svgHolderT0');
- 		obj.search(chr1[0].substr(3)+ ":" + parseInt(chr[2]) + ".." + parseInt(chr[3]), function(err) {});
+ 		obj.search(chr[1].substr(3)+ ":" + parseInt(chr[2]) + ".." + parseInt(chr[3]), function(err) {});
 
 		return ShowChromosome(chr[1], parseInt(chr[2]), parseInt(chr[3]));
 	}
@@ -666,7 +666,7 @@ function get_server_file(id){
 	$.ajax({
 		method: "get",
 		dataType: "jsonp",
-		url: "http://127.0.0.1:8888/",
+		url: " http://bioalgorithm.xyz/teatlas_ajax",
 		data: {"id": id},
 		success: function(file) {
 			for (var i = 0; i < file.content.length; i++)
@@ -687,12 +687,13 @@ function run_demo(){
 
 $(document).ready(function() {
     SamplesLoaded();
+	var loc = location.hash;
 	createSmallBwtWebByAl('svgHolderT0', 'sml0', '1', 5000000, 10000000, function() {
-		if (location.hash == ''){
+		if (loc == ''){
 			Route("#general");
 		//	run_demo();
 		} else {
-			Route();
+			Route(loc);
 		}
 	}, function(newChr, newStart, newEnd) {
 		ShowChromosome('chr' + newChr, newStart, newEnd);
