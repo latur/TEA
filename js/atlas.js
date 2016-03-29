@@ -151,17 +151,6 @@ function SamplesLoaded(){
 		Route();
 	});
 
-
-	// Panel-fixed:
-	$(window).scroll(function(e) {
-		if ($(this).scrollTop() > 90) {
-			$('body').addClass('fix');
-			doc.style.marginTop = $('.fixed-nav')[0].offsetHeight + 'px';
-		} else {
-			$('body').removeClass('fix');
-			doc.style.marginTop = '0px';
-		}
-	});
 	// Samples uploader
 	$('#load').bootstrapFileInput();
 	$('#load').change(function(e){
@@ -227,7 +216,6 @@ function SamplesLoaded(){
 		var chr = location.hash.match(/^\#?(chr[0-9XY]+)\:([0-9]+)\-([0-9]+)\/?([0-9a-z]+)?$/);
 		return ShowChromosome($(this).data('map'), parseInt(chr[2]), parseInt(chr[3]));
 	});
-
 }
 
 function disable_button(){
@@ -428,8 +416,9 @@ function _ShowHelper2(){
 
 // Showing chromosomes as one line [Thao]
 function ShowAsLine(){
+	doc.style.marginTop = '230px';
 	$('.chr-line').html('');
-	$("#svgHolderT0").css("visibility", "hidden");
+	$("#svgHolderT0").css("display", "none");
 	Object.keys(chrs).map(function(name, i){
 		var style = 'width:' + (density_len[name] * 100 /1558) + '%';
 		var title = name.substr(3);
@@ -446,6 +435,7 @@ function ShowAsLine(){
 
 function load_detail_content(name, start, end){
 	$(".detail_content").css("margin-left", "-1100px");
+	
 	var obj = getBwtWeb('svgHolderT0');
     obj.search(name.substr(3) + ":" + start + ".." + end, function(err) {});
 
@@ -453,12 +443,12 @@ function load_detail_content(name, start, end){
 	start -= screen;
 	end += screen;
 	var sample = d3.select(".samples")
-	sample.html('').attr("height", n_file*40);
+	sample.html('').attr("height", n_file*50);
 
 	var extra = 0;
 	for (var i = 0; i < n_file; i++){
 		var f = file_list[i];
-		var y = i*40 + 15 + extra;
+		var y = i*50 + 15 + extra;
 		var last_x = 0;
 		sample.append("text")
 			.attr("x", 1105)
@@ -497,13 +487,13 @@ function load_detail_content(name, start, end){
 			var x = (content[0]-start)*3300/(end-start);
 			if (x < last_x + 120){
 					y += 15
-					if (y >= i*60 + extra + add){
+					if (y >= i*50 + extra + add){
 							add += 15;
-							sample.attr("height", n_file*40 + extra + add);
+							sample.attr("height", n_file*50 + extra + add);
 					}
 			} else {
 				last_x = x;	
-				y = i*40 + extra + 30;
+				y = i*50 + extra + 30;
 			}
 			sample.append("rect")
 				.attr("fill", color[content[2]])
@@ -514,8 +504,8 @@ function load_detail_content(name, start, end){
 				.attr("y", y);
 			sample.append("text")
 				.attr("id", name + '-' + f + '-' + s)
-				.attr("x", x + 6)
-				.attr("y", y + 10)
+				.attr("x", x + 8)
+				.attr("y", y + 8)
 				.attr("class", "content_name")
 				.attr("style", "font-size: 10px")
 				.text(content[5])
@@ -530,7 +520,9 @@ function load_detail_content(name, start, end){
 // Selected region on chromosome
 function ShowChromosome(name, start, end){
 	$(".list_name").html(name.charAt(0).toUpperCase() + name.substr(1) + '<span class="caret"></span>');
-	$("#svgHolderT0").css("visibility", "visibility");
+	$("#svgHolderT0").css("display", "block");
+	doc.style.marginTop = $('.fixed-nav')[0].offsetHeight + 'px';
+
 
 	// Impossible states:
 	if (!chrs[name])
@@ -627,6 +619,26 @@ function ShowChromosome(name, start, end){
 	};
 	Resized([start, end]);
 
+	// Buttons:
+	$('.move-c a.cnt').click(function(){
+		var inc = parseFloat($(this).data('e'));
+		var p = inc * (ora[1] - ora[0]);
+		var x1 = ora[0] + p, x2 = ora[1] + p;
+		if (x1 <  0) { x1 = 0; x2 = ora[1] - ora[0]; }
+		if (x2 > size) { x2 = size; x1 = size - ora[1] + ora[0]; }
+		Resized([x1, x2]);
+	});
+
+	$('.zoom-c a.cnt').click(function(){
+		var inc = parseFloat($(this).data('e'));
+		var cen = (ora[1] + ora[0])/2;
+		var upg = inc * (ora[1] - ora[0]) / 2;
+		if (upg < 100) upg = 100;
+		var x1 = cen - upg, x2 = cen + upg;
+		if (x1 < 0) x1 = 0;
+		if (x2 > size) x2 = size;
+		Resized([x1, x2]);
+	});
 	$(".status").css("visibility", "hidden");
 }
 
@@ -653,9 +665,9 @@ function run_demo(){
 	get_server_file(expName)
 }
 
-$( document ).ready(function() {
-      SamplesLoaded();
-	  createSmallBwtWeb('svgHolderT0', 'sml0', '22', 30000000, 30030000);
+$(document).ready(function() {
+    SamplesLoaded();
+	createSmallBwtWebByAl('svgHolderT0', 'sml0', '1', 5000000, 10000000);
 	if (location.hash == ''){
 		Route("#general");
 	//	run_demo();

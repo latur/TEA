@@ -3,7 +3,7 @@ body {
 	font: 13px 'Segoe UI', 'DejaVu Sans', Helvetica, 'Trebuchet MS', Arial, sans-serif;
 	font-weight: 100;
 	line-height: 1.4em;
-	background: #fafafa;
+	background: #fff;
 }
 hr {
 	margin-bottom: 15px;
@@ -111,9 +111,9 @@ hr {
 .fix .fixed-nav {
 	width: 100%;
 	position: fixed;
+	height: auto;
 	top: 0px;
 	z-index: 50;
-	box-shadow: 0 5px 15px rgba(0,0,0,0.05);
 	background: #FFF;
 }
 
@@ -138,14 +138,23 @@ hr {
 	width: 300px;
 }
 
-.container, .chr-line, #svgHolderT0 {
+.container {
 	display: block;
 	width: 1100px;
 	margin: auto;
-	height: auto;
+}
+
+#svgHolderT0 {
+	display: block;
+	width: 1100px;
+	margin: auto;
+	height: 70px;
 }
 
 .chr-line {
+	display: block;
+	width: 1100px;
+	margin: auto;
 	height: 50px;
 }
 /* Chromosome-list */
@@ -388,8 +397,8 @@ hr {
 
 #modal .contig_align {
 	width: 800px;
-	z-index: 1000;
 }
+
 #modal pre {
 	border: none;
 	margin-bottom: 0;
@@ -689,6 +698,7 @@ hr {
 	overflow: hidden;
 	width: 1100px;
 	margin: auto;
+border: 1px solid;
 }
 
 .detail_content {

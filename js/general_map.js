@@ -243,7 +243,8 @@ function get_common(){
 					if (!expData[chr][n]) break;
 	
 					for (var k = 0; k < expData[chr][n].length; k++){
-						if (Math.abs(expData[chr][name][pos][0] - expData[chr][n][k][0]) < 50){
+						if (Math.abs(expData[chr][name][pos][0] - expData[chr][n][k][0]) < 50 &&
+							expData[chr][name][pos][2] == expData[chr][name][pos][2]){
 							++count;
 							has = 1;
 							break;
