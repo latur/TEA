@@ -317,12 +317,14 @@ function align_contig(id){
 
 	var len = 0, height = 0, ref = '';
 	if (info[5] != "Unknown"){
-		if (TE_ref[info[5]].length > 1000){
-			ref = TE_ref[info[5]].substr(500) + "..." + TE_ref[info[5]].substr(-500, 500);
+		if (TE_ref[info[5]].length > 600){
+			ref = TE_ref[info[5]].substr(0, 300) + "..." + TE_ref[info[5]].substr(-300, 300);
+		alert(ref);
+
 		} else
 			ref = TE_ref[info[5]];
-		alert(ref);
-		len = ref*11 + 10;
+
+		len = ref.length*11 + 10;
 		if (info[6] != "Unknown")
 			height = info[6].split("/").length*25 + 90;
 		else
