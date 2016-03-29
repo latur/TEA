@@ -451,8 +451,8 @@ function ShowAsLine(){
 
 function load_detail_content(name, start, end){
 	$(".detail_content").css("margin-left", "-1100px");
-	var obj = getBwtWeb('gene_db');
-    obj.search(name.substr(3) + ":" + start + ".." + end, function(err) {});
+	//var obj = getBwtWeb('gene_db');
+    //obj.search(name.substr(3) + ":" + start + ".." + end, function(err) {});
 
 	var screen = end-start;
 	start -= screen;
