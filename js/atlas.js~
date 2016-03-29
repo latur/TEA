@@ -103,8 +103,14 @@ function SamplesLoaded(){
 	});
 
 	// View mode
-	$('.chr-view-mode .aslist').click(function(){ Route("chr1:5000000-10000000"); });
-	$('.chr-view-mode .asline').click(function(){ Route('#general'); });
+	$('.chr-view-mode .aslist').click(function(){
+			Route("chr1:5000000-10000000");
+	});
+	$('.chr-view-mode .asline').click(function(){
+			var obj = getBwtWeb('gene_db');
+	        obj.releaseSocket();
+ 			Route('#general');
+	 });
 
 	$("#find").keyup(function(e) {
    		if (e.keyCode == 13) {
@@ -445,19 +451,19 @@ function ShowAsLine(){
 
 function load_detail_content(name, start, end){
 	$(".detail_content").css("margin-left", "-1100px");
-	var obj = getBwtWeb('svgHolderT0');
+	var obj = getBwtWeb('gene_db');
     obj.search(name.substr(3) + ":" + start + ".." + end, function(err) {});
 
 	var screen = end-start;
 	start -= screen;
 	end += screen;
 	var sample = d3.select(".samples")
-	sample.html('').attr("height", n_file*60);
+	sample.html('').attr("height", n_file*50);
 
 	var extra = 0;
 	for (var i = 0; i < n_file; i++){
 		var f = file_list[i];
-		var y = i*60 + 20 + extra;
+		var y = i*50 + 20 + extra;
 		var last_x = 0;
 		sample.append("text")
 			.attr("x", 1105)
@@ -484,6 +490,7 @@ function load_detail_content(name, start, end){
 				$(".pop_up").remove();
 			})
 			.text(f);
+		y += 30;
 		for (var s in expData[name][f]){
 			var content = expData[name][f][s];
 			if (content[0] < start) continue;
@@ -492,6 +499,15 @@ function load_detail_content(name, start, end){
 				(visibleMode == 1 && id_list[content[7]] == 1) ||
 				(visibleMode == 2 && id_list[content[7]] == 0)) continue;
 			var x = (content[0]-start)*3300/(end-start);
+			if (x < last_x + 10){
+
+					y += 15
+					if (y >= i*60 + extra){
+							extra += 15;
+							sample.attr("height", n_file*50 + extra);
+					}
+			} else y = i*60 + 30;
+
 			sample.append("rect")
 				.attr("id", name + '-' + f + '-' + s)
 				.attr("fill", color[content[2]])
@@ -499,8 +515,9 @@ function load_detail_content(name, start, end){
 				.attr("height", "10")
 				.attr("opacity", "0.8")
 				.attr("x", x)
-				.attr("y", y + 30);
-
+				.attr("y", y);
+			last_x = x;
+			
 		}
 	}
 }
@@ -523,7 +540,7 @@ function ShowChromosome(name, start, end){
 
 	// Content
 	$("#content").html('').append(Template('detail_table', {}));
-	createSmallBwtWeb('genes', 'sml0', name.substr(3), 2*start - end, 2*end - start);
+	createSmallBwtWeb('gene_db', 'sml0', name.substr(3), 2*start - end, 2*end - start);
 	load_detail_content(name, start, end);
 
 	var size = chrs[name];
