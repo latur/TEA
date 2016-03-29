@@ -27,6 +27,25 @@ var cache = {};       // Cache for imagedata
 var XHR = false;
 
 /* -------------------------------------------- */
+
+// Отложенные действия
+var Stack = (function(){
+	var actions = {};
+	return function(act, timer){
+		if (!act) return;
+		var ID = act.toString();
+		if(actions[ID]) clearInterval(actions[ID]['timeout']);
+		actions[ID] = {'timer' : timer || 500 };
+		actions[ID]['timeout'] = setInterval(function(){
+			if (actions[ID]['timer'] > 0) {
+				return actions[ID]['timer'] -= 50;
+			}
+			clearInterval(actions[ID]['timeout']);
+			act();
+		}, 50);
+	}
+}());
+
 // The template. Obtaining a template name and pasting data
 var Template = (function(classname){
 	var templates = {};

@@ -306,6 +306,17 @@ function ShowChromosome(name, start, end){
 		}
 		ox = NaN, px = NaN, dx = NaN, tx = NaN, vx = NaN;
 	};
+	window.onresize = function(e){
+		$('#content').addClass('blur');
+		Stack(function(){
+			$('#content').removeClass('blur');
+			ww = sel.offsetWidth;
+			svg.setAttribute('viewBox', '0 0 '+ww+' 30');
+			svg.setAttribute('width', ww);
+			Parse(ww * H.bp[0] / size, ww * H.bp[1] / size);
+			Rend();
+		});
+	};
 
 	// Buttons:
 	$('.move-c a.cnt').hover(function(){
