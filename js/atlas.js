@@ -435,172 +435,6 @@ function ShowAsLine(){
 
 function load_detail_content(name, start, end){
 	$(".detail_content").css("margin-left", "-1100px");
-	
-	var obj = getBwtWeb('svgHolderT0');
-    obj.search(name.substr(3) + ":" + start + ".." + end, function(err) {});
-
-	var screen = end-start;
-	start -= screen;
-	end += screen;
-	var sample = d3.select(".samples")
-	sample.html('').attr("height", n_file*50);
-
-	var extra = 0;
-	for (var i = 0; i < n_file; i++){
-		var f = file_list[i];
-		var y = i*50 + 15 + extra;
-		var last_x = 0;
-		sample.append("text")
-			.attr("x", 1105)
-			.attr("y", y)
-			.attr("class", "map_name")
-			.attr("id", f)
-			.on("click", function(){
-				remove_file(this.id);
-				$(".pop_up").remove();
-			})
-			.on("mouseover", function(){
-				$("body").append(function(){
-					return $("<div/>")
-						.attr("class", "pop_up")
-						.attr("style", "height: 25px; font-size: 15px; font-weight: bold; text-align: center;padding: 5px; border-radius: 3px;")
-						.css("left", event.pageX + 10)
-						.css("top", event.pageY + 10)
-						.append(function(){
-							return $("<span/>").attr("class", "glyphicon glyphicon-trash");
-						});
-					});
-			})
-			.on("mouseout", function(){
-				$(".pop_up").remove();
-			})
-			.text(f);
-		y += 30 + extra;
-		var add = 0;
-		for (var s in expData[name][f]){
-			var content = expData[name][f][s];
-			if (content[0] < start) continue;
-			if (content[0] > end) break;
-			if ((visibleType != 0 && visibleType != content[2]) ||
-				(visibleMode == 1 && id_list[content[7]] == 1) ||
-				(visibleMode == 2 && id_list[content[7]] == 0)) continue;
-			var x = (content[0]-start)*3300/(end-start);
-			if (x < last_x + 120){
-					y += 15
-					if (y >= i*50 + extra + add){
-							add += 15;
-							sample.attr("height", n_file*50 + extra + add);
-					}
-			} else {
-				last_x = x;	
-				y = i*50 + extra + 30;
-			}
-			sample.append("rect")
-				.attr("fill", color[content[2]])
-				.attr("width", "4")
-				.attr("height", "10")
-				.attr("opacity", "0.8")
-				.attr("x", x)
-				.attr("y", y);
-			sample.append("text")
-				.attr("id", name + '-' + f + '-' + s)
-				.attr("x", x + 8)
-				.attr("y", y + 8)
-				.attr("class", "content_name")
-				.attr("style", "font-size: 10px")
-				.text(content[5])
-				.on("click", function(){
-					align_contig(this.id);
-				});			
-		}
-		extra += add;
-	}
-}
-
-function load_detail_content(name, start, end){
-	$(".detail_content").css("margin-left", "-1100px");
-	
-	var obj = getBwtWeb('svgHolderT0');
-    obj.search(name.substr(3) + ":" + start + ".." + end, function(err) {});
-
-	var screen = end-start;
-	start -= screen;
-	end += screen;
-	var sample = d3.select(".samples")
-	sample.html('').attr("height", n_file*50);
-
-	var extra = 0;
-	for (var i = 0; i < n_file; i++){
-		var f = file_list[i];
-		var y = i*50 + 15 + extra;
-		var last_x = 0;
-		sample.append("text")
-			.attr("x", 1105)
-			.attr("y", y)
-			.attr("class", "map_name")
-			.attr("id", f)
-			.on("click", function(){
-				remove_file(this.id);
-				$(".pop_up").remove();
-			})
-			.on("mouseover", function(){
-				$("body").append(function(){
-					return $("<div/>")
-						.attr("class", "pop_up")
-						.attr("style", "height: 25px; font-size: 15px; font-weight: bold; text-align: center;padding: 5px; border-radius: 3px;")
-						.css("left", event.pageX + 10)
-						.css("top", event.pageY + 10)
-						.append(function(){
-							return $("<span/>").attr("class", "glyphicon glyphicon-trash");
-						});
-					});
-			})
-			.on("mouseout", function(){
-				$(".pop_up").remove();
-			})
-			.text(f);
-		y += 30 + extra;
-		var add = 0;
-		for (var s in expData[name][f]){
-			var content = expData[name][f][s];
-			if (content[0] < start) continue;
-			if (content[0] > end) break;
-			if ((visibleType != 0 && visibleType != content[2]) ||
-				(visibleMode == 1 && id_list[content[7]] == 1) ||
-				(visibleMode == 2 && id_list[content[7]] == 0)) continue;
-			var x = (content[0]-start)*3300/(end-start);
-			if (x < last_x + 120){
-					y += 15
-					if (y >= i*50 + extra + add){
-							add += 15;
-							sample.attr("height", n_file*50 + extra + add);
-					}
-			} else {
-				last_x = x;	
-				y = i*50 + extra + 30;
-			}
-			sample.append("rect")
-				.attr("fill", color[content[2]])
-				.attr("width", "4")
-				.attr("height", "10")
-				.attr("opacity", "0.8")
-				.attr("x", x)
-				.attr("y", y);
-			sample.append("text")
-				.attr("id", name + '-' + f + '-' + s)
-				.attr("x", x + 8)
-				.attr("y", y + 8)
-				.attr("class", "content_name")
-				.attr("style", "font-size: 10px")
-				.text(content[5])
-				.on("click", function(){
-					align_contig(this.id);
-				});			
-		}
-		extra += add;
-	}
-}function load_detail_content2name, start, end){
-	$(".detail_content").css("margin-left", "-1100px");
 
 	var screen = end-start;
 	start -= screen;
@@ -775,9 +609,15 @@ function ShowChromosome(name, start, end){
 	document.onmouseup = function(e){
 		if (!isNaN(dx)) {
 			Resized([(ox)*size/1100, (ox + dx)*size/1100]);
+			var obj = getBwtWeb('svgHolderT0');
+		    obj.search(name.substr(3) + ":" + start + ".." + end, function(err) {});
+
 		}
 		if (!isNaN(vx)) {
 			Resized([(ix[0] + vx*3)*size/ww, (ix[1] + vx*3)*size/ww]);
+			var obj = getBwtWeb('svgHolderT0');
+		   obj.search(name.substr(3) + ":" + start + ".." + end, function(err) {});
+
 		}
 		box.style.display = 'none';
 		ox = NaN, px = NaN, dx = NaN, tx = NaN, vx = NaN;
@@ -840,6 +680,6 @@ $(document).ready(function() {
 			Route();
 		}
 	}, function(newChr, newStart, newEnd) {
-		load_detail_content2('chr' + newChr, newStart, newEnd);
+		load_detail_content('chr' + newChr, newStart, newEnd);
 	});	
 });
