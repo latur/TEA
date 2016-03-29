@@ -687,14 +687,8 @@ function run_demo(){
 $(document).ready(function() {
     SamplesLoaded();
 
+	$(".status").css("visibility", "visible").html("Initialize...");
 	var loc = location.hash;
-	if (loc == ''){
-			$(".status").css("visibility", "visible").html("Running demo...");
-			expName = ["2nsready", "2sready", "3s_merged", "91c"];
-			get_server_file(expName)
-	} else 
-		$(".status").css("visibility", "visible").html("Initialize...");
-
 	createSmallBwtWebByAl('svgHolderT0', 'sml0', '1', 5000000, 10000000, function() {
 		Route(loc);
 	}, function(newChr, newStart, newEnd) {

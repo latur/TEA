@@ -538,7 +538,13 @@ function load_detail_content(name, start, end){
 				.attr("height", "10")
 				.attr("opacity", "0.8")
 				.attr("x", x)
-				.attr("y", y);
+				.attr("y", y)
+				.on("mouseover", function(){
+					$("#ruler_line").css({"left": event.pageX+ "px", "visibility": "visible" });
+				})
+				.on("mouseout", function(){
+					$("#ruler_line").css("visibility", "hidden");
+				})
 			sample.append("text")
 				.attr("id", name + '-' + f + '-' + s)
 				.attr("x", x + 8)
@@ -552,6 +558,11 @@ function load_detail_content(name, start, end){
 		}
 		extra += add;
 	}
+	$("#content").append(function(){
+		return $("<div/>")
+			.attr("id", "ruler_line")
+			.attr("style", "position: absolute; width: 2px; height:120%; border: 1px solid; top: -120px; left: 10px; visibility: hidden; z-index:10000");
+	});
 }
 
 // Selected region on chromosome
@@ -687,20 +698,10 @@ function run_demo(){
 $(document).ready(function() {
     SamplesLoaded();
 
+	$(".status").css("visibility", "visible").html("Initialize...");
 	var loc = location.hash;
-	if (loc == ''){
-			$(".status").css("visibility", "visible").html("Running demo...");
-			expName = ["2nsready", "2sready", "3s_merged", "91c"];
-			get_server_file(expName)
-	} else 
-		$(".status").css("visibility", "visible").html("Initialize...");
-
 	createSmallBwtWebByAl('svgHolderT0', 'sml0', '1', 5000000, 10000000, function() {
-		if (loc == ''){
-			run_demo();
-		} else {
-			Route(loc);
-		}
+		Route(loc);
 	}, function(newChr, newStart, newEnd) {
 		ShowChromosome('chr' + newChr, newStart, newEnd);
 	});	

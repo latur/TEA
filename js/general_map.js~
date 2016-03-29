@@ -103,21 +103,28 @@ function general_map(){
 					map.append("polyline")
 					 	.attr("points", (x-step) + "," + y + " " + (x+step/2) + "," + (y-60*value/d_max) + " " + (x+2*step) + "," + y)
 						.attr("style", "stroke:" + color[visibleType] + "; cursor: pointer; stroke-width: 0.5px; opacity: 0.8")
-						.attr("id", value + " sites")
+						.attr("id", value + "-" +j+ "-" + k)
 						.on("mouseover", function(){
-							var id = this.id;
+							var id = this.id.split("-")[0];
 							$("body").append(function(){
 								return $("<div/>")
 									.attr("class", "pop_up")
 									.attr("style", "height: 20px; font-size: 12px; text-align: center;")
 									.css("left", event.pageX + 10)
 									.css("top", event.pageY + 10)
-									.html(id);
+									.html(id + (parseInt(id) > 1? " sites": " site"));
+
 							});
 						})
 						.on("mouseout", function(){
 							$(".pop_up").remove();
+						})
+						.on("click", function(){
+							$(".pop_up").remove();
+							var id = this.id.split("-");
+							Route("#" + id[2] +":"+parseInt(id[1])*2000000+"-"+(parseInt(id[1])*2000000 + 2000000)); 
 						});
+
 				}
 			}
 		}
