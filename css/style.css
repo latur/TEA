@@ -146,9 +146,16 @@ hr {
 
 #svgHolderT0 {
 	display: block;
+	width: 1115px;
+	margin: auto;
+}
+
+.gene_wrap {
+	display: block;
 	width: 1100px;
 	margin: auto;
-	height: 70px;
+	overflow: hidden;
+	height: 80px;
 }
 
 .chr-line {

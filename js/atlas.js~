@@ -27,7 +27,7 @@ var cache = {'hm' : {}};
 // Samples filter: checkboxes
 var visibleType = 0;
 var visibleMode = 0;
-
+var mode = 0;
 /* -------------------------------------------- */
 
 const density_len = {
@@ -109,9 +109,8 @@ function SamplesLoaded(){
 	$("#find").keyup(function(e) {
    		if (e.keyCode == 13) {
 			var loc = $(this).val();
-			location.hash = loc + (expID ? ('/' + expID) : '');
 			// Show one chromosome
-			var chr = location.hash.match(/^\#?(chr[0-9XY]+)\:([0-9]+)\-([0-9]+)\/?([0-9a-z]+)?$/);
+			var chr = loc.match(/^\#?(chr[0-9XY]+)\:([0-9]+)\-([0-9]+)\/?([0-9a-z]+)?$/);
 			if (chr) {
 				disable_button();
 				return ShowChromosome(chr[1], parseInt(chr[2]), parseInt(chr[3]));
@@ -214,7 +213,8 @@ function SamplesLoaded(){
 
 	$('.chr-btn a').click(function(){
 		var chr = location.hash.match(/^\#?(chr[0-9XY]+)\:([0-9]+)\-([0-9]+)\/?([0-9a-z]+)?$/);
-		return ShowChromosome($(this).data('map'), parseInt(chr[2]), parseInt(chr[3]));
+		var name = $(this).data('map');
+		return ShowChromosome(name, parseInt(chr[2]), parseInt(chr[3]));
 	});
 }
 
@@ -435,6 +435,11 @@ function ShowAsLine(){
 
 function load_detail_content(name, start, end){
 	$(".detail_content").css("margin-left", "-1100px");
+	if (mode == 0){
+		var obj = getBwtWeb('svgHolderT0');
+ 		obj.search(name.substr(3)+ ":" + start + ".." + end, function(err) {});
+	}
+
 
 	var screen = end-start;
 	start -= screen;
@@ -520,14 +525,13 @@ function ShowChromosome(name, start, end){
 	$("#svgHolderT0").css("display", "block");
 	doc.style.marginTop = $('.fixed-nav')[0].offsetHeight + 'px';
 
-
 	// Impossible states:
 	if (!chrs[name])
 		name = 'chr1';
 	if (end < start + 25000){
 		end = start + 25000;
-		location.hash = "#" + name + ":" + start + "-" + end;
 	}
+	location.hash = "#" + name + ":" + start + "-" + end;
 
 	// chromosome bar:
 	$('.chr-line').html(Template('chromosome', { name: name}));
@@ -601,18 +605,16 @@ function ShowChromosome(name, start, end){
 			vx = -(e.pageX - tx) * (ix[1] - ix[0]) / ww;
 			$(".detail_content").css("margin-left", (e.pageX - tx - 1100) + "px");
 			ResizePre([(ix[0] + vx) * size / ww, (ix[1] + vx) * size / ww]);
-			var obj = getBwtWeb('svgHolderT0');
-    		obj.search(name.substr(3) + ":" + start + ".." + end, function(err) {});
 		}
 	};
 
 	document.onmouseup = function(e){
 		if (!isNaN(dx)) {
 			Resized([(ox)*size/1100, (ox + dx)*size/1100]);
-		}
+			}
 		if (!isNaN(vx)) {
 			Resized([(ix[0] + vx*3)*size/ww, (ix[1] + vx*3)*size/ww]);
-		}
+			}
 		box.style.display = 'none';
 		ox = NaN, px = NaN, dx = NaN, tx = NaN, vx = NaN;
 	};
@@ -674,6 +676,8 @@ $(document).ready(function() {
 			Route();
 		}
 	}, function(newChr, newStart, newEnd) {
-		load_detail_content('chr' + newChr, newStart, newEnd);
+		mode = 1;
+		ShowChromosome('chr' + newChr, newStart, newEnd);
+		mode = 0;
 	});	
 });
