@@ -62,7 +62,7 @@ $(function(){
 	// Demo data
 	$('.load-demo').click(function(e){
 		Msg.Show('Loading demo files...');
-		Download(['2ns-ready','2s-ready','2sready','SRR12','SRR16'], function(){}, SamplesLoaded);
+		Download(['1ns-ready','1s-ready','2nsready','2sready','61'], function(){}, SamplesLoaded);
 	});
 
 	// Mode: General/Detail

@@ -23,7 +23,7 @@ var expData   = {}; // {chr1 : {file1 : [], ..}, chr2 ...}
 var expNames  = []; // [file1, file2, file3]
 var expPoints = {}; // Positions info (for compare)
 
-var cache = {};       // Cache for imagedata
+var cache = {}; // Cache for imagedata
 var XHR = false;
 
 /* -------------------------------------------- */
@@ -161,7 +161,6 @@ function Route(loc){
 
 	// Main page
 	var home = location.hash.match(/^\#?([a-z]+)?$/);
-	if (home[1] == 'new') return ;
 
 	// Detail (Show chromosome list)
 	if (home[1] == 'detail') return ShowDetail();
@@ -170,8 +169,10 @@ function Route(loc){
 	if (home[1] == 'general') return ShowGeneral();
 	
 	// Demo data for new users
-	Msg.Show('Loading demo files..');
-	Download(['2ns-ready','2s-ready','2sready','SRR12','SRR16'], function(){ Msg.Log('.') }, SamplesLoaded);
+	if (home[1] == 'demo') {
+		Msg.Show('Loading demo files..');
+		Download(['2ns-ready','2s-ready','2sready','SRR12','SRR16'], function(){ Msg.Log('.') }, SamplesLoaded);
+	}
 
 }
 
@@ -186,6 +187,7 @@ function Parse(content, filename){
 		c[1] = parseInt(c[1]);
 		expData[c[0]][filename].push(c.slice(1));
 		var ID = c[1] + c[0];
+		if (c[7] == '') c[7] = "Unknown";
 		if (!expPoints[ID]) expPoints[ID] = 0;
 		expPoints[ID]++;
 	});
@@ -196,7 +198,7 @@ function Download(samples, onload, onstop){
 	var onstop = onstop || function(){};
 	if (samples.length == 0) return onstop();
 	var name = samples.pop();
-	XHR = $.post(server + 'sample/' + name, {}, function(csv){
+	XHR = $.post(server + 'data/' + name, {}, function(csv){
 		Parse(csv, name);
 		if (onload) onload(name);
 		return Download(samples, onload, onstop);
@@ -214,7 +216,7 @@ function Modal(data){
 // Sort of retrotransposons in the order on the chromosome
 function SamplesLoaded(){
 	cache = {}; // Clear cache	
-	if (location.hash == '' || location.hash == '#new') location.hash = '#general';
+	if (location.hash == '#demo' || location.hash == '') location.hash = '#general';
 
 	// Disable some function when number of file is lower than needed
 	if (expNames.length > 0) $('.visible.type .btn').removeClass("disabled");

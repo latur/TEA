@@ -141,7 +141,7 @@ function ShowChromosome(name, start, end){
 						comp : expPoints[spl[0] + name] > 1 ? '-common' : '-differ',
 						left : (spl[0] * H.kpx)
 					};
-					tr.name = detail > 0 ? (spl[3] + '  ') : '';
+					tr.name = detail > 0 ? (spl[5] + '  ') : '';
 					tr.space = tr.name.length * 6.65;
 
 					if (spl[0] > H.bp[0] && spl[0] < H.bp[1]) tr.vis = 'inw';
@@ -158,7 +158,8 @@ function ShowChromosome(name, start, end){
 		$('.spl a').click(function(){
 			var info = expData[name][$(this).data('f')][$(this).data('i')];
 			Modal({
-				title : '<b>' + info[3] + '</b>. Chromosome: <kbd>' + name + '</kbd>. Position: <kbd>' + info[0] + '</kbd>',
+				//title : '<b>' + info[3] + '</b>. Chromosome: <kbd>' + name + '</kbd>. Position: <kbd>' + info[0] + '</kbd>',
+				title : '=]',
 				data  : '<pre>' + info[4].match(/.{1,60}/g).join('\n') + '</pre>'
 			});
 		});

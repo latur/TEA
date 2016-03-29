@@ -7,7 +7,7 @@ function _ShowHelper(){
 	}, function(){
 		if (hovrline) hovrline.style.display = 'none';
 	}).each(function(){
-		var e = $(this)[0], name = $(this).data('name');
+		var e = $(this)[0], name = $(this).data('name').replace('-full','');
 		var K = chrs[name]/$(this).width();
 		$(this).mousemove(function(h){
 			e.children[0].style.left = h.offsetX + 'px';
