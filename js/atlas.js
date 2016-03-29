@@ -648,7 +648,7 @@ function run_demo(){
 	var expName = ["2nsready", "2sready", "3s_merged", "91c"]
 	get_server_file(expName)
 }
-
+/*
 $(function(){
 	SamplesLoaded();
 	if (location.hash == '')
@@ -656,4 +656,13 @@ $(function(){
 	else {
 		Route();
 	}
+}); */
+
+ $( document ).ready(function() {
+      SamplesLoaded();
+//	if (location.hash == '')
+	//	run_demo();
+//	else {
+		Route();
+//	}
 });
