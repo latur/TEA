@@ -84,9 +84,12 @@ function Route(loc){
 
 	// Show one chromosome
 	var chr = location.hash.match(/^\#?(chr[0-9XY]+)\:([0-9]+)\-([0-9]+)\/?([0-9a-z]+)?$/);
-	if (chr) 
-		return ShowChromosome(chr[1], parseInt(chr[2]), parseInt(chr[3]));
+	if (chr) {
+		var obj = getBwtWeb('svgHolderT0');
+ 		obj.search(chr1[0].substr(3)+ ":" + parseInt(chr[2]) + ".." + parseInt(chr[3]), function(err) {});
 
+		return ShowChromosome(chr[1], parseInt(chr[2]), parseInt(chr[3]));
+	}
 	// Show chromosome list
 	return ShowAsLine();
 }
@@ -113,6 +116,8 @@ function SamplesLoaded(){
 			var chr = loc.match(/^\#?(chr[0-9XY]+)\:([0-9]+)\-([0-9]+)\/?([0-9a-z]+)?$/);
 			if (chr) {
 				disable_button();
+				var obj = getBwtWeb('svgHolderT0');
+ 				obj.search(chr[1].substr(3)+ ":" + parseInt(chr[2]) + ".." + parseInt(chr[3]), function(err) {});
 				return ShowChromosome(chr[1], parseInt(chr[2]), parseInt(chr[3]));
 			} else {
 				$(this).val('').attr("placeholder","Try again with search format. Ex: chr1:1000-5000000");
@@ -214,6 +219,9 @@ function SamplesLoaded(){
 	$('.chr-btn a').click(function(){
 		var chr = location.hash.match(/^\#?(chr[0-9XY]+)\:([0-9]+)\-([0-9]+)\/?([0-9a-z]+)?$/);
 		var name = $(this).data('map');
+		var obj = getBwtWeb('svgHolderT0');
+ 		obj.search(name.substr(3)+ ":" + parseInt(chr[2]) + ".." + parseInt(chr[3]), function(err) {});
+
 		return ShowChromosome(name, parseInt(chr[2]), parseInt(chr[3]));
 	});
 
@@ -225,7 +233,10 @@ function SamplesLoaded(){
 		var x1 = ora[0] + p, x2 = ora[1] + p;
 		if (x1 <  0) { x1 = 0; x2 = ora[1] - ora[0]; }
 		if (x2 > chrs[name]) { x2 = chrs[name]; x1 = chrs[name] - ora[1] + ora[0]; }
-		ShowChromosome( name, x1, x2);
+		var obj = getBwtWeb('svgHolderT0');
+ 		obj.search(name.substr(3)+ ":" + x1 + ".." + x2, function(err) {});
+
+		ShowChromosome(name, x1, x2);
 	});
 
 	$('.zoom-c a.cnt').click(function(){
@@ -237,7 +248,10 @@ function SamplesLoaded(){
 		var x1 = cen - upg, x2 = cen + upg;
 		if (x1 < 0) x1 = 0;
 		if (x2 > chrs[name]) x2 = chrs[name];
-		ShowChromosome( name, x1, x2);
+		var obj = getBwtWeb('svgHolderT0');
+ 		obj.search(name.substr(3)+ ":" + x1 + ".." + x2, function(err) {});
+
+		ShowChromosome(name, x1, x2);
 	});
 
 }
@@ -440,11 +454,10 @@ function _ShowHelper2(){
 
 // Showing chromosomes as one line [Thao]
 function ShowAsLine(){
-	$('.fixed-nav')[0].offsetHeight = ($('.fixed-nav')[0].offsetHeight - 80) + 'px';
+	$('.chr-line').html('');
+	$(".gene_wrap").css({"visibility": "hidden", "height": "0"});
 	doc.style.marginTop =  $('.fixed-nav')[0].offsetHeight + 'px';
 
-	$('.chr-line').html('');
-	$("#svgHolderT0").css("display", "none");
 	Object.keys(chrs).map(function(name, i){
 		var style = 'width:' + (density_len[name] * 100 /1558) + '%';
 		var title = name.substr(3);
@@ -461,11 +474,6 @@ function ShowAsLine(){
 
 function load_detail_content(name, start, end){
 	$(".detail_content").css("margin-left", "-1100px");
-	if (mode != 1){
-		var obj = getBwtWeb('svgHolderT0');
- 		obj.search(name.substr(3)+ ":" + start + ".." + end, function(err) {});
-	}
-
 
 	var screen = end-start;
 	start -= screen;
@@ -548,7 +556,7 @@ function load_detail_content(name, start, end){
 // Selected region on chromosome
 function ShowChromosome(name, start, end){
 	$(".list_name").html(name.charAt(0).toUpperCase() + name.substr(1) + '<span class="caret"></span>');
-	$("#svgHolderT0").css("display", "block");
+	$(".gene_wrap").css({"visibility": "visible", "height": "80px"});
 	doc.style.marginTop = $('.fixed-nav')[0].offsetHeight + 'px';
 
 	// Impossible states:
@@ -637,9 +645,14 @@ function ShowChromosome(name, start, end){
 	document.onmouseup = function(e){
 		if (!isNaN(dx)) {
 			Resized([(ox)*size/1100, (ox + dx)*size/1100]);
+			var obj = getBwtWeb('svgHolderT0');
+ 			obj.search(name.substr(3)+ ":" + (ox)*size/1100 + ".." + (ox + dx)*size/1100, function(err) {});
 			}
 		if (!isNaN(vx)) {
 			Resized([(ix[0] + vx*3)*size/ww, (ix[1] + vx*3)*size/ww]);
+			var obj = getBwtWeb('svgHolderT0');
+ 			obj.search(name.substr(3)+ ":" + (ix[0] + vx*3)*size/ww + ".." + (ix[1] + vx*3)*size/ww, function(err) {});
+
 			}
 		box.style.display = 'none';
 		ox = NaN, px = NaN, dx = NaN, tx = NaN, vx = NaN;
@@ -682,8 +695,6 @@ $(document).ready(function() {
 			Route();
 		}
 	}, function(newChr, newStart, newEnd) {
-		mode = 1;
 		ShowChromosome('chr' + newChr, newStart, newEnd);
-		mode = 0;
 	});	
 });
