@@ -659,7 +659,6 @@ function ShowChromosome(name, start, end){
 		ox = NaN, px = NaN, dx = NaN, tx = NaN, vx = NaN;
 	};
 	Resized([start, end]);
-
 	$(".status").css("visibility", "hidden");
 }
 
@@ -682,25 +681,22 @@ function get_server_file(id){
 }
 
 function run_demo(){
-	var expName = ["2nsready", "2sready", "3s_merged", "91c"]
-	get_server_file(expName)
+	
 }
 
 $(document).ready(function() {
     SamplesLoaded();
 
 	var loc = location.hash;
-	if (loc == '')
+	if (loc == ''){
 			$(".status").css("visibility", "visible").html("Running demo...");
-	else 
+			expName = ["2nsready", "2sready", "3s_merged", "91c"];
+			get_server_file(expName)
+	} else 
 		$(".status").css("visibility", "visible").html("Initialize...");
 
 	createSmallBwtWebByAl('svgHolderT0', 'sml0', '1', 5000000, 10000000, function() {
-		if (loc == ''){
-			run_demo();
-		} else {
-			Route(loc);
-		}
+		Route(loc);
 	}, function(newChr, newStart, newEnd) {
 		ShowChromosome('chr' + newChr, newStart, newEnd);
 	});	
