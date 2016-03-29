@@ -292,7 +292,9 @@ function draw_seq(info, len){
 	
 }
 
-function align_contig(info, name, file){
+function align_contig(id){
+	var id = id.split("-");
+	var name = id[0], file = id[1], info = expData[name][file][id[2]];
 	if (n_group > 0){
 		Modal({
 			title : '<b> Chromosome: </b>'+name.substr(3)+'<div class="tab"></div><b>Position: </b>'+info[0]+'<div class="tab"></div><b>Type: </b>'+info[5] + '<br><b>File name: </b>' + file,

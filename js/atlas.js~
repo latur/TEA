@@ -103,14 +103,8 @@ function SamplesLoaded(){
 	});
 
 	// View mode
-	$('.chr-view-mode .aslist').click(function(){
-			Route("chr1:5000000-10000000");
-	});
-	$('.chr-view-mode .asline').click(function(){
-			var obj = getBwtWeb('gene_db');
-	        obj.releaseSocket();
- 			Route('#general');
-	 });
+	$('.chr-view-mode .aslist').click(function(){Route("chr1:5000000-10000000");});
+	$('.chr-view-mode .asline').click(function(){Route('#general');});
 
 	$("#find").keyup(function(e) {
    		if (e.keyCode == 13) {
@@ -435,6 +429,7 @@ function _ShowHelper2(){
 // Showing chromosomes as one line [Thao]
 function ShowAsLine(){
 	$('.chr-line').html('');
+	$("#svgHolderT0").css("visibility", "hidden");
 	Object.keys(chrs).map(function(name, i){
 		var style = 'width:' + (density_len[name] * 100 /1558) + '%';
 		var title = name.substr(3);
@@ -451,8 +446,8 @@ function ShowAsLine(){
 
 function load_detail_content(name, start, end){
 	$(".detail_content").css("margin-left", "-1100px");
-	//var obj = getBwtWeb('gene_db');
-    //obj.search(name.substr(3) + ":" + start + ".." + end, function(err) {});
+	var obj = getBwtWeb('svgHolderT0');
+    obj.search(name.substr(3) + ":" + start + ".." + end, function(err) {});
 
 	var screen = end-start;
 	start -= screen;
@@ -463,7 +458,7 @@ function load_detail_content(name, start, end){
 	var extra = 0;
 	for (var i = 0; i < n_file; i++){
 		var f = file_list[i];
-		var y = i*40 + 20 + extra;
+		var y = i*40 + 15 + extra;
 		var last_x = 0;
 		sample.append("text")
 			.attr("x", 1105)
@@ -500,15 +495,16 @@ function load_detail_content(name, start, end){
 				(visibleMode == 1 && id_list[content[7]] == 1) ||
 				(visibleMode == 2 && id_list[content[7]] == 0)) continue;
 			var x = (content[0]-start)*3300/(end-start);
-			if (x < last_x + 60){
-
+			if (x < last_x + 120){
 					y += 15
 					if (y >= i*60 + extra + add){
 							add += 15;
 							sample.attr("height", n_file*40 + extra + add);
 					}
-			} else y = i*40 + extra + 30;
-
+			} else {
+				last_x = x;	
+				y = i*40 + extra + 30;
+			}
 			sample.append("rect")
 				.attr("fill", color[content[2]])
 				.attr("width", "4")
@@ -520,9 +516,12 @@ function load_detail_content(name, start, end){
 				.attr("id", name + '-' + f + '-' + s)
 				.attr("x", x + 6)
 				.attr("y", y + 10)
-				.text(content[5]);
-			last_x = x;
-			
+				.attr("class", "content_name")
+				.attr("style", "font-size: 10px")
+				.text(content[5])
+				.on("click", function(){
+					align_contig(this.id);
+				});			
 		}
 		extra += add;
 	}
@@ -531,6 +530,7 @@ function load_detail_content(name, start, end){
 // Selected region on chromosome
 function ShowChromosome(name, start, end){
 	$(".list_name").html(name.charAt(0).toUpperCase() + name.substr(1) + '<span class="caret"></span>');
+	$("#svgHolderT0").css("visibility", "visibility");
 
 	// Impossible states:
 	if (!chrs[name])
@@ -546,7 +546,6 @@ function ShowChromosome(name, start, end){
 
 	// Content
 	$("#content").html('').append(Template('detail_table', {}));
-//	createSmallBwtWeb('gene_db', 'sml0', name.substr(3), 2*start - end, 2*end - start);
 
 	var size = chrs[name];
 	var sl = $('#range')[0], 
@@ -653,21 +652,14 @@ function run_demo(){
 	var expName = ["2nsready", "2sready", "3s_merged", "91c"]
 	get_server_file(expName)
 }
-/*
-$(function(){
-	SamplesLoaded();
-	if (location.hash == '')
-		run_demo();
-	else {
+
+$( document ).ready(function() {
+      SamplesLoaded();
+	  createSmallBwtWeb('svgHolderT0', 'sml0', '22', 30000000, 30030000);
+	if (location.hash == ''){
+		Route("#general");
+	//	run_demo();
+	} else {
 		Route();
 	}
-}); */
-
- $( document ).ready(function() {
-      SamplesLoaded();
-//	if (location.hash == '')
-	//	run_demo();
-//	else {
-		Route();
-//	}
 });

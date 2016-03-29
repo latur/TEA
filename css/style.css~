@@ -138,20 +138,15 @@ hr {
 	width: 300px;
 }
 
-.container, .chr-line {
+.container, .chr-line, #svgHolderT0 {
 	display: block;
 	width: 1100px;
 	margin: auto;
+	height: auto;
 }
 
 .chr-line {
 	height: 50px;
-}
-
-#svgHolderT0 {
-	display: block;
-	width: 1100px;
-	margin: auto;
 }
 /* Chromosome-list */
 .chr {
@@ -393,6 +388,7 @@ hr {
 
 #modal .contig_align {
 	width: 800px;
+	z-index: 1000;
 }
 #modal pre {
 	border: none;
@@ -438,6 +434,14 @@ hr {
 
 .map_name:hover {
 	fill: #585858;
+}
+
+.content_name {
+	fill: #A4A4A4;
+}
+
+.content_name:hover {
+	fill: #08088A;
 }
 
 /* Pop up table */
