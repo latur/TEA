@@ -248,7 +248,7 @@ function SamplesLoaded(){
 		var name = $(".list_name").text().toLowerCase();
 		var cen = (ora[1] + ora[0])/2;
 		var upg = inc * (ora[1] - ora[0]) / 2;
-		if (upg < 50) upg = 50;
+		if (upg < 25) upg = 25;
 		var x1 = cen - upg, x2 = cen + upg;
 		if (x1 < 0) x1 = 0;
 		if (x2 > chrs[name]) x2 = chrs[name];
@@ -684,16 +684,25 @@ function get_server_file(id){
 }
 
 function run_demo(){
-	
+	expName = ["2nsready", "2sready", "61", "91c"]
+	get_server_file(expName);
 }
 
 $(document).ready(function() {
     SamplesLoaded();
 
-	$(".status").css("visibility", "visible").html("Initialize...");
+	var loc = location.hash;
+	if (loc == '')
+		$(".status").css("visibility", "visible").html("Running demo...");
+	else
+		$(".status").css("visibility", "visible").html("Initialize...");
 	var loc = location.hash;
 	createSmallBwtWebByAl('svgHolderT0', 'sml0', '1', 5000000, 10000000, function() {
-		Route(loc);
+alert();
+		if (loc == '')
+			run_demo();
+		else
+			Route(loc);
 	}, function(newChr, newStart, newEnd) {
 		ShowChromosome('chr' + newChr, newStart, newEnd);
 	});	
