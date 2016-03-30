@@ -643,6 +643,8 @@ function ShowChromosome(name, start, end){
 			vx = -(e.pageX - tx) * (ix[1] - ix[0]) / ww;
 			$(".detail_content").css("margin-left", (e.pageX - tx - 1100) + "px");
 			ResizePre([(ix[0] + vx) * size / ww, (ix[1] + vx) * size / ww]);
+var obj = getBwtWeb('svgHolderT0');
+ 			obj.search(name.substr(3)+ ":" + (ox)*size/1100 + ".." + (ox + dx)*size/1100, function(err) {});
 		}
 	};
 
@@ -703,6 +705,7 @@ $(document).ready(function() {
 		else
 			Route(loc);
 	}, function(newChr, newStart, newEnd) {
-		ShowChromosome('chr' + newChr, newStart, newEnd);
+console.log;
+//		ShowChromosome('chr' + newChr, newStart, newEnd);
 	});	
 });

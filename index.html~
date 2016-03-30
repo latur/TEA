@@ -255,8 +255,8 @@
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.file-input.js"></script>
 <script type="text/javascript" src="js/d3/d3.min.js"></script>
-<script language="javascript" src="js/bwtweb-all-min.js"></script>
-<script language="javascript" src="js/worker-all-min.js"></script>
+<script language="javascript" src="js/bwtweb-all-min.js?v=2"></script>
+<script language="javascript" src="js/worker-all-min.js?v=1"></script>
 
 <script type="text/javascript" src="js/general_map.js"></script>
 <script type="text/javascript" src="js/phylogenetic_tree.js"></script>
