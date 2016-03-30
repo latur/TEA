@@ -701,7 +701,7 @@ $(document).ready(function() {
 		if (loc == '')
 			run_demo();
 		else
-			Route(location.hash);
+			Route(loc);
 	}, function(newChr, newStart, newEnd) {
 		ShowChromosome('chr' + newChr, newStart, newEnd);
 	});	
