@@ -644,7 +644,7 @@ function ShowChromosome(name, start, end){
 			$(".detail_content").css("margin-left", (e.pageX - tx - 1100) + "px");
 			ResizePre([(ix[0] + vx)*size/ww, (ix[1] + vx)*size/ww]);
 			var obj = getBwtWeb('svgHolderT0');
- 			obj.search(name.substr(3)+ ":" + (ix[0] + vx)*size/1100 + ".." + (ix[1] + vx)*size/1100, function(err) {});
+ 			obj.search(name.substr(3)+ ":" + (ix[0] + vx)*size/ww + ".." + (ix[1] + vx)*size/ww, function(err) {});
 		}
 	};
 
