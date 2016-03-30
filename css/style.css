@@ -615,7 +615,7 @@ body:not(.compare-common):not(.compare-differ) .all.btn,
 #bind-panel {
 	text-shadow: 0 0 1px #FFF, 0 0 2px #FFF;
     position: absolute;
-    top: 94px;
+    top: 44px;
     left: 0;
     padding: 5px;
     font-size: 11px;
