@@ -1,1 +1,1 @@
-var sample_list = ['1ns-ready', '1s-ready', '2nsready', '2sready', '3ns_merged', '3s_merged', '61', '81', '91']
+var sample_list = ['1ns-ready', '1s-ready', '2nsready', '2sready', '3ns_merged', '3s_merged', '61', '81', '91c']
