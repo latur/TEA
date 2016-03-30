@@ -559,7 +559,7 @@ function load_detail_content(name, start, end){
 function ShowChromosome(name, start, end){
 	$(".list_name").html(name.charAt(0).toUpperCase() + name.substr(1) + '<span class="caret"></span>');
 	$(".gene_wrap").css({"visibility": "visible", "height": "auto"});
-	doc.style.marginTop = $('.fixed-nav')[0].offsetHeight + 'px';
+	doc.style.marginTop = (parseInt($('.fixed-nav')[0].offsetHeight) + 20) + 'px';
 
 	// Impossible states:
 	if (!chrs[name])
@@ -649,13 +649,13 @@ function ShowChromosome(name, start, end){
 			Resized([(ox)*size/1100, (ox + dx)*size/1100]);
 			var obj = getBwtWeb('svgHolderT0');
  			obj.search(name.substr(3)+ ":" + (ox)*size/1100 + ".." + (ox + dx)*size/1100, function(err) {});			
-			doc.style.marginTop = $('.fixed-nav')[0].offsetHeight + 'px';
+			doc.style.marginTop = (parseInt($('.fixed-nav')[0].offsetHeight) + 20) + 'px';
 			}
 		if (!isNaN(vx)) {
 			Resized([(ix[0] + vx*3)*size/ww, (ix[1] + vx*3)*size/ww]);
 			var obj = getBwtWeb('svgHolderT0');
  			obj.search(name.substr(3)+ ":" + (ix[0] + vx*3)*size/ww + ".." + (ix[1] + vx*3)*size/ww, function(err) {});
-			doc.style.marginTop = $('.fixed-nav')[0].offsetHeight + 'px';
+			doc.style.marginTop = (parseInt($('.fixed-nav')[0].offsetHeight) + 20) + 'px';
 			}
 		box.style.display = 'none';
 		ox = NaN, px = NaN, dx = NaN, tx = NaN, vx = NaN;
