@@ -678,7 +678,7 @@ function get_server_file(id){
 			get_common();
 			contruct_tree();
 			visibleType = visibleMode = 0;
-			Route();
+			Route("#general");
 		}
 	})
 }
@@ -698,7 +698,6 @@ $(document).ready(function() {
 		$(".status").css("visibility", "visible").html("Initialize...");
 	var loc = location.hash;
 	createSmallBwtWebByAl('svgHolderT0', 'sml0', '1', 5000000, 10000000, function() {
-alert();
 		if (loc == '')
 			run_demo();
 		else

@@ -678,7 +678,7 @@ function get_server_file(id){
 			get_common();
 			contruct_tree();
 			visibleType = visibleMode = 0;
-			Route();
+			Route("#general");
 		}
 	})
 }
@@ -701,7 +701,7 @@ $(document).ready(function() {
 		if (loc == '')
 			run_demo();
 		else
-			Route(loc);
+			Route(location.hash);
 	}, function(newChr, newStart, newEnd) {
 		ShowChromosome('chr' + newChr, newStart, newEnd);
 	});	
