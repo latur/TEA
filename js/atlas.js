@@ -27,7 +27,7 @@ var cache = {'hm' : {}};
 // Samples filter: checkboxes
 var visibleType = 0;
 var visibleMode = 0;
-var mode = 0;
+var mode = 0, search_key = 0;
 /* -------------------------------------------- */
 
 const density_len = {
@@ -123,7 +123,8 @@ function SamplesLoaded(){
  				obj.search(chr[1].substr(3)+ ":" + start + ".." + end, function(err) {});
 				return ShowChromosome(chr[1], start, end);
 			} else {
-				$(this).val('').attr("placeholder","Try again with search format. Ex: chr1:1000-5000000");
+				if (search_key == 0)
+					$(this).val('').attr("placeholder","Try again with search format. Ex: chr1:1000-5000000");
 			}
 		}
 	});
@@ -705,8 +706,10 @@ $(document).ready(function() {
 		
 		var obj = getBwtWeb('svgHolderT0');
 		obj.addSuggestion($("#find"), function(suggestData) {
+			search_key = 1;
 			obj.search(suggestData['chr_id'].substr(3) + ":" + suggestData['chr_start'] + ".." + suggestData['chr_end'], function(err) {});
 			ShowChromosome(suggestData['chr_id'], suggestData['chr_start'], suggestData['chr_end']);
+			search_key = 0;
 		});
 	}, function(newChr, newStart, newEnd) {
 		ShowChromosome('chr' + newChr, newStart, newEnd);
