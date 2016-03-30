@@ -265,5 +265,5 @@
 <script type="text/javascript" src="js/contig_align.js"></script>
 <script type="text/javascript" src="js/samples_list.js"></script>
 
-<script type="text/javascript" src="js/atlas.js"></script>
+<script type="text/javascript" src="js/atlas.js?v=1"></script>
 </html>
