@@ -702,6 +702,11 @@ $(document).ready(function() {
 			run_demo();
 		else
 			Route(loc);
+		
+		var obj = getBwtWeb('svgHolderT0');
+		obj.addSuggestion($("#find"), function(suggestData) {
+			console.log(suggestData);
+		});
 	}, function(newChr, newStart, newEnd) {
 		ShowChromosome('chr' + newChr, newStart, newEnd);
 	});	
