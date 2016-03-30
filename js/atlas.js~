@@ -122,7 +122,7 @@ function SamplesLoaded(){
 				var obj = getBwtWeb('svgHolderT0');
  				obj.search(chr[1].substr(3)+ ":" + start + ".." + end, function(err) {});
 				return ShowChromosome(chr[1], start, end);
-			}
+			} 
 		}
 	});
 
@@ -558,7 +558,7 @@ function load_detail_content(name, start, end){
 // Selected region on chromosome
 function ShowChromosome(name, start, end){
 	$(".list_name").html(name.charAt(0).toUpperCase() + name.substr(1) + '<span class="caret"></span>');
-	$(".gene_wrap").css({"visibility": "visible", "height": "80px"});
+	$(".gene_wrap").css({"visibility": "visible", "height": "auto"});
 	doc.style.marginTop = $('.fixed-nav')[0].offsetHeight + 'px';
 
 	// Impossible states:
@@ -648,13 +648,14 @@ function ShowChromosome(name, start, end){
 		if (!isNaN(dx)) {
 			Resized([(ox)*size/1100, (ox + dx)*size/1100]);
 			var obj = getBwtWeb('svgHolderT0');
- 			obj.search(name.substr(3)+ ":" + (ox)*size/1100 + ".." + (ox + dx)*size/1100, function(err) {});
+ 			obj.search(name.substr(3)+ ":" + (ox)*size/1100 + ".." + (ox + dx)*size/1100, function(err) {});			
+			doc.style.marginTop = $('.fixed-nav')[0].offsetHeight + 'px';
 			}
 		if (!isNaN(vx)) {
 			Resized([(ix[0] + vx*3)*size/ww, (ix[1] + vx*3)*size/ww]);
 			var obj = getBwtWeb('svgHolderT0');
  			obj.search(name.substr(3)+ ":" + (ix[0] + vx*3)*size/ww + ".." + (ix[1] + vx*3)*size/ww, function(err) {});
-
+			doc.style.marginTop = $('.fixed-nav')[0].offsetHeight + 'px';
 			}
 		box.style.display = 'none';
 		ox = NaN, px = NaN, dx = NaN, tx = NaN, vx = NaN;
