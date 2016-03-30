@@ -705,7 +705,7 @@ $(document).ready(function() {
 		
 		var obj = getBwtWeb('svgHolderT0');
 		obj.addSuggestion($("#find"), function(suggestData) {
-			console.log(suggestData);
+				ShowChromosome(suggestData['chr_id'], suggestData['chr_start'], suggestData['chr_end']);
 		});
 	}, function(newChr, newStart, newEnd) {
 		ShowChromosome('chr' + newChr, newStart, newEnd);

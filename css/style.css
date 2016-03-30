@@ -720,4 +720,37 @@ hr {
 	width: 3300px;
 	cursor: pointer;
 }
-
+/* Suggest */
+.autocomplete-suggestions {
+	border: 1px solid #52c8dc;
+	background:#F0F8FF;
+    cursor: default;
+    overflow: auto; -webkit-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64);
+    -moz-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64);
+    box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64);
+    outline:inherit;
+    border-radius:8px;
+    -moz-border-radius:8px;
+    -webkit-border-radius:8px;
+    -ms-border-radius:8px;
+    -o-border-radius:8px;
+}
+.autocomplete-suggestion { 
+	padding: 2px 5px; 
+	white-space: nowrap; 
+	overflow: hidden;
+}
+.autocomplete-no-suggestion { padding: 2px 5px;}
+.autocomplete-selected { background: #52c8dc; }
+.autocomplete-suggestions strong {
+	font-weight: bold;
+	color: #000;
+}
+.autocomplete-group { padding: 2px 5px; }
+.autocomplete-group strong { 
+	font-weight: bold; 
+	font-size: 16px; 
+	color: #000; 
+	display: block; 
+	border-bottom: 1px solid #000; 
+}
