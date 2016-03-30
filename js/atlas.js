@@ -642,7 +642,9 @@ function ShowChromosome(name, start, end){
 			if (isNaN(vx)) box.style.display = 'block';
 			vx = -(e.pageX - tx) * (ix[1] - ix[0]) / ww;
 			$(".detail_content").css("margin-left", (e.pageX - tx - 1100) + "px");
-			ResizePre([(ix[0] + vx) * size / ww, (ix[1] + vx) * size / ww]);
+			ResizePre([(ix[0] + vx)*size/ww, (ix[1] + vx)*size/ww]);
+			var obj = getBwtWeb('svgHolderT0');
+ 			obj.search(name.substr(3)+ ":" + (ix[0] + vx)*size/ww + ".." + (ix[1] + vx)*size/ww, function(err) {});
 		}
 	};
 
