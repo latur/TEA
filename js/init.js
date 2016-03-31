@@ -1,5 +1,10 @@
 $(function(){
-	Route(); 
+	if (!Cookie.Get('clear')) {
+		Msg.Show('Loading demo files..');
+		Download(demo, function(){ Msg.Log('.') }, SamplesLoaded);
+	} else {
+		Route();
+	}
 
 	// Go to genome browser	
 	$('.show-general').click(function(){ Route('#chr1:152967038-154678079'); });
@@ -94,6 +99,58 @@ $(function(){
 		location.hash = '';
 		location.reload();
 	});
+	
+	// Show Tree
+	$('.showtree').click(function(){
+		Modal({'title' : 'Tree', 'data' : Template('tree'), 'class' : 'tree'});
+		var tree = Tree();
+
+        var newick = Newick.parse(tree)
+        var newickNodes = []
+        function buildNewickNodes(node, callback) {
+          newickNodes.push(node)
+          if (node.branchset) {
+            for (var i=0; i < node.branchset.length; i++) {
+              buildNewickNodes(node.branchset[i])
+            }
+          }
+        }
+        buildNewickNodes(newick)
+        
+		function ToDrawSvg(e, step, scale) {
+			var child = e.children('.t-box');
+			if (child.length == 2){
+				var k = ($(child[0]).offset().top + $(child[0]).height());
+				var v = k + $(child[1]).height()/2;
+				$('#tree-svg').append(Scobe(k/2 + step * 6, v + step * 4, step * scale))
+				ToDrawSvg($(child[0]), step + 1, scale);
+				ToDrawSvg($(child[1]), step + 1, scale);
+			}
+		}
+		
+		function Scobe(p1, p2, x){
+			var size = 20; x++;
+			var ptss = [x+size+','+p1, x+','+p1, x+','+p2, x+size+','+p2].join(' ');
+			var div = document.createElementNS('http://www.w3.org/1999/xhtml', 'div');
+		    div.innerHTML= '<svg xmlns="http://www.w3.org/2000/svg"><polyline fill="none" stroke="black" points="'+ptss+'"></polyline></svg>';
+		    var frag = document.createDocumentFragment();
+		    while (div.firstChild.firstChild) frag.appendChild(div.firstChild.firstChild);
+		    return frag;
+		}
+	
+
+        d3.phylogram.buildRadial('#tree', newick, {
+          width: 400,
+          skipLabels: true
+        })
+        return;
+        
+        d3.phylogram.build('#tree', newick, {
+          width: 800,
+          height: 400
+        });
+
+	})
 
 	// Panel-fixed:
 	$(window).scroll(function(e) {
@@ -112,7 +169,6 @@ $(function(){
 		}
 	});
 });
-
 
 
 
