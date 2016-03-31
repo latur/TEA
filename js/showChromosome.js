@@ -29,6 +29,7 @@ function ShowChromosome(name, start, end){
 	var size = chrs[name];
 	var box = $('#sel-box')[0], sel = $('#range')[0];
 	var blurL = $('#blur-l')[0], blurR = $('#blur-r')[0];
+	var area = $('#z-area')[0], jump = $('#jump-to')[0];
 	
 	// Variables: Zoom-box
 	var svg = $('#ch-svg')[0], svgL = $('#path-left')[0], svgR = $('#path-right')[0];
@@ -47,13 +48,27 @@ function ShowChromosome(name, start, end){
 	// Actions:
 	// - Parsing mousemove data (pixels -> bp)
 	function Parse(a, b, k){
-		console.log([a,b])
 		H.px[0] = a > b ? b : a;
 		H.px[1] = a > b ? a : b;
 		if (H.px[1] > ww) H.px[1] = ww;
 		if (H.px[0] <= 0) H.px[0] = 0;
 		if (H.px[0] == H.px[1]) H.px[1]++;
 		H.bp = [parseInt(H.px[0] * size / ww), parseInt(H.px[1] * size / ww)];
+		if (H.bp[1] - H.bp[0] < 80) {
+			var center = parseInt((H.bp[1] + H.bp[0])/2);
+			H.bp = [center - 40, center + 40];
+		}
+		if (!k) H.kpx = ww * ww / (H.px[1] - H.px[0]) / size;
+		H.offset = - (H.bp[0] * H.kpx - ww);
+	}
+	// - Parsing bp data (bp -> pixels)
+	function BPParse(bpa, bpb, k){
+		H.bp = [bpa >= 0 ? bpa : 0, bpb <= size ? bpb : size];
+		if (H.bp[1] - H.bp[0] < 80) {
+			var center = parseInt((H.bp[1] + H.bp[0])/2);
+			H.bp = [center - 40, center + 40];
+		}
+		H.px = [H.bp[0] * ww / size, H.bp[1] * ww / size];
 		if (!k) H.kpx = ww * ww / (H.px[1] - H.px[0]) / size;
 		H.offset = - (H.bp[0] * H.kpx - ww);
 	}
@@ -126,7 +141,6 @@ function ShowChromosome(name, start, end){
 			// Rulers
 			rule.css({ left : (p1 * H.kpx) + H.offset + 'px' });
 			var R = '', bp = '', rw = inc * H.kpx;
-			console.log(inc);
 			while(p1 < x2 + 10 * inc) {
 				R += Template('rule', {width : rw, bp : Name(p1)});
 				p1 += inc;
@@ -134,6 +148,7 @@ function ShowChromosome(name, start, end){
 			rule.html(R);
 			zoom.classList.remove('grayscale');
 			zoom.classList.remove('blur');
+			zoom.classList.remove('animate');
 			zoom.style.marginLeft = - ww + 'px';
 
 			// Samples
@@ -200,8 +215,7 @@ function ShowChromosome(name, start, end){
 				}
 				bases.innerHTML = html;
 			}
-			
-			
+
 			// Bind-levels
 			var bingPanel = '', bingGraph = '';
 			var bindInfo = inf[1].split(';').map(function(btype, k){
@@ -303,7 +317,7 @@ function ShowChromosome(name, start, end){
 	}
 
 	// Events:
-	var px,ox,dx, tx,vx,ix;
+	var px,ox,dx, tx,vx,ix, se, we;
 	// Select range (chromosome)
 	sel.onmousedown = function(e){
 		ox = e.offsetX;
@@ -313,6 +327,10 @@ function ShowChromosome(name, start, end){
 		tx = e.pageX;
 		ix = [H.px[0], H.px[1]];
 	});
+	$('#genes, #bind-graph, #samples').mousedown(function(e){
+		se = e.pageX;
+	});
+	
 	document.onmousemove = function(e){
 		// Select range (chromosome) ?
 		if (!isNaN(ox)) {
@@ -335,6 +353,21 @@ function ShowChromosome(name, start, end){
 			Parse(ix[0] - vx, ix[1] - vx, true);
 			Preview(e.pageX - tx);
 		}
+		// Second-selecter
+		if (!isNaN(se)) {
+			if (isNaN(we)) {
+				jump.style.display = 'none';
+				area.style.display = 'block';
+			}
+			we = (e.pageX - se);
+			if (we > 0) {
+				area.style.left  = se-20 + 'px';
+				area.style.width = we + 'px';
+			} else {
+				area.style.left  = se-20 + we + 'px';
+				area.style.width = - we + 'px';
+			}
+		}
 	};
 	document.onmouseup = function(e){
 		if (!isNaN(dx)) {
@@ -345,7 +378,15 @@ function ShowChromosome(name, start, end){
 			Parse(ix[0] - vx, ix[1] - vx);
 			Rend();
 		}
-		ox = NaN, px = NaN, dx = NaN, tx = NaN, vx = NaN;
+		// Second-selecter
+		if (!isNaN(se)) {
+			var lx = se + we/2 - 19;
+			if (lx < 87) lx = 87;
+			if (lx > ww - 87) lx = ww - 87;
+			jump.style.display = 'block';
+			jump.style.left = lx + 'px';
+		}
+		ox = NaN, px = NaN, dx = NaN, tx = NaN, vx = NaN, se = NaN, we = NaN;
 	};
 	window.onresize = function(e){
 		$('#content').addClass('blur');
@@ -354,7 +395,7 @@ function ShowChromosome(name, start, end){
 			ww = sel.offsetWidth;
 			svg.setAttribute('viewBox', '0 0 '+ww+' 30');
 			svg.setAttribute('width', ww);
-			Parse(ww * H.bp[0] / size, ww * H.bp[1] / size);
+			BPParse(H.bp[0], H.bp[1]);
 			Rend();
 		});
 	};
@@ -365,6 +406,7 @@ function ShowChromosome(name, start, end){
 	},function(){
 		zoom.classList.remove('animate');
 	}).click(function(){
+		zoom.classList.add('animate');
 		zoom.classList.add('blur');
 		var inc = parseFloat($(this).data('e'));
 		var p = inc * (H.px[1] - H.px[0]);
@@ -372,8 +414,8 @@ function ShowChromosome(name, start, end){
 		if (x1 <  0) { x1 = 0; x2 = H.px[1] - H.px[0]; }
 		if (x2 > size) { x2 = size; x1 = size - H.px[1] + ora[0]; }
 		Parse(x1, x2);
-		//Preview(0);
-		Rend();
+		Preview(-inc * ww);
+		setTimeout(function(){ Rend(true); }, 350);
 	});
 
 	$('.zoom-c a.cnt').click(function(){
@@ -384,17 +426,30 @@ function ShowChromosome(name, start, end){
 		if (padding < 40) padding = 40;
 		var x1 = (center - padding) > 0 ? center - padding : 0; 
 		var x2 = (center + padding) > size ? size : center + padding; 
-		console.log(x1)
-		console.log(x2)
-		Parse(x1 * ww / size, x2 * ww / size);
-		Preview(0);
+		BPParse(x1, x2);
 		Rend();
 	});
 	$('.chr-btn .dropdown-menu a').click(function(){
 		Route($(this).attr('href'));
 	});
+	
+	// Jump:
+	jump.children[0].onclick = function(){
+		zoom.classList.add('blur');
+		jump.style.display = 'none';
+		area.style.display = 'none';
+		var K = (H.bp[1] - H.bp[0])/ww;
+		var x1 = H.bp[0] + K * parseInt(area.style.left);
+		var x2 = H.bp[0] + K * (parseInt(area.style.width) + parseInt(area.style.left));
+		BPParse(parseInt(x1), parseInt(x2));
+		Rend();
+	}
+	// Close:
+	jump.children[1].onclick = function(){
+		jump.style.display = 'none';
+		area.style.display = 'none';
+	}
 
-	Parse(ww * start / size, ww * end / size);
-	Preview(0);
+	BPParse(start, end);
 	Rend();
 }

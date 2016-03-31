@@ -452,6 +452,7 @@ body:not(.compare-common):not(.compare-differ) .all.btn,
 	margin: -2px 0 -3px 0;
 }
 .ch-zoom {
+	position: relative;
 	overflow: hidden;
 	border-left: 1px solid #222;
 	border-right: 1px solid #222;
@@ -576,6 +577,32 @@ span.bp.e.T { background: rgba(255, 48, 0, 0.4); }
 span.bp.e.G { background: rgba(238, 255, 0, 0.4); }
 span.bp.e.C { background: rgba(0, 52, 255, 0.4); }
 
+#z-area {
+	display: none;
+	position: absolute;
+	border: 1px dashed #f00;
+	top: 0;
+    bottom: 0;
+    z-index: 30;
+    background: rgba(145, 0, 255, 0.04);
+}
+#jump-to {
+	display: none;
+	z-index: 35;
+	position: absolute;
+    background: #FFF;
+    padding: 7px;
+    top: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    width: 174px;
+    text-align: center;
+    margin-left: -87px;
+}
+#jump-to .btn {
+	padding: 3px 5px;
+    font-size: 11px
+}
 
 #genes {
 	overflow: hidden;
