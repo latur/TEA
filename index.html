@@ -208,6 +208,7 @@
 			<div id="ch-zoom-hm" class="ch-zoom-scroll">
 				<div class="rules"></div>
 				<div class="genes">
+					<div id="bases"></div>
 					<div class="hm" id="ghmap"></div>
 					<div id="genes"></div>
 				</div>
@@ -248,7 +249,7 @@
 
 <script data-name="bindlevel" class="template" type="text/x-handlebars-template">
 	<svg id="b-gr{key}" class="blevel" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="100" style="left: {left}px; width: {width}px">
-		<polyline points="{points}" style="stroke-width: 0; fill: rgba({color}, 0.5);"/>
+		<polyline fill-opacity="0.5" fill="rgb({color})" points="{points}" style="stroke-width: 0;"/>
 	</svg>
 </script>
 <script data-name="bindpanel" class="template" type="text/x-handlebars-template">

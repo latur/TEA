@@ -2,7 +2,7 @@
 function ShowChromosome(name, start, end){
 	// Validate:
 	if (!chrs[name]) return Route('#general');
-	if (end - start < 200) end -= 100, start += 100;
+	if (end - start < 80) end -= 40, start += 40;
 	if (end > chrs[name]) end = chrs[name];
 	if (start < 0) start = 0;
 
@@ -31,7 +31,7 @@ function ShowChromosome(name, start, end){
 	var blurL = $('#blur-l')[0], blurR = $('#blur-r')[0];
 	
 	// Variables: Zoom-box
-	var svg = $('#ch-svg')[0], svgL = $('#path-left')[0], svgR = $('#path-right')[0];;
+	var svg = $('#ch-svg')[0], svgL = $('#path-left')[0], svgR = $('#path-right')[0];
 	var zoom = $('#ch-zoom-hm')[0];
 	var spls = $('#samples')[0];
 	var rule = $('.rules');
@@ -47,6 +47,7 @@ function ShowChromosome(name, start, end){
 	// Actions:
 	// - Parsing mousemove data (pixels -> bp)
 	function Parse(a, b, k){
+		console.log([a,b])
 		H.px[0] = a > b ? b : a;
 		H.px[1] = a > b ? a : b;
 		if (H.px[1] > ww) H.px[1] = ww;
@@ -115,7 +116,7 @@ function ShowChromosome(name, start, end){
 		if (bp <  8000000) detail++; // M
 		if (bp <  5500000) detail++; // S
 		if (bp <  2000000) detail++; // XS
-		var genes = $('#genes')[0], bgraph = $('#bind-graph')[0], bpanel = $('#bind-panel')[0];
+		var genes = $('#genes')[0], bgraph = $('#bind-graph')[0], bpanel = $('#bind-panel')[0], bases = $('#bases')[0];
 		var mode = ['L','L','M','S','XS'][detail];
 
 		// -- > --
@@ -124,9 +125,10 @@ function ShowChromosome(name, start, end){
 
 			// Rulers
 			rule.css({ left : (p1 * H.kpx) + H.offset + 'px' });
-			var R = '', bp = '';
+			var R = '', bp = '', rw = inc * H.kpx;
+			console.log(inc);
 			while(p1 < x2 + 10 * inc) {
-				R += Template('rule', {width : inc * H.kpx, bp : Name(p1)});
+				R += Template('rule', {width : rw, bp : Name(p1)});
 				p1 += inc;
 			}
 			rule.html(R);
@@ -175,6 +177,31 @@ function ShowChromosome(name, start, end){
 				});
 			});
 			
+			// Bases ?
+			bases.style.display = inc > 100 ? 'none' : 'block';
+			bases.innerHTML = '';
+			if (inf[2]) {
+				var html = '';
+				// BP
+				if (inc == 10) {
+					for (var v = 0; v < inf[2].length; v+=10){
+						var bp10 = '';
+						for (var vv = 0; vv < 10; vv++ ) {
+							var b = (inf[2][v + vv] || '');
+							bp10 += '<span class="bp e '+b+'">' + b + '</span>';
+						}
+						html += '<span class="bp-cat" style="width:'+(rw)+'px">' + bp10 + '</span>';
+					}
+				}
+				if (inc == 100) {
+					for (var v = 0; v < inf[2].length; v++){
+						html += '<span style="width: '+(rw/100)+'px" class="bp '+inf[2][v]+'"></span>';
+					}
+				}
+				bases.innerHTML = html;
+			}
+			
+			
 			// Bind-levels
 			var bingPanel = '', bingGraph = '';
 			var bindInfo = inf[1].split(';').map(function(btype, k){
@@ -207,9 +234,7 @@ function ShowChromosome(name, start, end){
 			});
 			
 			genes.style.height = 'auto';
-			if (detail == 0) {
-				return genes.innerHTML = Template('zoom-Z', {name : name, left : H.offset});
-			}
+			if (detail == 0) genes.innerHTML = Template('zoom-Z', {name : name, left : H.offset});
 
 			// Genes
 			var genesInfo = inf[0].split(';').map(function(row){
@@ -246,13 +271,15 @@ function ShowChromosome(name, start, end){
 				return gene;
 			});
 			
-			var _ = Align(genesInfo, 12);
-			genes.innerHTML = _.el.map(function(e){ return Template('zoom-' + mode, e); }).join('');
+			if (detail > 0) {
+				var _ = Align(genesInfo, 12);
+				genes.innerHTML = _.el.map(function(e){ return Template('zoom-' + mode, e); }).join('');
+			}
 			var gh = 74;
 			if (detail < 2) gh = 20;
 			if (detail > 2) gh = Math.max(74, _.h);
 			genes.style.height = gh + 'px';
-			bpanel.style.top = gh + 24 + 'px';
+			bpanel.style.top = gh + 22 + (inc <= 100 ? 15 : 0) + 'px';
 		});
 	}
 	
@@ -345,6 +372,7 @@ function ShowChromosome(name, start, end){
 		if (x1 <  0) { x1 = 0; x2 = H.px[1] - H.px[0]; }
 		if (x2 > size) { x2 = size; x1 = size - H.px[1] + ora[0]; }
 		Parse(x1, x2);
+		//Preview(0);
 		Rend();
 	});
 
@@ -352,11 +380,14 @@ function ShowChromosome(name, start, end){
 		zoom.classList.add('blur');
 		var inc = parseFloat($(this).data('e'));
 		var center = (H.bp[1] + H.bp[0])/2;
-		var padding = inc * (H.bp[1] - H.bp[0])/2;
-		if (padding < 100) padding = 100;
+		var padding = Math.round(inc * (H.bp[1] - H.bp[0])/2);
+		if (padding < 40) padding = 40;
 		var x1 = (center - padding) > 0 ? center - padding : 0; 
 		var x2 = (center + padding) > size ? size : center + padding; 
+		console.log(x1)
+		console.log(x2)
 		Parse(x1 * ww / size, x2 * ww / size);
+		Preview(0);
 		Rend();
 	});
 	$('.chr-btn .dropdown-menu a').click(function(){
