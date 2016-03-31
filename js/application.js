@@ -1,8 +1,8 @@
 "use strict";
 
-const server  = 'http://dev.mazepa.us/tea/app/';
-const chrsSum = 3088269832;
-const chrs = {
+var server  = 'http://dev.mazepa.us/tea/app/';
+var chrsSum = 3088269832;
+var chrs = {
 	'chr1':  248956422, 'chr2':  242193529, 'chr3':  198295559, 
 	'chr4':  190214555, 'chr5':  181538259, 'chr6':  170805979, 
 	'chr7':  159345973, 'chr8':  145138636, 'chr9':  138394717, 
@@ -14,10 +14,10 @@ const chrs = {
 };
 
 // Page containers
-const hdr = $('#header')[0];
-const doc = $('#content')[0];
-const colors = [[0,220,0],[220,0,0],[0,0,220]];
-const demo = ['3ns_merged','61','81','2nsready'];
+var hdr = $('#header')[0];
+var doc = $('#content')[0];
+var colors = [[0,220,0],[220,0,0],[0,0,220]];
+var demo = ['3ns_merged','61','81','2nsready'];
 
 var expData   = {}; // {chr1 : {file1 : [], ..}, chr2 ...}
 var expNames  = []; // [file1, file2, file3]

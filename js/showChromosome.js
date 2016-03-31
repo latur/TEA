@@ -63,6 +63,7 @@ function ShowChromosome(name, start, end){
 	}
 	// - Parsing bp data (bp -> pixels)
 	function BPParse(bpa, bpb, k){
+		bpa = parseInt(bpa), bpb = parseInt(bpb);
 		H.bp = [bpa >= 0 ? bpa : 0, bpb <= size ? bpb : size];
 		if (H.bp[1] - H.bp[0] < 80) {
 			var center = parseInt((H.bp[1] + H.bp[0])/2);
@@ -112,8 +113,7 @@ function ShowChromosome(name, start, end){
 		// Restyle
 		box.style.display = 'none';
 		zoom.style.opacity = 1;
-		if (dynamic) zoom.classList.remove('grayscale');
-		if (dynamic) zoom.classList.remove('blur');
+		if (dynamic) $(zoom).removeClass('blur');
 
 		// Location in bp
 		var url = name + ':' + H.bp[0].toLocaleString() + '-' + H.bp[1].toLocaleString();
@@ -147,9 +147,7 @@ function ShowChromosome(name, start, end){
 				p1 += inc;
 			}
 			rule.html(R);
-			zoom.classList.remove('grayscale');
-			zoom.classList.remove('blur');
-			zoom.classList.remove('animate');
+			$(zoom).removeClass('blur animate');
 			zoom.style.marginLeft = - ww + 'px';
 
 			// Samples
@@ -348,7 +346,6 @@ function ShowChromosome(name, start, end){
 		if (!isNaN(tx)) {
 			if (isNaN(vx)) {
 				box.style.display = 'block';
-				zoom.classList.add('grayscale');
 			}
 			vx = (e.pageX - tx) * ww / (H.kpx * size);
 			Parse(ix[0] - vx, ix[1] - vx, true);
@@ -380,7 +377,7 @@ function ShowChromosome(name, start, end){
 			Rend();
 		}
 		// Second-selecter
-		if (!isNaN(se)) {
+		if (!isNaN(we)) {
 			var lx = se + we/2 - 19;
 			if (lx < 87) lx = 87;
 			if (lx > ww - 87) lx = ww - 87;
