@@ -9,9 +9,9 @@ function ShowChromosome(name, start, end){
 	// Insert HTML template:
 	_HideIntro();
 	var chrList = Object.keys(chrs).map(function(chr){
-		var part   = Math.round(chrs[chr]/50);
-		var center = [part * 25, part * 26].join('-');
-		return '<a href="#'+chr+':'+center+'">' + chr + '</a>';
+		var part = Math.round(chrs[chr]/50);
+		var bp = (part * 20).toLocaleString() + '-' + (part * 26).toLocaleString();
+		return '<a href="#'+chr+':'+bp+'">' + chr + '</a>';
 	}).join('');
 	doc.innerHTML = Template('chromosome', { name: name, clist : chrList });
 
@@ -116,8 +116,9 @@ function ShowChromosome(name, start, end){
 		if (dynamic) zoom.classList.remove('blur');
 
 		// Location in bp
-		location.hash = '#' + name + ':' + H.bp.join('-');
-		$('#position')[0].innerHTML = name + ':' + H.bp.join('-');
+		var url = name + ':' + H.bp[0].toLocaleString() + '-' + H.bp[1].toLocaleString();
+		location.hash = '#' + url
+		$('#position')[0].innerHTML = url;
 		
 		// Visible interval		
 		var x1 = Math.max(H.bp[0] - H.bp[1] + H.bp[0], 0);

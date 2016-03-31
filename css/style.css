@@ -327,7 +327,7 @@ hr {
 	float: right
 }
 #position {
-	width: 180px;
+	width: 190px;
 }
 
 @media (max-width:1140px) {
@@ -775,9 +775,6 @@ span.bp.e.C { background: rgba(0, 52, 255, 0.4); }
 #modal .modal-dialog {
 	width: 500px;
 }
-#modal .tree-dialog {
-	width: 650px;
-}
 #modal pre {
 	border: none;
 	margin-bottom: 0;
@@ -802,6 +799,30 @@ span.bp.e.C { background: rgba(0, 52, 255, 0.4); }
 	border-right: 1px solid #000;
 }
 
-
-
+/* Tree */
+#modal .tree {
+	width: 80%;
+}
+.t-visual {
+	margin: 20px;
+	position: relative;
+}
+.t-visual #tree {
+	position: relative;
+	z-index: 15;
+}
+.t-visual #tree-svg {
+	position: absolute;
+	z-index: 20;
+	top: 0;
+	left: 0px;
+}
+.t-box {
+    background: rgba(0,0,90,0.02);
+    padding: 5px 5px 5px 20px;
+    border: 1px solid rgba(0,0,0,0.05);
+    margin: 1px;
+    border-radius: 3px;
+    position: relative;
+}
 

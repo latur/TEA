@@ -168,17 +168,13 @@ var Msg = (function(){
 // Routing based on location.hash
 function Route(loc){
 	if (loc) location.hash = loc;
+
 	// Show one chromosome
-	var chr = location.hash.match(/^\#?(chr[0-9XY]+)\:([0-9]+)\-([0-9]+)$/);
-	if (chr) return ShowChromosome(chr[1], parseInt(chr[2]), parseInt(chr[3]));
+	var chr = location.hash.match(/^\#?(chr[0-9XY]+)\:([0-9,]+)\-([0-9,]+)$/);
+	if (chr) return ShowChromosome(chr[1], parseInt(chr[2].replace(/,/g,'')), parseInt(chr[3].replace(/,/g,'')));
 
 	// Main page
 	var home = location.hash.match(/^\#?([a-z]+)?$/);
-
-	if (expNames.length == 0 && !Cookie.Get('clear')) {
-		Msg.Show('Loading demo files..');
-		Download(demo, function(){ Msg.Log('.') }, SamplesLoaded);
-	}
 
 	// Detail (Show chromosome list)
 	if (home[1] == 'detail') return ShowDetail();
