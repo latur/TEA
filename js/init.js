@@ -61,8 +61,9 @@ $(function(){
 
 	// Demo data
 	$('.load-demo').click(function(e){
+		Cookie.Set('clear', '');
 		Msg.Show('Loading demo files...');
-		Download(['1ns-ready','1s-ready','2nsready','2sready','61'], function(){}, SamplesLoaded);
+		Download(demo, function(){}, SamplesLoaded);
 	});
 
 	// Mode: General/Detail
@@ -89,7 +90,8 @@ $(function(){
 
 	// Reset all
 	$('.clear').click(function(){
-		location.href = '#new';
+		Cookie.Set('clear', 'true')
+		location.hash = '';
 		location.reload();
 	});
 

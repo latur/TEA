@@ -16,8 +16,8 @@ const chrs = {
 // Page containers
 const hdr = $('#header')[0];
 const doc = $('#content')[0];
-
 const colors = [[0,220,0],[220,0,0],[0,0,220]];
+const demo = ['3ns_merged','61','81','2nsready'];
 
 var expData   = {}; // {chr1 : {file1 : [], ..}, chr2 ...}
 var expNames  = []; // [file1, file2, file3]
@@ -61,6 +61,19 @@ var Template = (function(classname){
 		return html;
 	}
 }('.template'));
+
+var Cookie = (function(){
+	function Get(name) {
+		var matches = document.cookie.match(new RegExp(
+			"(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+		));
+		return matches ? decodeURIComponent(matches[1]) : undefined;
+	}
+	function Set(name, val) {
+		document.cookie = name + "=" + val;
+	}
+	return {Get : Get, Set : Set};
+}());
 
 // Heatmap of pictures
 var HeatMap = (function(){
@@ -162,18 +175,16 @@ function Route(loc){
 	// Main page
 	var home = location.hash.match(/^\#?([a-z]+)?$/);
 
+	if (expNames.length == 0 && !Cookie.Get('clear')) {
+		Msg.Show('Loading demo files..');
+		Download(demo, function(){ Msg.Log('.') }, SamplesLoaded);
+	}
+
 	// Detail (Show chromosome list)
 	if (home[1] == 'detail') return ShowDetail();
 
 	// General (Show chromosome line)
 	if (home[1] == 'general') return ShowGeneral();
-	
-	// Demo data for new users
-	if (home[1] == 'demo') {
-		Msg.Show('Loading demo files..');
-		Download(['2ns-ready','2s-ready','2sready','SRR12','SRR16'], function(){ Msg.Log('.') }, SamplesLoaded);
-	}
-
 }
 
 // Parse samples files. Separators: Col: "\t", Row: "\n"
