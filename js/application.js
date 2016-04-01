@@ -22,6 +22,7 @@ var demo = ['3ns_merged','61','81','2nsready'];
 var expData   = {}; // {chr1 : {file1 : [], ..}, chr2 ...}
 var expNames  = []; // [file1, file2, file3]
 var expPoints = {}; // Positions info (for compare)
+var samples   = {};
 
 var cache = {}; // Cache for imagedata
 var XHR = false;
@@ -223,6 +224,16 @@ function Modal(data){
 // Sort of retrotransposons in the order on the chromosome
 function SamplesLoaded(){
 	cache = {}; // Clear cache	
+	samples = {};
+	for (var chr in expData) {
+		for (var f in expData[chr]) {
+			expData[chr][f].map(function(e){
+				if (!samples[f]) samples[f] = [];
+				samples[f].push(e[0]);
+			});
+		}
+	}
+
 	if (location.hash == '#demo' || location.hash == '') location.hash = '#general';
 
 	// Disable some function when number of file is lower than needed

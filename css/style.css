@@ -801,14 +801,17 @@ span.bp.e.C { background: rgba(0, 52, 255, 0.4); }
 
 /* Tree */
 #modal .tree {
-	width: 80%;
 }
 .t-visual {
 	margin: 20px;
 	position: relative;
 }
+.t-text {
+	margin: 20px;
+}
 .t-visual #tree {
 	position: relative;
+	left: 5px;
 	z-index: 15;
 }
 .t-visual #tree-svg {
@@ -820,9 +823,28 @@ span.bp.e.C { background: rgba(0, 52, 255, 0.4); }
 .t-box {
     background: rgba(0,0,90,0.02);
     padding: 5px 5px 5px 20px;
-    border: 1px solid rgba(0,0,0,0.05);
-    margin: 1px;
+    padding: 0px 0px 0px 45px;
+    border: 0px solid rgba(0,0,0,0.05);
+    margin: 0px;
     border-radius: 3px;
     position: relative;
+    overflow: hidden
 }
-
+.t-box i {
+	position: absolute;
+	top: 50%;
+	left: 2px;
+	font-size: 10px;
+	line-height: 12px;
+}
+.t-box span {
+	display: block;
+    padding: 2px 5px;
+    margin: 3px 0 3px -5px;
+    height: 20px;
+    float: left;
+    background: #FFF;
+    border-radius: 3px;
+    border: 1px solid #C1C1C1;
+    line-height: 16px;
+}
