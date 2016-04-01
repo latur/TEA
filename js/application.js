@@ -205,6 +205,118 @@ function Parse(content, filename){
 	});
 }
 
+// Search
+var Finder = (function(){
+	var actsList = [], opened = false, last = '';
+	function Parse(str){
+		if (last == str) return ;
+		last = str;
+		actsList = [];
+		// Chromosome / position / interval
+		var nma = str.match(/^\#?([0-9XY]+)\:?([0-9,]+)?\-?([0-9,]+)?$/); 
+		var nmv = str.match(/^\#?(chr[0-9XY]+)\:?([0-9,]+)?\-?([0-9,]+)?$/);
+		for (var chr in chrs) {
+			if (nma && chr.indexOf(nma[1]) != -1 || nmv && chr.indexOf(nmv[1]) != -1){
+				var x1 = (nma ? nma[2] : false) || (nmv ? nmv[2] : false);
+				var x2 = (nma ? nma[3] : false) || (nmv ? nmv[3] : false);
+				var tx = '';
+				if (x1 && x2) {
+					x1 = parseInt(x1.replace(/,/g, '')); x2 = parseInt(x2.replace(/,/g, ''));
+					if (x2 > chrs[chr]) x2 = chrs[chr];
+					var r = x2 > x1 ? [x1,x2] : [x2,x1];
+					tx = ' <small>[' + r.join('-') + ']</small>';
+					if (nma && chr.substr(3) != nma[1] || nmv && chr != nmv[1]) continue;
+				} else 
+				if (x1) {
+					x1 = parseInt(x1);
+					var r = [x1 - Math.min(x1, 5000), x1 + 5000];
+					tx = ' <small>[' + r.join('-') + ']</small>';
+				} else {
+					var r = [150000, 580000];
+				}
+				var t = r[0].toLocaleString() + '-' + r[1].toLocaleString();
+				actsList.push({
+					title : 'Chromosome ' + chr.substr(3) + tx, 
+					event : '#' + chr + ':' + t
+				});
+			}
+		}
+		Show();
+	}
+	function Show(){
+		var html = actsList.slice(0,7).map(function(h){
+			return Template('action', h);
+		}).join('');
+		$('#helper').html(html ? html : Template('helper-desc'));
+		$('#helper .f-action').click(function(){
+			actsList = [];
+			$('#find').val('');
+			Route($(this).data('act'));
+		}).hover(function(){
+			$('#helper .f-action').removeClass('sel');
+			$(this).addClass('sel');
+		});
+		$('#helper').css({ opacity : 1, top : '32px' });
+		opened = true;
+	}
+	function Hide(){
+		$('#helper').css({ opacity : 0, top : '38px' });
+		setTimeout(function(){ 
+			$('#helper').html('');
+		}, 350);
+		opened = false;
+	}
+
+	$('#find').focusin(function(){
+		Show();
+	}).focusout(function(){
+		Hide();
+	}).keyup(function(){
+		Parse($(this).val());
+	});
+
+	document.onkeydown = function(e){
+		var cur = $('#helper .f-action.sel');
+		// ESC
+		if (e.keyCode == 27 && opened) return Hide();
+		// Enter
+		if (e.keyCode == 13){ 
+			if (opened && actsList.length > 0) {
+				$('#find').val('');
+				Hide();
+				return Route(cur.length == 0 ? actsList[0].event : cur.data('act'));
+			}
+			if (!opened) {
+				$('#find').focus();
+			}
+		}
+		if (actsList.length == 0) return ;
+
+		// Down
+		if (e.keyCode == 40) {
+			if (cur.length == 0) {
+				return $('#helper .f-action:first-child').addClass('sel');
+			}
+			if (cur.next().length > 0) {
+				$('#helper .f-action').removeClass('sel');
+				cur.next().addClass('sel')
+			}
+		}
+		// UP
+		if (e.keyCode == 38) {
+			if (cur.length == 0) {
+				return $('#helper .f-action:last-child').addClass('sel');
+			}
+			if (cur.prev().length > 0) {
+				$('#helper .f-action').removeClass('sel');
+				cur.prev().addClass('sel')
+			}
+		}
+	}
+
+}());
+
+
 // Downloading samples from library
 function Download(samples, onload, onstop){
 	var onstop = onstop || function(){};
@@ -250,6 +362,3 @@ function SamplesLoaded(){
 	Route();
 }
 
-function Groups(){
-	return expGroup;
-}

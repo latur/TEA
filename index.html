@@ -14,7 +14,8 @@
 	<div class="intro">
 		<h2>Transposable Elements Atlas</h2> 
 		<div class="extended-controls finder">
-			<input type="text" id="find" placeholder="Find region/gene. Ex: chr1:1000-400000" class="input-sm form-control" />
+			<input type="text" id="find" placeholder="Search. Click for help" class="input-sm form-control" />
+			<div id="helper" class="animate"></div>
 		</div>
 		<div class="mini-controls">
 			<div class="btn-group input-group">
@@ -315,6 +316,19 @@
 		<button type="button" class="btn btn-primary g-compare disabled">Compare</button>
 	</div>
 </script>
+
+<script data-name="action" class="template" type="text/x-handlebars-template">
+	<div class="f-action" data-act="{event}"><h5>{title}</h5><p>{event}</p></div>
+</script>
+<script data-name="helper-desc" class="template" type="text/x-handlebars-template">
+	<div class="helper-desc">
+		<p>Search by chromosome name or number <kbd>chrX</kbd></p>
+		<p>Search by chromosome position <kbd>chr3:59000</kbd></p>
+		<p>Search by interval <kbd>chr1:1,000,000-5,000,000</kbd></p>
+	</div>
+</script>
+
+
 
 
 </body>

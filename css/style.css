@@ -310,26 +310,71 @@ hr {
 
 /* -------------------------------------------- */
 #content {
-	position: relative;;
+	position: relative;
 	z-index: 20;
 }
 #content.blur {
 	overflow: hidden;
 }
 /* Panels */
-.finder {
-	min-width: 420px;
-	position: absolute;
-	right: 0; 
-	top: 0
-}
 .check-block {
 	float: right
 }
 #position {
 	width: 190px;
 }
-
+.finder {
+	min-width: 420px;
+	position: absolute;
+	right: 0; 
+	top: 0;
+	z-index: 105;
+}
+#helper {
+	opacity: 0;
+    position: absolute;
+    top: 38px;
+    background: #fff;
+    border-radius: 5px;
+    width: 100%;
+    box-shadow: 0 2px 25px rgba(0,0,0,0.2);
+}
+#helper .f-action {
+	padding: 2px 10px;
+	border-bottom: 1px dashed #eee;
+}
+#helper .helper-desc {
+	padding: 5px 10px;
+}
+#helper .helper-desc kbd {
+    padding: 1px 4px;
+    margin: -1px 0;
+    background-color: #A5A5A5;
+	box-shadow: none;
+	float: right;
+}
+#helper .helper-desc p {
+	margin: 4px 0;
+}
+#helper .f-action:first-child {
+	border-radius: 5px 5px 0 0;
+}
+#helper .f-action:last-child {
+	border-radius: 0 0 5px 5px;
+	border-bottom: none;
+}
+#helper .f-action.sel {
+	cursor: pointer;
+	background: #F0EFFF;
+}
+#helper .f-action h5 {
+	margin: 7px 0 3px 0;
+	color: #222;
+}
+#helper .f-action p {
+	margin-bottom: 5px;
+	color: #B7B7B7;
+}
 @media (max-width:1140px) {
 	.finder {
 		min-width: 380px;
@@ -771,9 +816,17 @@ span.bp.e.C { background: rgba(0, 52, 255, 0.4); }
 .rule .r-sub > i:nth-child(even) {
 	background: #aaa;
 }
-
+#modal .modal-content {
+	box-shadow: 0 5px 75px rgba(0,0,0,.4);
+}
 #modal .modal-dialog {
 	width: 500px;
+    margin: 55px auto;
+}
+#modal.fade .modal-dialog {
+    -webkit-transition: -webkit-transform .15s ease-out;
+    -o-transition: -o-transform .15s ease-out;
+    transition: transform .15s ease-out;
 }
 #modal pre {
 	border: none;
