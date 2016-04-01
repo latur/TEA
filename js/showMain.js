@@ -46,6 +46,7 @@ function ShowDetail(){
 	var samples = expNames.map(function(f){
 		return '<div class="fn"><span>' + f + '</span></div>';
 	}).join('');
+	if (expGroup) samples = '<div class="fn"><span>Group I</span></div><div class="fn"><span>Group II</span></div>';
 	
 	doc.innerHTML = Template('chr-list', {clist : clist});
 	// Heatmap of samples
@@ -71,7 +72,10 @@ function ShowGeneral(){
 		HeatMap(chr, 36, "");
 	}); // Heatmap of samples
 	// Sample-names:
-	$('.chr-line-names').html(expNames.map(function(f){
+	var samples = expNames.map(function(f){
 		return '<div class="fn"><span>' + f + '</span></div>';
-	}).join(''));
+	}).join('');
+	if (expGroup) samples = '<div class="fn"><span>Group I</span></div><div class="fn"><span>Group II</span></div>';
+
+	$('.chr-line-names').html(samples);
 }

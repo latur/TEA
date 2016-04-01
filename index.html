@@ -39,7 +39,7 @@
 				<a class="btn btn-default detail"><span class="glyphicon glyphicon-equalizer"></span> Detail</a>
 			</div>
 			<div class="btn-group btn-group-sm samples-nav-pane">
-				<a class="btn btn-default disabled comparision"><span class="glyphicon glyphicon-adjust"></span> <span class="txt">Group comparision</span></a>
+				<a class="btn btn-default disabled comparision"><span class="glyphicon glyphicon-adjust"></span> <span class="tOn">Group comparision</span><span class="tOff">Cancel comparisons</span></a>
 				<a class="btn btn-default disabled showtree"><span class="glyphicon glyphicon-grain"></span> Phylogenetic tree</a>
 			</div>
 			<div class="check-block">
@@ -292,15 +292,34 @@
 	</div>
 </script>
 
+<script data-name="comparision" class="template" type="text/x-handlebars-template">
+	<div class="gpr">
+		<div class="row">
+			<div class="col-md-5"><h4>Group I</h4></div>
+			<div class="col-md-2"></div>
+			<div class="col-md-5"><h4>Group II</h4></div>
+		</div>
+		<div class="row cpr-lists">
+			<div class="col-md-5"><select multiple class="form-control" id="group-1">{files}</select></div>
+			<div class="col-md-2">
+				<div class="btn-group-vertical" role="group">
+					<a class="btn btn-default g-right"><span class="glyphicon glyphicon-arrow-right"></span></a>
+					<a class="btn btn-default g-left "><span class="glyphicon glyphicon-arrow-left"></span></a>
+				</div>
+			</div>
+			<div class="col-md-5"><select multiple class="form-control" id="group-2"></select></div>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+		<button type="button" class="btn btn-primary g-compare disabled">Compare</button>
+	</div>
+</script>
+
 
 </body>
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
-
-<script type="text/javascript" src="js/d3/d3.min.js"></script>
-<script type="text/javascript" src="js/general_map.js"></script>
-<script type="text/javascript" src="js/group_compare.js"></script>
-
 <script type="text/javascript" src="js/phylogeneticTree.js"></script>
 <script type="text/javascript" src="js/showMain.js"></script>
 <script type="text/javascript" src="js/showChromosome.js"></script>

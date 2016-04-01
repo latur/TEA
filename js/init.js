@@ -104,7 +104,54 @@ $(function(){
 	$('.showtree').click(function(){
 		Modal({'title' : 'Phylogenetic Tree', 'data' : Template('tree'), 'class' : 'tree'});
 		new Tree($('#tree'), $('#tree-svg'), $('#newick'));
-		//console.log(T.Newick());
+	});
+	
+	// Group compare
+	$('.comparision').click(function(){
+		if (expGroup) {
+			$('.comparision').removeClass('on');
+			expGroup = false;
+			cache = {};
+			return Route();
+		}
+		
+		var files = expNames.map(function(name){ return '<option>' + name + '</option>'; }).join('');
+		Modal({'title' : 'Group compare', 'data' : Template('comparision', {files : files}), 'class' : 'compare'});
+		var names = {g1 : [], g2 : []};
+		var Parse = function(){
+			names = {g1 : [], g2 : []};
+			$('#group-1 option').each(function(){ names.g1.push($(this).html()); });
+			$('#group-2 option').each(function(){ names.g2.push($(this).html()); });
+			$('.g-compare').addClass('disabled');
+			if (names.g1.length > 0 && names.g2.length > 0) $('.g-compare').removeClass('disabled');
+		};
+
+		$('.g-right').click(function(){
+			$('#group-1 option:selected').each(function(){
+				$('#group-2').append('<option>' + $(this).html() + '</option>');
+			}).remove();
+			Parse();
+		});
+		$('.g-left').click(function(){
+			$('#group-2 option:selected').each(function(){
+				$('#group-1').append('<option>' + $(this).html() + '</option>');
+			}).remove();
+			Parse();
+		});
+		$('.g-compare').click(function(){
+			expGroup = {};
+			for (var chr in expData){
+				expGroup[chr] = { g1 : [], g2 : [] };
+				names.g1.map(function(f){ expGroup[chr].g1 = expGroup[chr].g1.concat(expData[chr][f]); })
+				names.g2.map(function(f){ expGroup[chr].g2 = expGroup[chr].g2.concat(expData[chr][f]); })
+			}
+			$('#modal').modal('hide');
+			$('.comparision').addClass('on');
+			cache = {};
+			Route();
+			console.log(expGroup);
+		});
+		
 	});
 
 	// Panel-fixed:

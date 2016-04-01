@@ -799,8 +799,9 @@ span.bp.e.C { background: rgba(0, 52, 255, 0.4); }
 	border-right: 1px solid #000;
 }
 
-/* Tree */
-#modal .tree {
+/* Tree & Compare */
+#modal .compare .modal-header {
+	display: none;
 }
 .t-visual {
 	margin: 20px;
@@ -848,3 +849,31 @@ span.bp.e.C { background: rgba(0, 52, 255, 0.4); }
     border: 1px solid #C1C1C1;
     line-height: 16px;
 }
+.gpr {
+	margin: 15px;
+}
+.gpr h4 {
+	text-align: center;
+}
+.cpr-lists select {
+	padding: 0;
+	height: 250px;
+}
+.cpr-lists select option {
+	padding: 2px 6px;
+}
+.cpr-lists .col-md-2 {
+	padding: 0;
+}
+.cpr-lists .col-md-2 .btn-group-vertical {
+	display: block;
+}
+.comparision .tOff { display: none; }
+.comparision.on { text-shadow: 0 0 3px rgba(255,0,0,0.3); }
+.comparision.on .tOff { color: #700; display: inline-block; }
+.comparision.on .tOn { display: none; }
+.comparision.on .glyphicon { color: #e00; }
+
+
+
+

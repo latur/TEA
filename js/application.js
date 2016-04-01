@@ -20,6 +20,7 @@ var colors = [[0,220,0],[220,0,0],[0,0,220]];
 var demo = ['3ns_merged','61','81','2nsready'];
 
 var expData   = {}; // {chr1 : {file1 : [], ..}, chr2 ...}
+var expGroup  = false;
 var expNames  = []; // [file1, file2, file3]
 var expPoints = {}; // Positions info (for compare)
 var samples   = {};
@@ -78,6 +79,7 @@ var Cookie = (function(){
 
 // Heatmap of pictures
 var HeatMap = (function(){
+	var exp = {}, nms = [];
 	var MakeImage = function(chr, w, h, height, _filter){
 		var canvas = document.createElement('canvas');
 		canvas.width = w, canvas.height = h;
@@ -95,10 +97,10 @@ var HeatMap = (function(){
 		};
 		var y = 0;
 		var K = w / chrs[chr];
-		expNames.map(function(f){
-			if (expData[chr][f]) {
+		nms.map(function(f){
+			if (exp[chr][f]) {
 				var F = Array.apply(null, Array(w)).map(Number.prototype.valueOf, 1); // [0,0,0..]
-				expData[chr][f].map(function(sm){
+				exp[chr][f].map(function(sm){
 					if (!_filter(sm, sm[0] + chr)) return;
 					var col = colors[sm[2]-1],
 						xx = Math.floor(K * sm[0]), 
@@ -113,10 +115,12 @@ var HeatMap = (function(){
 		return canvas.toDataURL();
 	}
 	return function(chr, size, samples){
-		if (!expData[chr]) return ;
+		exp = expGroup ? expGroup : expData;
+		nms = expGroup ? ['g1', 'g2'] : expNames;
+		if (!exp[chr]) return ;
 		if (!cache[size]) cache[size] = {};
 		var width = $('.' + chr).width();
-		var height = expNames.length * size;
+		var height = nms.length * size;
 		if (!cache[size][chr]) cache[size][chr] = {
 			'height'  : height,
 			'type-1-common' : MakeImage(chr, width, height, size, function(e,id){ return e[2] == 1 && expPoints[id] > 1; }),
@@ -244,4 +248,8 @@ function SamplesLoaded(){
 
 	Msg.Hide();
 	Route();
+}
+
+function Groups(){
+	return expGroup;
 }

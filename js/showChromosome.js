@@ -152,12 +152,13 @@ function ShowChromosome(name, start, end){
 
 			// Samples
 			spls.innerHTML = '';
-			if (expData[name]) {
-				Object.keys(expData[name]).map(function(f,i){
-					var prepare = expData[name][f].sort(function(a,b){
+			var exp = expGroup ? expGroup : expData;
+			if (exp[name]) {
+				Object.keys(exp[name]).map(function(f,i){
+					var prepare = exp[name][f].sort(function(a,b){
 						if (a[0] > b[0]) return 1;
 						if (a[0] < b[0]) return -1;
-						return 0
+						return 0;
 					}).map(function(spl, ind){
 						var tr = {
 							id   : i + '-' + ind, 
@@ -183,7 +184,7 @@ function ShowChromosome(name, start, end){
 			}
 			
 			$('.spl a').click(function(){
-				var info = expData[name][$(this).data('f')][$(this).data('i')];
+				var info = exp[name][$(this).data('f')][$(this).data('i')];
 				Modal({
 					//title : '<b>' + info[3] + '</b>. Chromosome: <kbd>' + name + '</kbd>. Position: <kbd>' + info[0] + '</kbd>',
 					title : '=]',
