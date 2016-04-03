@@ -382,8 +382,10 @@ function ShowChromosome(name, start, end){
 			var lx = se + we/2 - 19;
 			if (lx < 87) lx = 87;
 			if (lx > ww - 87) lx = ww - 87;
+			var top = e.pageY - $(zoom).offset().top - 18;
 			jump.style.display = 'block';
 			jump.style.left = lx + 'px';
+			jump.style.top = (top > 10 ? top : 10) + 'px';
 		}
 		ox = NaN, px = NaN, dx = NaN, tx = NaN, vx = NaN, se = NaN, we = NaN;
 	};
