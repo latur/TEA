@@ -604,6 +604,7 @@ body:not(.compare-common):not(.compare-differ) .all.btn,
     line-height: 13px;
     font-weight: bold;
     font-family: monospace;
+    width: 300%;
 }
 #bases span {
 	height: 12px;
@@ -660,6 +661,7 @@ span.bp.e.C { background: rgba(0, 52, 255, 0.4); }
 	font-size: 11px;
 	font-family: monospace;
 	font-weight: 100;
+    overflow: hidden;
 }
 #genes .bx i {
 	position: relative;
