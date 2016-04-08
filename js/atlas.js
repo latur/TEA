@@ -675,7 +675,7 @@ function get_server_file(id){
 }
 
 function run_demo(){
-	expName = ["MS2A_S1_R", "MS2B_S7_R", "MS2C_S2_R"]
+	expName = ["MS2A", "MS2B", "MS2C"]
 	get_server_file(expName);
 }
 

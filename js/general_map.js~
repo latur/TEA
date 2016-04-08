@@ -207,7 +207,6 @@ function remove_file(id){
 
 /* Calculate common differenet & tree */
 function add_common(chr, pos, type, id, name){
-alert(id);
 	var cell = Math.ceil(pos/2000000)-1;
 	if (cell >= density_len[chr]) cell = density_len[chr]-1;
 
