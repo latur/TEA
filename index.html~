@@ -234,15 +234,15 @@
 <script data-name="library" class="template" type="text/x-handlebars-template">
 	<ul class="list-group sample-names">
 		<!-- Temporary solution -->
-		<li class="list-group-item" data-name="1s-ready">1s-ready <span class="glyphicon glyphicon-ok"></span></li>
+/*		<li class="list-group-item" data-name="1s-ready">1s-ready <span class="glyphicon glyphicon-ok"></span></li>
 		<li class="list-group-item " data-name="1ns-ready">1ns-ready <span class="glyphicon glyphicon-ok"></span></li>
 		<li class="list-group-item selected" data-name="2sready">2sready <span class="glyphicon glyphicon-ok"></span></li>
 		<li class="list-group-item selected" data-name="2nsready">2nsready <span class="glyphicon glyphicon-ok"></span></li>
 		<li class="list-group-item selected" data-name="3s_merged">3s_merged <span class="glyphicon glyphicon-ok"></span></li>
-		<li class="list-group-item" data-name="3ns_merged">3ns_merged <span class="glyphicon glyphicon-ok"></span></li>
-		<li class="list-group-item" data-name="61">61 <span class="glyphicon glyphicon-ok"></span></li>
-		<li class="list-group-item" data-name="81">81 <span class="glyphicon glyphicon-ok"></span></li>	
-		<li class="list-group-item selected" data-name="91c">91c <span class="glyphicon glyphicon-ok"></span></li>	
+		<li class="list-group-item" data-name="3ns_merged">3ns_merged <span class="glyphicon glyphicon-ok"></span></li>*/
+		<li class="list-group-item selected" data-name="MS2A_S1_R">MS2A<span class="glyphicon glyphicon-ok"></span></li>
+		<li class="list-group-item selected" data-name="MS2B_S7_R">MS2B <span class="glyphicon glyphicon-ok"></span></li>	
+		<li class="list-group-item selected" data-name="MS2C_S2_R">MS2C<span class="glyphicon glyphicon-ok"></span></li>	
 	</ul>
 	<div class="modal-footer">
 		<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
@@ -256,7 +256,7 @@
 <script type="text/javascript" src="js/bootstrap.file-input.js"></script>
 <script type="text/javascript" src="js/d3/d3.min.js"></script>
 <script src="http://static.bioturing.com/v20151221.72/b/js/pack4.min.js"></script>
-<script language="javascript" src="js/bwtweb-all-min.js?v=5"></script>
+<script language="javascript" src="js/bwtweb-all-min.js?v=7"></script>
 
 <script type="text/javascript" src="js/general_map.js"></script>
 <script type="text/javascript" src="js/phylogenetic_tree.js"></script>
@@ -265,5 +265,5 @@
 <script type="text/javascript" src="js/contig_align.js"></script>
 <script type="text/javascript" src="js/samples_list.js"></script>
 
-<script type="text/javascript" src="js/atlas.js?v=1"></script>
+<script type="text/javascript" src="js/atlas.js?v=3"></script>
 </html>

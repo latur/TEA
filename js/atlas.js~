@@ -255,7 +255,6 @@ function SamplesLoaded(){
 
 		ShowChromosome(name, x1, x2);
 	});
-
 }
 
 function disable_button(){
@@ -376,14 +375,6 @@ function Parse(content, filename){
 			id_list[id] = 0;
 		}
 	});
-
-	for (var chr in expData)
-  			expData[chr][filename] = expData[chr][filename].sort(function(a,b){
-				if (a[0] > b[0]) return  1;
-				if (a[0] < b[0]) return -1;
-				return 0;
-			});
-
 }
 
 // Get experiment data by ID
@@ -560,7 +551,7 @@ function load_detail_content(name, start, end){
 function ShowChromosome(name, start, end){
 	$(".list_name").html(name.charAt(0).toUpperCase() + name.substr(1) + '<span class="caret"></span>');
 	$(".gene_wrap").css({"visibility": "visible", "height": "auto"});
-	doc.style.marginTop = (parseInt($('.fixed-nav')[0].offsetHeight) + 30) + 'px';
+	doc.style.marginTop = (parseInt($('.fixed-nav')[0].offsetHeight) + 50) + 'px';
 
 	// Impossible states:
 	if (!chrs[name])
@@ -650,13 +641,13 @@ function ShowChromosome(name, start, end){
 			Resized([(ox)*size/1100, (ox + dx)*size/1100]);
 			var obj = getBwtWeb('svgHolderT0');
  			obj.search(name.substr(3)+ ":" + (ox)*size/1100 + ".." + (ox + dx)*size/1100, function(err) {});			
-			doc.style.marginTop = (parseInt($('.fixed-nav')[0].offsetHeight) + 30) + 'px';
+			doc.style.marginTop = (parseInt($('.fixed-nav')[0].offsetHeight) + 50) + 'px';
 			}
 		if (!isNaN(vx)) {
 			Resized([(ix[0] + vx*3)*size/ww, (ix[1] + vx*3)*size/ww]);
 			var obj = getBwtWeb('svgHolderT0');
  			obj.search(name.substr(3)+ ":" + (ix[0] + vx*3)*size/ww + ".." + (ix[1] + vx*3)*size/ww, function(err) {});
-			doc.style.marginTop = (parseInt($('.fixed-nav')[0].offsetHeight) + 30) + 'px';
+			doc.style.marginTop = (parseInt($('.fixed-nav')[0].offsetHeight) + 50) + 'px';
 			}
 		box.style.display = 'none';
 		ox = NaN, px = NaN, dx = NaN, tx = NaN, vx = NaN;
@@ -705,8 +696,10 @@ $(document).ready(function() {
 		
 		var obj = getBwtWeb('svgHolderT0');
 		obj.addSuggestion($("#find"), function(suggestData) {
-			obj.search(suggestData['chr_id'].substr(3) + ":" + suggestData['chr_start'] + ".." + suggestData['chr_end'], function(err) {});
-			ShowChromosome(suggestData['chr_id'], suggestData['chr_start'], suggestData['chr_end']);
+			if (expData[suggestData['chr_id']]){
+				obj.search(suggestData['chr_id'].substr(3) + ":" + suggestData['chr_start'] + ".." + suggestData['chr_end'], function(err) {});
+				ShowChromosome(suggestData['chr_id'], suggestData['chr_start'], suggestData['chr_end']);
+			}
 		});
 	}, function(newChr, newStart, newEnd) {
 		ShowChromosome('chr' + newChr, newStart, newEnd);
