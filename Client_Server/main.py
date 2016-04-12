@@ -10,17 +10,17 @@ class MainHandler(tornado.web.RequestHandler):
             callbackFunc = self.request.arguments["callback"][0]
             callbackFunc = str(callbackFunc)
 
-    		self.set_header('Content-Type', 'application/javascript')
+    	self.set_header('Content-Type', 'application/javascript')
 
 		ret = []
-		if self.request.arguments["inf"] == "file"):
+		if self.request.arguments["inf"] == "file":
 			for name in self.request.arguments["id[]"]:
 				path = '../samples/' + name
 				content = open(path, "r")
 				ret.append(content.read())
 		elif self.request.arguments["inf"] == "H3K27Ac":
-			ret.append(self.request.arguments["start"])
-			ret.append(self.request.arguments["end"])
+			ret.append("ji\n");
+			ret.append("ii\n");
 
 		self.write("{jsfunc}({json});".format(jsfunc=callbackFunc, json=tornado.escape.json_encode({"content": ret})))
         self.finish()
