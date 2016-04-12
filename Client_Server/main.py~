@@ -19,6 +19,7 @@ class MainHandler(tornado.web.RequestHandler):
 				content = open(path, "r")
 				ret.append(content.read())
 		elif self.request.arguments["inf"] == "H3K27Ac":
+			print self.request.arguments["start"]
 			ret.append("ji\n");
 			ret.append("ii\n");
 
