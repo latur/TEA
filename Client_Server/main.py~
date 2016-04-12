@@ -19,8 +19,8 @@ class MainHandler(tornado.web.RequestHandler):
 				content = open(path, "r")
 				ret.append(content.read())
 		elif self.request.arguments["inf"] == "H3K27Ac":
-			ret.append(self.request.arguments["start"])
-			ret.append(self.request.arguments["end"])
+			ret.append("ji\n");
+			ret.append("ii\n");
 
 		self.write("{jsfunc}({json});".format(jsfunc=callbackFunc, json=tornado.escape.json_encode({"content": ret})))
         self.finish()
