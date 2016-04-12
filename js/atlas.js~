@@ -3,14 +3,14 @@
 
 const chrsSum = 3088269832;
 const chrs = {
-	'chr1': 248956422,  'chr2':  242193529, 'chr3': 198295559, 
-	'chr4': 190214555,  'chr5':  181538259, 'chr6': 170805979, 
-	'chr7': 159345973,  'chr8':  145138636, 'chr9': 138394717, 
+	'chr1':  248956422, 'chr2':  242193529, 'chr3':  198295559, 
+	'chr4':  190214555, 'chr5':  181538259, 'chr6':  170805979, 
+	'chr7':  159345973, 'chr8':  145138636, 'chr9':  138394717, 
 	'chr10': 133797422, 'chr11': 135086622, 'chr12': 133275309, 
 	'chr13': 114364328, 'chr14': 107043718, 'chr15': 101991189, 
 	'chr16': 90338345,  'chr17': 83257441,  'chr18': 80373285, 
 	'chr19': 58617616,  'chr20': 64444167,  'chr21': 46709983, 
-	'chr22': 50818468,  'chrX':  156040895, 'chrY': 57227415
+	'chr22': 50818468,  'chrX':  156040895, 'chrY':  57227415
 };
 
 // Experiment ID 
@@ -473,12 +473,22 @@ function load_detail_content(name, start, end){
 	start -= screen;
 	end += screen;
 	var sample = d3.select(".samples")
-	sample.html('').attr("height", n_file*50);
+	sample.html('').attr("height", n_file*50 + 30);
+
+	$.ajax({
+		method: "get",
+		dataType: "jsonp",
+		url: " http://bioalgorithm.xyz/teatlas_ajax",
+		data: {"inf": "H3K27Ac", "start": start, "end": end},
+		success: function(chip_seq) {
+			
+		}
+	})
 
 	var extra = 0;
 	for (var i = 0; i < n_file; i++){
 		var f = file_list[i];
-		var y = i*50 + 15 + extra;
+		var y = i*50 + 45 + extra;
 		var last_x = 0;
 		sample.append("text")
 			.attr("x", 1105)
@@ -517,13 +527,13 @@ function load_detail_content(name, start, end){
 			var x = (content[0]-start)*3300/(end-start);
 			if (x < last_x + 120){
 					y += 15
-					if (y >= i*50 + extra + add){
+					if (y >= i*50 + extra + add + 30){
 							add += 15;
-							sample.attr("height", n_file*50 + extra + add);
+							sample.attr("height", n_file*50 + extra + add + 30);
 					}
 			} else {
 				last_x = x;	
-				y = i*50 + extra + 30;
+				y = i*50 + extra + 60;
 			}
 			sample.append("rect")
 				.attr("fill", color[content[2]])
@@ -661,7 +671,7 @@ function get_server_file(id){
 		method: "get",
 		dataType: "jsonp",
 		url: " http://bioalgorithm.xyz/teatlas_ajax",
-		data: {"id": id},
+		data: {"inf": "file", "id": id},
 		success: function(file) {
 			for (var i = 0; i < file.content.length; i++)
 				Parse(file.content[i], id[i]);
@@ -675,7 +685,7 @@ function get_server_file(id){
 }
 
 function run_demo(){
-	expName = ["MS2A_S1_R", "MS2B_S7_R", "MS2C_S2_R"]
+	expName = ["MS2A", "MS2B", "MS2C"]
 	get_server_file(expName);
 }
 
@@ -683,16 +693,8 @@ $(document).ready(function() {
     SamplesLoaded();
 
 	var loc = location.hash;
-	if (loc == '')
-		$(".status").css("visibility", "visible").html("Running demo...");
-	else
-		$(".status").css("visibility", "visible").html("Initialize...");
-	var loc = location.hash;
 	createSmallBwtWebByAl('svgHolderT0', 'sml0', '1', 5000000, 10000000, function() {
-		if (loc == '')
-			run_demo();
-		else
-			Route(loc);
+		Route();
 		
 		var obj = getBwtWeb('svgHolderT0');
 		obj.addSuggestion($("#find"), function(suggestData) {
