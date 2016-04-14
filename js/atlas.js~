@@ -481,7 +481,8 @@ function load_detail_content(name, start, end){
 		url: " http://bioalgorithm.xyz/teatlas_ajax",
 		data: {"inf": "H3K27Ac", "start": start, "end": end},
 		success: function(chip_seq) {
-			
+			alert(chip_seq[0])
+			alert(chip_seq[1])
 		}
 	})
 
