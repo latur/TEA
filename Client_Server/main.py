@@ -1,7 +1,6 @@
 import tornado.ioloop
 import tornado.web
 import tornado.escape
-import gene_ann
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):    	
@@ -12,12 +11,14 @@ class MainHandler(tornado.web.RequestHandler):
 
 
         self.set_header('Content-Type', 'application/javascript')
-	ret = []
+		ret = []
 
-	for name in self.request.arguments["id[]"]:
-		path = '../samples/' + name
-		content = open(path, "r")
-		ret.append(content.read())
+		if self.request.arguments["inf"] == "file":
+			print self.request.arguments["inf"]
+			for name in self.request.arguments["id[]"]:
+				path = '../samples/' + name
+				content = open(path, "r")
+				ret.append(content.read())
         self.write("{jsfunc}({json});".format(jsfunc=callbackFunc, json=tornado.escape.json_encode({"content": ret})))
         self.finish()
 
