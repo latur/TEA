@@ -55,25 +55,14 @@ function draw_tsd(info){
 	if (info[3] == "None"){
 		draw_line(0, 45, 389, 45, 2, canvas)
 		draw_line(0, 80, 389, 80, 2, canvas)
-		if (info[4] == "None"){
-			draw_line(390, 80, 780, 80, 2, canvas)
-			draw_line(390, 45, 780, 45, 2, canvas)
-		}else {
-			draw_text(500, 70,  "15px sans-serif", "red", "Deletion", canvas);
-			draw_dash_line(390, 80, 780, 80, 2, canvas)
-			draw_dash_line(390, 45, 780, 45, 2, canvas)
-		}
+		draw_line(390, 80, 780, 80, 2, canvas)
+		draw_line(390, 45, 780, 45, 2, canvas)
 	} else if (info[3] == "Delete"){
 		draw_dash_line(0, 45, 389, 45, 2, canvas);
 		draw_dash_line(0, 80, 389, 80, 2, canvas);
-		draw_text(250, 70,  "15px sans-serif", "red", "Deletion", canvas);
-		if (info[4] == "None"){
-			draw_line(390, 80, 780, 80, 2, canvas)
-			draw_line(390, 45, 780, 45, 2, canvas)
-		} else {
-			draw_dash_line(390, 80, 780, 80, 2, canvas)
-			draw_dash_line(390, 45, 780, 45, 2, canvas)
-		}
+		draw_line(390, 80, 780, 80, 2, canvas)
+		draw_line(390, 45, 780, 45, 2, canvas)
+		draw_text(15, 70,  "15px sans-serif", "red", "Deletion of " + info[4] + "bp", canvas);
 	} else {
 		draw_text(15, 70,  "15px sans-serif", "#000", "Target site duplication", canvas);
 		var tsd = [info[3].replace(/]/g, "[").split("["), info[4].replace(/]/g, "[").split("[")]
