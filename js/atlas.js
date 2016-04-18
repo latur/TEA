@@ -507,7 +507,7 @@ function load_detail_content(name, start, end){
 	var sample = d3.select(".samples")
 	sample.html('').attr("height", n_file*50 + chip_height);
 
-	var chr = name.substr(3) == 'X'? 23: name.substr(3) == Y? 24 : parseInt(name.substr(3));
+	var chr = name.substr(3) == 'X'? 23: name.substr(3) == 'Y'? 24 : parseInt(name.substr(3));
 	$.ajax({
 		method: "get",
 		dataType: "jsonp",

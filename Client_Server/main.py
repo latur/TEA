@@ -11,9 +11,9 @@ chr_len = [0, 248956422, 491149951, 689445510, 879660065, 1061198324,
 			2824183054, 2875001522, 3031042417, 3088269832 ]
 }
 
-def get_chip_seq(start, end, chr):
+def get_chip_seq(start, end, name):
 	chip_seq = [];
-	dis = end - start
+	dis = int(end) - int(start)
 	f = "../data/Bind"
 	step = 0
 
@@ -37,8 +37,9 @@ def get_chip_seq(start, end, chr):
 		file_path = f + str(i) + ".bin"
 		chip_seq.append([])
 		inp = open(file_path, "r")
-		prev = chr_len[name-1]*12/step
-		while struct.unpack("H", inp.read(2)) < name:
+		prev = int(chr_len[int(name)-1]/step)
+		prev *= 12
+		while struct.unpack("H", inp.read(2)) < int(name):
 			prev += 12
 			inp.seek(prev)
 		inp.seek(prev + 4)
@@ -47,7 +48,7 @@ def get_chip_seq(start, end, chr):
 			inp.seek(prev + 4) 
 
 		max_size = os.path.getsize(file_path)
-		for k in range(start, end, step):
+		for k in range(int(start), int(end), step):
 			line = int(k/step)
 			if (prev + line) >= 0 & line*12 <= max_size -12:
 				inp.seek(prev + line*12 + 8)
@@ -76,7 +77,7 @@ class MainHandler(tornado.web.RequestHandler):
 			content = open(path, "r")
 			ret.append(content.read())
 	elif self.request.arguments["inf"][0] == "H3K27Ac":
-		ret = get_chip_seq(int(self.request.arguments["start"][0]), int(self.request.arguments["end"][0]), int(self.request.arguments["chr"][0]))
+		ret = get_chip_seq(self.request.arguments["start"][0], self.request.arguments["end"][0], self.request.arguments["chr"][0])
         self.write("{jsfunc}({json});".format(jsfunc=callbackFunc, json=tornado.escape.json_encode({"content": ret})))
         self.finish()
 
