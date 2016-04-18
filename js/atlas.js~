@@ -47,6 +47,7 @@ var n_file = 0;
 var density_map = {}, d_max = 0, g_density = {}, g_max;
 var tree = [];
 var color = ["grey", "green", "red", "blue"];
+var chip_seq_color = ["#d62728", "#ff7f0e", "#2ca02c", "#1f77b4", "#9467bd", " #e377c2"]
 var ora = [0,1];
 /* -------------------------------------------- */
 /* Functions */
@@ -488,13 +489,19 @@ function load_detail_content(name, start, end){
 			for (var i = 0; i < chip_seq["content"].length; i++){
 				var max_score = getMax(chip_seq["content"][i])
 				var step = 3300/chip_seq["content"][i].length;
-				var path = "M0 " + (30 - chip_seq["content"][i][0]*30/max_score) + " ";
-				var x = step;
-				for (var k = 1; k < chip_seq["content"][i].length; k++, x += step){
+				var path = "M0 30 ";
+				var x = 0;
+				for (var k = 0; k < chip_seq["content"][i].length; k++, x += step){
 					var y = 30 - chip_seq["content"][i][k]*30/max_score
 					path += "L" + x + " " + y + " ";
 				}
-				path += "L" + x + " 30 z"
+				path += "L" + x + " 30 z";
+				sample.append("path")
+					.attr({
+						d: path,
+						fill: chip_seq_color[i],
+						opacity: 0.5
+					})
 			}
 		}
 	})
