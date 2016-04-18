@@ -553,15 +553,15 @@ function load_detail_content(name, start, end){
 
 			sample.append("path")
 				.attr({
-					d: "M1655 15 L1650 15 L1650 50",
+					d: "M1655 5 L1650 5 L1650 50",
 					stroke: "#000",
-					"stroke-dasharray": "10,5,2,2,2,5"
+					"stroke-dasharray": "10,5,2,2,2,5",
+					fill: "none"
 				})
 			sample.append("text")
 				.attr({
-					x: 1650,
+					x: 1658,
 					y: 12,
-					"text-anchor": "middle",
 					"font-size": "8px",
 				})
 				.text(max_score)
