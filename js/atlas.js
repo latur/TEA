@@ -535,7 +535,7 @@ function load_detail_content(name, start, end){
 					.attr({
 						x: 1100 + 15,
 						y: i*8 + 6,
-						"font-size": "8px",
+						"font-size": "6px",
 						color: "#000",
 						id: H3K27Ac[i].name,
 					})
@@ -553,14 +553,15 @@ function load_detail_content(name, start, end){
 
 			sample.append("path")
 				.attr({
-					d: "M35 5 L30 5 L30 50",
+					d: "M1655 15 L1650 15 L1650 50",
 					stroke: "#000",
 					"stroke-dasharray": "10,5,2,2,2,5"
 				})
 			sample.append("text")
 				.attr({
-					x: 40,
-					y: 10,
+					x: 1650,
+					y: 12,
+					"text-anchor": "middle",
 					"font-size": "8px",
 				})
 				.text(max_score)
