@@ -3,8 +3,7 @@ import tornado.web
 import tornado.escape
 import struct
 
-def get_chip_seq(start, end):
-	chip_seq = [];
+def get_chip_seq(chip_seq, start, end):
 	dis = int(end) - int(start)
 	f = "../data/Bind"
 	step = 0
@@ -46,7 +45,7 @@ class MainHandler(tornado.web.RequestHandler):
             callbackFunc = str(callbackFunc)
 
         self.set_header('Content-Type', 'application/javascript')
-	ret
+	ret = []
 
 	if self.request.arguments["inf"][0] == "file":
 		print self.request.arguments["inf"]
@@ -55,7 +54,7 @@ class MainHandler(tornado.web.RequestHandler):
 			content = open(path, "r")
 			ret.append(content.read())
 	elif self.request.arguments["inf"][0] == "H3K27Ac":
-		ret = get_chip_seq(self.request.arguments["start"][0], self.request.arguments["end"][0])
+		get_chip_seq(ret, self.request.arguments["start"][0], self.request.arguments["end"][0])
         self.write("{jsfunc}({json});".format(jsfunc=callbackFunc, json=tornado.escape.json_encode({"content": ret})))
         self.finish()
 
