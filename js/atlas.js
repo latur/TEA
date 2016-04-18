@@ -550,21 +550,21 @@ function load_detail_content(name, start, end){
 						}
 					})
 			}
-		}
 
-		sample.append("path")
-			.attr({
-				d: "M35 5 L30 5 L30 50",
-				stroke: "#000",
-				"stroke-dasharray": "10,5,2,2,2,5"
-			})
-		sample.append("text")
-			.attr({
-				x: 40,
-				y: 10,
-				"font-size": "8px",
-			})
-			.text(max_score)
+			sample.append("path")
+				.attr({
+					d: "M35 5 L30 5 L30 50",
+					stroke: "#000",
+					"stroke-dasharray": "10,5,2,2,2,5"
+				})
+			sample.append("text")
+				.attr({
+					x: 40,
+					y: 10,
+					"font-size": "8px",
+				})
+				.text(max_score)
+			}
 	})
 
 	var extra = 0;
