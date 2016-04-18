@@ -374,7 +374,20 @@ function Parse(content, filename){
 			c[1] = parseInt(c[1]);
 			c[2] = parseInt(c[2]);
 			c[3] = parseInt(c[3]);
+
+			// Use to trace for turn on/off element and show inf when needed
 			var id = c[0] + '-' + filename + '-' + c[1] + '-' + c[2];
+			id_list[id] = 0;
+			$.ajax({
+				method: "get",
+				dataType: "jsonp",
+				url: " http://bioalgorithm.xyz/teatlas_ajax",
+				data: {"inf": "filter", "site": c[1], "chr": c[0]},
+				success: function(filter) {
+					alert(filter)
+				}
+			})	
+
 			if (c[7] == '')
 				c[7] = "Unknown";
 
@@ -387,8 +400,6 @@ function Parse(content, filename){
 
 			++density_map[c[0]][filename][cell][c[3]-1];
 
-			// Use to trace for turn on/off element and show inf when needed
-			id_list[id] = 0;
 		}
 	});
 }
@@ -496,11 +507,12 @@ function load_detail_content(name, start, end){
 	var sample = d3.select(".samples")
 	sample.html('').attr("height", n_file*50 + chip_height);
 
+	var chr = name.substr(3) == 'X'? 23: name.substr(3) == Y? 24 : parseInt(name.substr(3));
 	$.ajax({
 		method: "get",
 		dataType: "jsonp",
 		url: " http://bioalgorithm.xyz/teatlas_ajax",
-		data: {"inf": "H3K27Ac", "start": start, "end": end},
+		data: {"inf": "H3K27Ac", "start": start, "end": end, "chr": chr},
 		success: function(chip_seq) {
 			for (var i = 0; i < chip_seq["content"].length; i++){
 				var max_score = getMax(chip_seq["content"][i])
@@ -551,6 +563,9 @@ function load_detail_content(name, start, end){
 					})
 					.on("mouseover", function(){
 						$(this).css("font-weight", "bold")
+					})
+					.on("mouseout", function(){
+						$(this).css("font-weight", "normal")
 					})
 			}
 

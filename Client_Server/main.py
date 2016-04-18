@@ -4,9 +4,16 @@ import tornado.escape
 import struct
 import os
 
-def get_chip_seq(start, end):
+chr_len = [0, 248956422, 491149951, 689445510, 879660065, 1061198324,
+			1232004303, 1391350276, 1536488912, 1674883629, 1808681051,
+			1943767673, 2077042982, 2191407310, 2298451028, 2400442217, 
+			2490780562, 2574038003, 2654411288, 2713028904, 2777473071,
+			2824183054, 2875001522, 3031042417, 3088269832 ]
+}
+
+def get_chip_seq(start, end, chr):
 	chip_seq = [];
-	dis = int(end) - int(start)
+	dis = end - start
 	f = "../data/Bind"
 	step = 0
 
@@ -30,11 +37,20 @@ def get_chip_seq(start, end):
 		file_path = f + str(i) + ".bin"
 		chip_seq.append([])
 		inp = open(file_path, "r")
+		prev = chr_len[name-1]*12/step
+		while struct.unpack("H", inp.read(2)) < name:
+			prev += 12
+			inp.seek(prev)
+		inp.seek(prev + 4)
+		while struct.unpack("I", inp.read(4)) > 0:
+			prev -= 12
+			inp.seek(prev + 4) 
+
 		max_size = os.path.getsize(file_path)
-		for k in range(int(start), int(end), step):
+		for k in range(start, end, step):
 			line = int(k/step)
-			if line >= 0 & line*12 <= max_size -12:
-				inp.seek(line*12 + 8)
+			if (prev + line) >= 0 & line*12 <= max_size -12:
+				inp.seek(prev + line*12 + 8)
 				score = struct.unpack("f", inp.read(4))
 				chip_seq[i].append(score[0])
 			else:			
@@ -60,7 +76,7 @@ class MainHandler(tornado.web.RequestHandler):
 			content = open(path, "r")
 			ret.append(content.read())
 	elif self.request.arguments["inf"][0] == "H3K27Ac":
-		ret = get_chip_seq(self.request.arguments["start"][0], self.request.arguments["end"][0])
+		ret = get_chip_seq(int(self.request.arguments["start"][0]), int(self.request.arguments["end"][0]), int(self.request.arguments["chr"][0]))
         self.write("{jsfunc}({json});".format(jsfunc=callbackFunc, json=tornado.escape.json_encode({"content": ret})))
         self.finish()
 
