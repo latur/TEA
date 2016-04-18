@@ -5,7 +5,7 @@ import struct
 
 def get_chip_seq(start, end):
 	chip_seq = [];
-	dis = end - start
+	dis = int(end) - int(start)
 	f = "Bind"
 	step = 0
 
@@ -29,7 +29,7 @@ def get_chip_seq(start, end):
 		f += i + ".bin"
 		chip_seq.append([])
 		inp = open(f, "r")
-		for k in range(start, end, step):
+		for k in range(int(start), int(end), step):
 			line = int(k/step)
 			inp.seek(line*12 + 8)
 			chip_seq[i].append(struct.unpack("f", inp.read(4)))
@@ -43,7 +43,6 @@ class MainHandler(tornado.web.RequestHandler):
         if("callback" in self.request.arguments):
             callbackFunc = self.request.arguments["callback"][0]
             callbackFunc = str(callbackFunc)
-
 
         self.set_header('Content-Type', 'application/javascript')
 	ret = []
