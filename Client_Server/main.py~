@@ -29,7 +29,7 @@ def get_chip_seq(start, end):
 		f += i + ".bin"
 		chip_seq.append([])
 		inp = open(f, "r")
-		for k in range(start, end, step):
+		for k in range(int(start), int(end), step):
 			line = int(k/step)
 			inp.seek(line*12 + 8)
 			chip_seq[i].append(struct.unpack("f", inp.read(4)))

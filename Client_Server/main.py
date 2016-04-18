@@ -26,7 +26,7 @@ def get_chip_seq(start, end):
 		s = 100000
 
 	for i in range(0, 6):
-		f += i + ".bin"
+		f += str(i) + ".bin"
 		chip_seq.append([])
 		inp = open(f, "r")
 		for k in range(int(start), int(end), step):
