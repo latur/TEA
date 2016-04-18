@@ -63,7 +63,6 @@ var H3K27Ac = {'GM12878': '255, 128, 128',
 				'K562': '128, 128, 255',
 				'NHEK': '212, 128, 255',
 				'NHLF': '255, 128, 212'}
-	];
 var ora = [0,1];
 /* -------------------------------------------- */
 /* Functions */
@@ -537,7 +536,7 @@ function load_detail_content(name, start, end){
 						x: 1100 + 15,
 						y: i*8 + 6,
 						text: H3K27Ac[i].name,
-						font-size: "8px",
+						"font-size": "8px",
 						color: "#000",
 						id: H3K27Ac[i].name,
 					})
