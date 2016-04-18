@@ -549,11 +549,14 @@ function load_detail_content(name, start, end){
 							$("." + this.id).css({fill: H3K27Ac_2[this.id]})
 						}
 					})
+					.on("mouseover", function(){
+						$(this).css("font-weight", "bold")
+					})
 			}
 
 			sample.append("path")
 				.attr({
-					d: "M1655 5 L1650 5 L1650 50",
+					d: "M1655,2 L1650,2 L1650,50",
 					stroke: "#000",
 					"stroke-dasharray": "10,5,2,2,2,5",
 					fill: "none"
@@ -561,7 +564,7 @@ function load_detail_content(name, start, end){
 			sample.append("text")
 				.attr({
 					x: 1658,
-					y: 12,
+					y: 8,
 					"font-size": "8px",
 				})
 				.text(max_score)
