@@ -535,11 +535,11 @@ function load_detail_content(name, start, end){
 					.attr({
 						x: 1100 + 15,
 						y: i*8 + 6,
-						text: H3K27Ac[i].name,
 						"font-size": "8px",
 						color: "#000",
 						id: H3K27Ac[i].name,
 					})
+					.text(H3K27Ac[i].name)
 					.on("click", function(){
 						if ($("." + this.id).css("fill") != "none"){
 							$(this).css({color: "#c7c7c7"})
@@ -551,6 +551,20 @@ function load_detail_content(name, start, end){
 					})
 			}
 		}
+
+		sample.append("path")
+			.attr({
+				d: "M35 5 L30 5 L30 50",
+				stroke: "#000",
+				"stroke-dasharray": "10,5,2,2,2,5"
+			})
+		sample.append("text")
+			.attr({
+				x: 40,
+				y: 10,
+				"font-size": "8px",
+			})
+			.text(max_score)
 	})
 
 	var extra = 0;

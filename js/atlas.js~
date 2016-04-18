@@ -505,6 +505,10 @@ function load_detail_content(name, start, end){
 			for (var i = 0; i < chip_seq["content"].length; i++){
 				var max_score = getMax(chip_seq["content"][i])
 				var step = 3300/chip_seq["content"][i].length;
+				sample.append("path")
+					.attr({
+						d: "M
+					})
 				var path = "M0 " + chip_height + " ";
 				var x = 0;
 				for (var k = 0; k < chip_seq["content"][i].length; k++, x += step){
@@ -535,11 +539,11 @@ function load_detail_content(name, start, end){
 					.attr({
 						x: 1100 + 15,
 						y: i*8 + 6,
-						text: H3K27Ac[i].name,
 						"font-size": "8px",
 						color: "#000",
 						id: H3K27Ac[i].name,
 					})
+					.text(H3K27Ac[i].name)
 					.on("click", function(){
 						if ($("." + this.id).css("fill") != "none"){
 							$(this).css({color: "#c7c7c7"})
