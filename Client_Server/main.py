@@ -32,10 +32,10 @@ def get_chip_seq(start, end):
 		for k in range(int(start), int(end), step):
 			line = int(k/step)
 			inp.seek(line*12 + 8)
-			chip_seq[i].append(float(struct.unpack("f", inp.read(4))))
-			print float(struct.unpack("f", inp.read(4)))
+			chip_seq[i].append(struct.unpack("f", inp.read(4)))
 		inp.close()
-	return [0,1]	 
+	print chip_seq[0]
+	return chip_seq	 
 	
 
 class MainHandler(tornado.web.RequestHandler):
@@ -46,7 +46,7 @@ class MainHandler(tornado.web.RequestHandler):
             callbackFunc = str(callbackFunc)
 
         self.set_header('Content-Type', 'application/javascript')
-	ret = []
+	ret
 
 	if self.request.arguments["inf"][0] == "file":
 		print self.request.arguments["inf"]

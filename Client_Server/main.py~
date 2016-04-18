@@ -31,11 +31,11 @@ def get_chip_seq(start, end):
 		inp = open(file_path, "r")
 		for k in range(int(start), int(end), step):
 			line = int(k/step)
-			inp.seek(line*12)
+			inp.seek(line*12 + 8)
 			chip_seq[i].append(struct.unpack("f", inp.read(4)))
-			print struct.unpack("f", inp.read(12))
 		inp.close()
-	return chip_seq 
+	print chip_seq[0]
+	return chip_seq	 
 	
 
 class MainHandler(tornado.web.RequestHandler):
