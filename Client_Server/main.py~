@@ -11,22 +11,22 @@ def get_chip_seq(start, end):
 
 	if (dis < 41250):
 		f += "25."
-		s = 25
+		step = 25
 	elif (dis < 165000):
 		f += "100."
-		s = 100
+		step = 100
 	elif (dis < 1650000):
 		f += "1000."
-		s = 1000
+		step = 1000
 	elif (dis < 16500000):
 		f += "10000."
-		s = 10000
+		step = 10000
 	else:
 		f += "100000."
-		s = 100000
+		step = 100000
 
 	for i in range(0, 6):
-		f += str(i) + ".bin"
+		file_path = f + str(i) + ".bin"
 		chip_seq.append([])
 		inp = open(f, "r")
 		for k in range(int(start), int(end), step):

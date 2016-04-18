@@ -26,9 +26,9 @@ def get_chip_seq(start, end):
 		step = 100000
 
 	for i in range(0, 6):
-		f += str(i) + ".bin"
+		file_path = f + str(i) + ".bin"
 		chip_seq.append([])
-		inp = open(f, "r")
+		inp = open(file_path, "r")
 		for k in range(int(start), int(end), step):
 			line = int(k/step)
 			inp.seek(line*12 + 8)
