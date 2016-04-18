@@ -37,7 +37,6 @@ def get_chip_seq(start, end):
 		inp.close()
 
 	return chip_seq	 
-	
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):    	

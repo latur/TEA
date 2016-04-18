@@ -465,6 +465,10 @@ function ShowAsLine(){
 		general_map();
 }
 
+function getMax(array) {
+  return Math.max.apply(null, array);
+}
+
 function load_detail_content(name, start, end){
 	$(".detail_content").css("margin-left", "-1100px");
 	$(".pop_up").remove();
@@ -481,8 +485,24 @@ function load_detail_content(name, start, end){
 		url: " http://bioalgorithm.xyz/teatlas_ajax",
 		data: {"inf": "H3K27Ac", "start": start, "end": end},
 		success: function(chip_seq) {
-			alert(chip_seq[0])
-			alert(chip_seq[1])
+			for (var i = 0; i < chip_seq["content"].length; i++){
+				var max_score = getMax(chip_seq["content"][i])
+				var step = 3300/chip_seq["content"][i].length;
+				var path = "M0 " + (30 - chip_seq["content"][i][0]*30/max_score) + " ";
+				var x = step;
+				for (var k = 1; k < chip_seq["content"][i].length; k++, x += step){
+					var y = 30 - chip_seq["content"][i][k]*30/max_score
+					path += "L" + x + " " + y + " ";
+				}
+				path += "L" + x + " 30 z";
+				sample.append("path")
+					.attr({
+						d: path,
+						stroke: "red",
+						fill: "red",
+						opacity: 0.5
+					})
+			}
 		}
 	})
 
