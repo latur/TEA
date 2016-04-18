@@ -1,6 +1,7 @@
 import tornado.ioloop
 import tornado.web
 import tornado.escape
+import struct
 
 def get_chip_seq(start, end):
 	chip_seq = [];
@@ -10,16 +11,30 @@ def get_chip_seq(start, end):
 
 	if (dis < 41250):
 		f += "25."
-		s
-	elif (dis < 165000) f += "100."
-	elif (dis < 1650000) f += "1000."
-	elif (dis < 16500000) f += "10000."
-	else f += "100000."
+		s = 25
+	elif (dis < 165000):
+		f += "100."
+		s = 100
+	elif (dis < 1650000):
+		f += "1000."
+		s = 1000
+	elif (dis < 16500000):
+		f += "10000."
+		s = 10000
+	else:
+		f += "100000."
+		s = 100000
 
 	for i in range(0, 6):
 		f += i + ".bin"
 		chip_seq.append([])
-		 
+		inp = open(f, "r")
+		for k in range(start, end, step):
+			line = int(k/step)
+			inp.seek(line*12 + 8)
+			chip_seq[i].append(struct.unpack("f", inp.read(4)))
+	print chip_seq[0]
+	return [0,1]	 
 	
 
 class MainHandler(tornado.web.RequestHandler):
