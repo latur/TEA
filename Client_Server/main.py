@@ -2,6 +2,7 @@ import tornado.ioloop
 import tornado.web
 import tornado.escape
 import struct
+import os
 
 def get_chip_seq(start, end):
 	chip_seq = [];
@@ -29,14 +30,14 @@ def get_chip_seq(start, end):
 		file_path = f + str(i) + ".bin"
 		chip_seq.append([])
 		inp = open(file_path, "r")
-		max_size = inp.tell()
+		max_size = os.path.getsize(file_path)
 		for k in range(int(start), int(end), step):
 			line = int(k/step)
-			if line >= 0 && line*12 <= max_size -12:
+			if line >= 0 & line*12 <= max_size -12:
 				inp.seek(line*12 + 8)
 				score = struct.unpack("f", inp.read(4))
 				chip_seq[i].append(score[0])
-			else				
+			else:			
 				chip_seq[i].append(0)
 		inp.close()
 
