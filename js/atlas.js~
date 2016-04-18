@@ -474,7 +474,7 @@ function load_detail_content(name, start, end){
 	end += screen;
 	var sample = d3.select(".samples")
 	sample.html('').attr("height", n_file*50 + 30);
-/*
+
 	$.ajax({
 		method: "get",
 		dataType: "jsonp",
@@ -485,7 +485,7 @@ function load_detail_content(name, start, end){
 			alert(chip_seq[1])
 		}
 	})
-*/
+
 	var extra = 0;
 	for (var i = 0; i < n_file; i++){
 		var f = file_list[i];
@@ -677,8 +677,10 @@ function get_server_file(id){
 			for (var i = 0; i < file.content.length; i++)
 				Parse(file.content[i], id[i]);
 			get_max();
-			get_common();
-			contruct_tree();
+			if (file_list.length > 1)
+				get_common();
+			if (file_list.length > 2)
+				contruct_tree();
 			visibleType = visibleMode = 0;
 			Route("#general");
 		}

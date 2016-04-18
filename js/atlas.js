@@ -677,8 +677,10 @@ function get_server_file(id){
 			for (var i = 0; i < file.content.length; i++)
 				Parse(file.content[i], id[i]);
 			get_max();
-			get_common();
-			contruct_tree();
+			if (file_list.length > 1)
+				get_common();
+			if (file_list.length > 2)
+				contruct_tree();
 			visibleType = visibleMode = 0;
 			Route("#general");
 		}
