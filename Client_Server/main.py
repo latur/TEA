@@ -32,10 +32,10 @@ def get_chip_seq(start, end):
 		for k in range(int(start), int(end), step):
 			line = int(k/step)
 			inp.seek(line*12 + 8)
-			chip_seq[i].append(struct.unpack("f", inp.read(4)))
-			print struct.unpack("f", inp.read(4))
+			chip_seq[i].append(float(struct.unpack("f", inp.read(4))))
+			print float(struct.unpack("f", inp.read(4)))
 		inp.close()
-	return chip_seq 
+	return [0,1]	 
 	
 
 class MainHandler(tornado.web.RequestHandler):
