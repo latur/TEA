@@ -47,7 +47,23 @@ var n_file = 0;
 var density_map = {}, d_max = 0, g_density = {}, g_max;
 var tree = [];
 var color = ["grey", "green", "red", "blue"];
-var chip_seq_color = ["#d62728", "#ff7f0e", "#2ca02c", "#1f77b4", "#9467bd", " #e377c2"]
+var H3K27Ac = [
+		{name: 'GM12878', col : '255, 128, 128'},
+		{name: 'H1-hESC', col : '255, 212, 128'},
+		{name: 'HSMM',    col : '120, 235, 204'},
+		{name: 'HUVEC',   col : '128, 212, 255'},
+		{name: 'K562',    col : '128, 128, 255'},
+		{name: 'NHEK',    col : '212, 128, 255'},
+		{name: 'NHLF',    col : '255, 128, 212'}
+	];
+var H3K27Ac = {'GM12878': '255, 128, 128',
+				'H1-hESC': '255, 212, 128',
+				'HSMM': '120, 235, 204',
+				'HUVEC': '128, 212, 255',
+				'K562': '128, 128, 255',
+				'NHEK': '212, 128, 255',
+				'NHLF': '255, 128, 212'}
+	];
 var ora = [0,1];
 /* -------------------------------------------- */
 /* Functions */
@@ -475,32 +491,64 @@ function load_detail_content(name, start, end){
 	$(".pop_up").remove();
 	
 	var screen = end-start;
+	var chip_height = 50;
 	start -= screen;
 	end += screen;
 	var sample = d3.select(".samples")
-	sample.html('').attr("height", n_file*50 + 30);
+	sample.html('').attr("height", n_file*50 + chip_height);
 
 	$.ajax({
 		method: "get",
 		dataType: "jsonp",
 		url: " http://bioalgorithm.xyz/teatlas_ajax",
-		data: {"inf": "H3K27Ac", "start": start, "end": end},
+		data: {"inf": "H3K27Ac", "start": start >= 0? start : 0, "end": end},
 		success: function(chip_seq) {
 			for (var i = 0; i < chip_seq["content"].length; i++){
 				var max_score = getMax(chip_seq["content"][i])
 				var step = 3300/chip_seq["content"][i].length;
-				var path = "M0 30 ";
+				var path = "M0 " + chip_height + " ";
 				var x = 0;
 				for (var k = 0; k < chip_seq["content"][i].length; k++, x += step){
-					var y = 30 - chip_seq["content"][i][k]*30/max_score
+					var y = chip_height - chip_seq["content"][i][k]*chip_height/max_score
 					path += "L" + x + " " + y + " ";
 				}
-				path += "L" + x + " 30 z";
+				path += "L" + x + " " + chip_height + " z";
 				sample.append("path")
 					.attr({
 						d: path,
-						fill: chip_seq_color[i],
+						stroke: "none",
+						fill: H3K27Ac[i].color,
+						class: H3K27Ac[i].name,
 						opacity: 0.5
+					})
+				sample.append("circle")
+					.attr({
+						cx: i*8 + 4,
+						cy: 1100 + 10,
+						r: 3,
+						stroke: H3K27Ac[i].color,
+						'stroke-width': "2px",
+						fill: H3K27Ac[i].color,
+						class: H3K27Ac[i].name,
+						opacity: 0.5,
+					})
+				sample.append("text")
+					.attr({
+						x: 1100 + 15,
+						y: i*8 + 6,
+						text: H3K27Ac[i].name,
+						font-size: "8px",
+						color: "#000",
+						id: H3K27Ac[i].name,
+					})
+					.on("click", function(){
+						if ($("." + this.id).css("fill") != "none"){
+							$(this).css({color: "#c7c7c7"})
+							$("." + this.id).css({fill: "none"})
+						} else {
+							$(this).css({color: "#000"})
+							$("." + this.id).css({fill: H3K27Ac_2[this.id]})
+						}
 					})
 			}
 		}
@@ -509,7 +557,7 @@ function load_detail_content(name, start, end){
 	var extra = 0;
 	for (var i = 0; i < n_file; i++){
 		var f = file_list[i];
-		var y = i*50 + 45 + extra;
+		var y = i*50 + 15 + chip_height + extra;
 		var last_x = 0;
 		sample.append("text")
 			.attr("x", 1105)
@@ -548,13 +596,13 @@ function load_detail_content(name, start, end){
 			var x = (content[0]-start)*3300/(end-start);
 			if (x < last_x + 120){
 					y += 15
-					if (y >= i*50 + extra + add + 30){
+					if (y >= i*50 + extra + add + chip_height){
 							add += 15;
-							sample.attr("height", n_file*50 + extra + add + 30);
+							sample.attr("height", n_file*50 + extra + add + chip_height);
 					}
 			} else {
 				last_x = x;	
-				y = i*50 + extra + 60;
+				y = i*50 + extra + 30 + chip_height;
 			}
 			sample.append("rect")
 				.attr("fill", color[content[2]])
