@@ -85,7 +85,7 @@ def get_value(site, name):
 			x = struct.unpack("I", inp.read(4))
 
 		max_size = os.path.getsize(file_path)
-		line = int(site/step)
+		line = int(site/25)
 		if line >= 0 & line*12 <= max_size -12:
 			inp.seek(prev + line*12 + 8)
 			s = struct.unpack("f", inp.read(4))

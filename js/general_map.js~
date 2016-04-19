@@ -160,6 +160,7 @@ function get_max(){
 }
 
 function get_idlist(){
+	var tmp = (JSON.parse(JSON.stringify(id_list)))
 	id_list = {};
 	for (var chr in expData){
 		if (chr.localeCompare("map") == 0) continue;
@@ -167,8 +168,12 @@ function get_idlist(){
 		for (var name in expData[chr]){
 			if (name.localeCompare("map") == 0) continue;
 
-			for (var pos = 0; pos < expData[chr][name].length; pos++)
-				id_list[expData[chr][name][pos][5]] = 0;
+			for (var pos = 0; pos < expData[chr][name].length; pos++){
+				var id = expData[chr][name][pos][5]; 
+				id_list[id][0] = 0;
+				for (var k = 1; k < tmp[id].length; k++)
+					id_list[id][k] = tmp[id][k]
+			}
 		}
 	}	
 }
@@ -212,13 +217,13 @@ function add_common(chr, pos, type, id, name){
 
 	++density_map[chr][name][cell][type+3];
 
-	id_list[id] = 1;
+	id_list[id][0] = 1;
 }
 
 function init(){
 	for (var id in id_list){
 		if (id.localeCompare("map") == 0) continue;
-		 id_list[id] = 0;
+		 id_list[id][0] = 0;
 	}
 
 	for (var chr in density_map){

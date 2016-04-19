@@ -378,14 +378,16 @@ function Parse(content, filename){
 
 			// Use to trace for turn on/off element and show inf when needed
 			var id = c[0] + '-' + filename + '-' + c[1] + '-' + c[2];
-			id_list[id] = 0;
+			id_list[id] = [0];
 			$.ajax({
 				method: "get",
 				dataType: "jsonp",
 				url: " http://bioalgorithm.xyz/teatlas_ajax",
-				data: {"inf": "filter", "site": c[1], "chr": c[0]},
+				data: {"inf": "filter", "site": c[1], "chr": c[0].substr(3)},
 				success: function(filter) {
-					alert(filter)
+					for (var i in filter["content"])
+						id_list[id].push(filter["content"][i]
+					alert(id_list[i])
 				}
 			})	
 
@@ -624,8 +626,8 @@ function load_detail_content(name, start, end){
 			if (content[0] < start) continue;
 			if (content[0] > end) break;
 			if ((visibleType != 0 && visibleType != content[2]) ||
-				(visibleMode == 1 && id_list[content[7]] == 1) ||
-				(visibleMode == 2 && id_list[content[7]] == 0)) continue;
+				(visibleMode == 1 && id_list[content[7]][0] == 1) ||
+				(visibleMode == 2 && id_list[content[7]][0] == 0)) continue;
 			var x = (content[0]-start)*3300/(end-start);
 			if (x < last_x + 120){
 					y += 15
