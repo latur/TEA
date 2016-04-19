@@ -379,7 +379,7 @@ function Parse(content, filename){
 			// Use to trace for turn on/off element and show inf when needed
 			var id = c[0] + '-' + filename + '-' + c[1] + '-' + c[2];
 			id_list[id] = 0;
-/*			$.ajax({
+			$.ajax({
 				method: "get",
 				dataType: "jsonp",
 				url: " http://bioalgorithm.xyz/teatlas_ajax",
@@ -388,7 +388,7 @@ function Parse(content, filename){
 					alert(filter)
 				}
 			})	
-*/
+
 			if (c[7] == '')
 				c[7] = "Unknown";
 

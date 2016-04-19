@@ -31,9 +31,7 @@ def get_chip_seq(start, end, name):
 	else:
 		f += "100000."
 		step = 100000
-	print step
-	print name
-	print start
+
 	for i in range(0, 6):
 		file_path = f + str(i) + ".bin"
 		chip_seq.append([])
@@ -63,8 +61,39 @@ def get_chip_seq(start, end, name):
 				chip_seq[i].append(0)
 		inp.close()
 
-	return chip_seq	
+	return chip_seq
 
+def get_value(site, name):
+	score = []
+	f = "../data/Bind25."
+
+	for i in range(0, 6):
+		file_path = f + str(i) + ".bin"
+		inp = open(file_path, "r")
+		prev = int(chr_len[name-1]/25)*12
+		x = struct.unpack("H", inp.read(2))
+		while x[0] != name:
+			prev += 12
+			inp.seek(prev)
+			x = struct.unpack("H", inp.read(2))
+
+		inp.seek(prev + 4)
+		x = struct.unpack("I", inp.read(4))
+		while x[0] > 0:
+			prev -= 12
+			inp.seek(prev + 4) 
+			x = struct.unpack("I", inp.read(4))
+
+		max_size = os.path.getsize(file_path)
+		line = int(site/step)
+		if line >= 0 & line*12 <= max_size -12:
+			inp.seek(prev + line*12 + 8)
+			s = struct.unpack("f", inp.read(4))
+			score.append(s[0])
+		else:			
+			score.append(0)
+		inp.close()
+	return score
 class MainHandler(tornado.web.RequestHandler):
     def get(self):    	
     	callbackFunc = ""
@@ -83,6 +112,8 @@ class MainHandler(tornado.web.RequestHandler):
 			ret.append(content.read())
 	elif self.request.arguments["inf"][0] == "H3K27Ac":
 		ret = get_chip_seq(int(self.request.arguments["start"][0]), int(self.request.arguments["end"][0]), int(self.request.arguments["chr"][0]))
+	elif self.request.arguments["inf"][0] == "filter":
+		ret = get_value(int(self.request.arguments["site"][0]), int(self.request.arguments["chr"][0]))
         self.write("{jsfunc}({json});".format(jsfunc=callbackFunc, json=tornado.escape.json_encode({"content": ret})))
         self.finish()
 
