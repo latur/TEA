@@ -303,8 +303,28 @@ function SamplesLoaded(){
 
 function filter_score(score){	
 	var chr = location.hash.match(/^\#?(chr[0-9XY]+)\:([0-9]+)\-([0-9]+)\/?([0-9a-z]+)?$/);
+	var start = parseInt(chr[2]);
+	var end = parseInt(chr[3]);
+	var step = end - start;
 	for (var i = 0; i < file_list.length; i++){
-		for (k in
+		for (var k = 0; k < expData[chr[1]][file_list[i]]; k++){
+			if (expData[chr[1]][file_list[i]][0] < start - step)
+				continue;
+			if (expData[chr[1]][file_list[i]][0] > end + step)
+				break;
+			var id = expData[chr[1]][file_list[i]][8];
+			var has = 0;
+			for (var j = 1; j < 7; j++){
+				if (id_list[id][j] >= score){
+					$("#" + id).css("visibility", "visible")
+					has = 1;
+					break;
+				}
+			}
+			if (has == 0)
+					$("#" + id).css("visibility", "hidden")
+
+		}
 	}
 }
 
