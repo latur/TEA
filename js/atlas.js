@@ -439,12 +439,19 @@ function Parse(content, filename){
 				url: " http://bioalgorithm.xyz/teatlas_ajax",
 				data: {"inf": "filter", "site": c[1], "chr": c[0].substr(3)},
 				success: function(filter) {
+					var minVal = $(".chipMin").html() == "min" ? 100000: parseInt($(".chipMin").html());
+					var maxVal = $(".chipMax").html() == "max" ? -100000: parseInt($(".chipMin").html());
 					for (var i in filter["content"]){
 						id_list[id].push(filter["content"][i])
-						if (parseInt(filter["content"][i]) < parseInt($(".chipMin").html()))
-							$(".chipMin").html(parseInt(filter["content"][i]))
-						if (parseInt(filter["content"][i]) > parseInt($(".chipMax").html()))
-							$(".chipMax").html(parseInt(filter["content"][i]))
+						if (parseInt(filter["content"][i]) < minVal){
+							minVal = parseInt(filter["content"][i]);
+							$(".chipMin").html(minVal);
+							$(".chipScore").html(minVal);
+						}
+						if (parseInt(filter["content"][i]) > maxVal){
+							maxVal = parseInt(filter["content"][i]);
+							$(".chipMax").html(maxVal)
+						}
 					}
 				}
 			})	
