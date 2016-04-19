@@ -722,8 +722,8 @@ hr {
 }
 /* Suggest */
 .autocomplete-suggestions {
-    border: 1px solid #52c8dc;
-    background:#F0F8FF;
+	border: 1px solid #52c8dc;
+	background:#F0F8FF;
     cursor: default;
     overflow: auto; -webkit-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64);
     -moz-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64);
@@ -734,10 +734,83 @@ hr {
     -webkit-border-radius:8px;
     -ms-border-radius:8px;
     -o-border-radius:8px;
-  }
-  .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
-  .autocomplete-no-suggestion { padding: 2px 5px;}
-  .autocomplete-selected { background: #52c8dc; }
-  .autocomplete-suggestions strong { font-weight: bold; color: #000; }
-  .autocomplete-group { padding: 2px 5px; }
-  .autocomplete-group strong { font-weight: bold; font-size: 16px; color: #000; display: block; border-bottom: 1px solid #000; }
+}
+.autocomplete-suggestion { 
+	padding: 2px 5px; 
+	white-space: nowrap; 
+	overflow: hidden;
+}
+.autocomplete-no-suggestion { padding: 2px 5px;}
+.autocomplete-selected { background: #52c8dc; }
+.autocomplete-suggestions strong {
+	font-weight: bold;
+	color: #000;
+}
+.autocomplete-group { padding: 2px 5px; }
+.autocomplete-group strong { 
+	font-weight: bold; 
+	font-size: 16px; 
+	color: #000; 
+	display: block; 
+	border-bottom: 1px solid #000; 
+}
+
+.chipFilHol {
+	position: relative;
+	display: block;
+	height: 6px;
+	width: 100px;
+	margin: auto;
+	margin-top: 15px;
+	border: 1px solid;
+	border-radius: 3px;
+}
+
+.chipFil {
+	position: absolute;
+	display: block;
+	top: -5px;
+	left: 0;
+	height: 15px;
+	width: 15px;
+	margin: auto;
+	border: 1px solid;
+	background: #fff;
+	background: -webkit-radial-gradient(#fff, #d9d9d9);
+  	background: -o-radial-gradient(#fff, #d9d9d9);
+  	background: -moz-radial-gradient(#fff, #d9d9d9);
+ 	background: radial-gradient(#fff, #d9d9d9);
+	border-radius: 7.5px;
+	cursor: pointer;
+}
+
+.chipFil:hover {
+	background: #9edae5;
+	background: -webkit-radial-gradient(#fff, #9edae5);
+  	background: -o-radial-gradient(#fff, #9edae5);
+  	background: -moz-radial-gradient(#fff, #9edae5);
+ 	background: radial-gradient(#fff, #9edae5);
+}
+
+.chipScore {
+	position: relative;
+	margin-top: -15px;
+	display: block;
+	font-size: 8px;
+}
+
+.chipMin {
+	position: relative;
+	margin-top: 5px;
+	display: inline-block;
+	float: left;
+	font-size: 8px;
+}
+
+.chipMax {
+	position: relative;
+	margin-top: 5px;
+	display: inline-block;
+	float: right;
+	font-size: 8px;
+}

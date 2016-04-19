@@ -33,7 +33,7 @@
 				<li><a data-map="3" class="type"> Others</a></li>
 				<li><a data-map="0" class="type glyphicon glyphicon-ok"></span> All</a></li>
 			    <li role="separator" class="divider"></li>
-				<li><a class="cnt">ChiP-seq score >=</a></li>
+				<li><a class="cnt">ChiP-seq signal value</a></li>
 				<li>
 					<div class="chipFilHol">
 						<div class="chipFil">
