@@ -63,43 +63,47 @@ def get_chip_seq(start, end, name):
 
 	return chip_seq
 
-def get_value(site, name):
-	chrs = 0
-	if name == 'X':
-		chrs = 23
-	elif name == 'Y':
-		chrs = 24
-	else
-		chrs = int(name)
-	score = []
+def get_value(id_list):
+	ret = []
 	f = "../data/Bind25."
 
-	for i in range(0, 6):
-		file_path = f + str(i) + ".bin"
-		inp = open(file_path, "r")
-		prev = int(chr_len[name-1]/25)*12
-		x = struct.unpack("H", inp.read(2))
-		while x[0] != name:
-			prev += 12
-			inp.seek(prev)
+	for ind in id_list:
+		chrs = 0
+		if ind.chr == 'X':
+			chrs = 23
+		elif ind.chr == 'Y':
+			chrs = 24
+		else
+			chrs = int(ind.chr)
+
+		score = []
+
+		for i in range(0, 6):
+			file_path = f + str(i) + ".bin"
+			inp = open(file_path, "r")
+			prev = int(chr_len[chrs-1]/25)*12
 			x = struct.unpack("H", inp.read(2))
+			while x[0] != chrs:
+				prev += 12
+				inp.seek(prev)
+				x = struct.unpack("H", inp.read(2))
 
-		inp.seek(prev + 4)
-		x = struct.unpack("I", inp.read(4))
-		while x[0] > 0:
-			prev -= 12
-			inp.seek(prev + 4) 
+			inp.seek(prev + 4)
 			x = struct.unpack("I", inp.read(4))
-
-		max_size = os.path.getsize(file_path)
-		line = int(site/25)
-		if line >= 0 & line*12 <= max_size -12:
-			inp.seek(prev + line*12 + 8)
-			s = struct.unpack("f", inp.read(4))
-			score.append(s[0])
-		else:			
-			score.append(0)
-		inp.close()
+			while x[0] > 0:
+				prev -= 12
+					inp.seek(prev + 4) 
+				x = struct.unpack("I", inp.read(4))
+	
+			max_size = os.path.getsize(file_path)
+			line = int(ind.site/25)
+			if line >= 0 & line*12 <= max_size -12:
+				inp.seek(prev + line*12 + 8)
+				s = struct.unpack("f", inp.read(4))
+				score.append(s[0])
+			else:			
+				score.append(0)
+			inp.close()
 	return score
 class MainHandler(tornado.web.RequestHandler):
     def get(self):    	
@@ -118,10 +122,10 @@ class MainHandler(tornado.web.RequestHandler):
 			content = open(path, "r")
 			ret.append(content.read())
 	elif self.request.arguments["inf"][0] == "H3K27Ac":
-		ret = get_chip_seq(int(self.request.arguments["start"][0]), int(self.request.arguments["end"][0]), int(self.request.arguments["chr"][0]))
+		ret = get_chip_seq(self.request.arguments["id_list[]"])
 	elif self.request.arguments["inf"][0] == "filter":
 		ret = get_value(int(self.request.arguments["site"][0]), self.request.arguments["chr"][0])
-        self.write("{jsfunc}({json});".format(jsfunc=callbackFunc, json=tornado.escape.json_encode({"content": ret})))
+        self.write("{jsfunc}({json});".format(jsfunc=callbackFunc, json=tornado.escape.json_encode(ret)))
         self.finish()
 
 def make_app():

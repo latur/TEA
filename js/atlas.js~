@@ -299,9 +299,6 @@ function SamplesLoaded(){
 		.on("mouseup", function(e){
 			is_fil = false;
 		})
-		document.onmousedown = function(){mouse_up = false;}
-		document.onmouseup = function(){mouse_up = true;}
-
 }
 
 function filter_score(score){	
@@ -414,6 +411,7 @@ function Parse(content, filename){
 	file_list.push(filename);
 	++n_file;
 
+	var list = [];
 	content.split('\n').map(function(line){
 		var c = line.split('\t');
 		if (chrs[c[0]]) {
@@ -436,29 +434,7 @@ function Parse(content, filename){
 			// Use to trace for turn on/off element and show inf when needed
 			var id = c[0] + '-' + filename + '-' + c[1] + '-' + c[2];
 			id_list[id] = [0];
-			$.ajax({
-				method: "get",
-				dataType: "jsonp",
-				url: " http://bioalgorithm.xyz/teatlas_ajax",
-				data: {"inf": "filter", "site": c[1], "chr": c[0].substr(3)},
-				success: function(filter) {
-					console.log(fileter)
-					var minVal = $(".chipMin").html() == "min" ? 100000: parseInt($(".chipMin").html());
-					var maxVal = $(".chipMax").html() == "max" ? -100000: parseInt($(".chipMin").html());
-					for (var i in filter["content"]){
-						id_list[id].push(filter["content"][i])
-						if (parseInt(filter["content"][i]) < minVal){
-							minVal = parseInt(filter["content"][i]);
-							$(".chipMin").html(minVal);
-							$(".chipScore").html(minVal);
-						}
-						if (parseInt(filter["content"][i]) > maxVal){
-							maxVal = parseInt(filter["content"][i]);
-							$(".chipMax").html(maxVal)
-						}
-					}
-				}
-			})	
+			
 
 			if (c[7] == '')
 				c[7] = "Unknown";
@@ -474,6 +450,33 @@ function Parse(content, filename){
 
 		}
 	});
+	$.ajax({
+		method: "get",
+		dataType: "jsonp",
+		url: " http://bioalgorithm.xyz/teatlas_ajax",
+		data: {"inf": "filter", "id_list": list},
+		success: function(filter) {
+			console.log(filter)
+			var minVal = $(".chipMin").html() == "min" ? 100000: parseInt($(".chipMin").html());
+			var maxVal = $(".chipMax").html() == "max" ? -100000: parseInt($(".chipMin").html());
+			for (var i = 0; i < filter.length; i++){
+				var id = filter[i].id;
+				for (var k = 0; k < 6; k++){
+					var score = filter[i].score[k];
+					id_list[id].push(score)
+					if (score < minVal){
+						minVal = score;
+						$(".chipMin").html(minVal);
+						$(".chipScore").html(minVal);
+					}
+					if (score > maxVal){
+						maxVal = score;
+						$(".chipMax").html(maxVal)
+					}
+				}
+			}
+		}
+	})	
 }
 
 // Get experiment data by ID
@@ -587,13 +590,13 @@ function load_detail_content(name, start, end){
 			url: " http://bioalgorithm.xyz/teatlas_ajax",
 			data: {"inf": "H3K27Ac", "start": start, "end": end, "chr": chr},
 			success: function(chip_seq) {
-				for (var i = 0; i < chip_seq["content"].length; i++){
-					var max_score = getMax(chip_seq["content"][i])
-					var step = 3300/chip_seq["content"][i].length;
+				for (var i = 0; i < chip_seq.length; i++){
+					var max_score = getMax(chip_seq[i])
+					var step = 3300/chip_seq[i].length;
 					var path = "M0 " + chip_height + " ";
 					var x = 0;
-					for (var k = 0; k < chip_seq["content"][i].length; k++, x += step){
-						var y = chip_height - chip_seq["content"][i][k]*chip_height/max_score
+					for (var k = 0; k < chip_seq[i].length; k++, x += step){
+						var y = chip_height - chip_seq[i][k]*chip_height/max_score
 						path += "L" + x + " " + y + " ";
 					}
 					path += "L" + x + " " + chip_height + " z";
@@ -807,6 +810,7 @@ function ShowChromosome(name, start, end){
 	};
 
 	document.onmouseup = function(e){
+		mouse_up = true;
 		if (!isNaN(dx)) {
 			Resized([(ox)*size/1100, (ox + dx)*size/1100]);
 			var obj = getBwtWeb('svgHolderT0');
@@ -834,7 +838,7 @@ function get_server_file(id){
 		data: {"inf": "file", "id": id},
 		success: function(file) {
 			for (var i = 0; i < file.content.length; i++)
-				Parse(file.content[i], id[i]);
+				Parse(file[i], id[i]);
 			get_max();
 			if (file_list.length > 1)
 				get_common();
