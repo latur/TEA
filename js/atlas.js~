@@ -452,7 +452,7 @@ function Parse(content, filename){
 		}
 	});
 
-	$.post({
+	$.ajax({
 		method: "post",
 		dataType: "jsonp", 
 		url: " http://bioalgorithm.xyz/teatlas_ajax",
