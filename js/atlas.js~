@@ -639,7 +639,7 @@ function load_detail_content(name, start, end){
 				$(".pop_up").remove();
 			})
 			.text(f);
-		y += 30 + extra + chip_height;
+		y += 30;
 		var add = 0, minVal = 100000, maxVal = -100000;
 		for (var s in expData[name][f]){
 			var content = expData[name][f][s];
