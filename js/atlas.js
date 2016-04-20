@@ -299,6 +299,8 @@ function SamplesLoaded(){
 		.on("mouseup", function(e){
 			is_fil = false;
 		})
+		document.onmousedown = function(){mouse_up = false;}
+		document.onmouseup = function(){mouse_up = true;}
 }
 
 function filter_score(score){	
@@ -638,6 +640,7 @@ function load_detail_content(name, start, end){
 								$(this).css("font-weight", "normal")
 						})
 				}
+			}
 		})
 	}
 	
@@ -786,7 +789,6 @@ function ShowChromosome(name, start, end){
 		ix = current;
 	};
 
-	document.onmousedown = function(){mouse_up = false;}
 	document.onmousemove = function(e){
 		// Select range ?
 		if (!isNaN(ox)) {
@@ -804,7 +806,6 @@ function ShowChromosome(name, start, end){
 	};
 
 	document.onmouseup = function(e){
-		mouse_up = true;
 		if (!isNaN(dx)) {
 			Resized([(ox)*size/1100, (ox + dx)*size/1100]);
 			var obj = getBwtWeb('svgHolderT0');
