@@ -29,7 +29,7 @@ var cache = {'hm' : {}};
 var visibleType = 0;
 var visibleMode = 0;
 var mode = 0;
-var mouse_up = false;
+var mouse_up = true;
 /* -------------------------------------------- */
 
 const density_len = {
@@ -446,6 +446,7 @@ function Parse(content, filename){
 						if (parseInt(filter["content"][i]) < minVal){
 							minVal = parseInt(filter["content"][i]);
 							$(".chipMin").html(minVal);
+							$(".chipScore").html(minVal);
 						}
 						if (parseInt(filter["content"][i]) > maxVal){
 							maxVal = parseInt(filter["content"][i]);
@@ -575,83 +576,69 @@ function load_detail_content(name, start, end){
 	sample.html('').attr("height", n_file*50 + chip_height);
 
 	var chr = name.substr(3) == 'X'? 23: name.substr(3) == 'Y'? 24 : parseInt(name.substr(3));
-	$.ajax({
-		method: "get",
-		dataType: "jsonp",
-		url: " http://bioalgorithm.xyz/teatlas_ajax",
-		data: {"inf": "H3K27Ac", "start": start, "end": end, "chr": chr},
-		success: function(chip_seq) {
-			for (var i = 0; i < chip_seq["content"].length; i++){
-				var max_score = getMax(chip_seq["content"][i])
-				var step = 3300/chip_seq["content"][i].length;
-				var path = "M0 " + chip_height + " ";
-				var x = 0;
-				for (var k = 0; k < chip_seq["content"][i].length; k++, x += step){
-					var y = chip_height - chip_seq["content"][i][k]*chip_height/max_score
-					path += "L" + x + " " + y + " ";
-				}
-				path += "L" + x + " " + chip_height + " z";
-				sample.append("path")
-					.attr({
-						d: path,
-						stroke: "none",
-						fill: H3K27Ac[i].col,
-						class: H3K27Ac[i].name,
-						opacity: 0.5
-					})
-				sample.append("circle")
-					.attr({
-						cx: 1100 + 10,
-						cy: i*8 + 4,
-						r: 3,
-						stroke: H3K27Ac[i].col,
-							'stroke-width': "2px",
-						fill: H3K27Ac[i].col,
-						class: H3K27Ac[i].name,
-						opacity: 0.5,
+	if (mouse_up){
+		$.ajax({
+			method: "get",
+			dataType: "jsonp",
+			url: " http://bioalgorithm.xyz/teatlas_ajax",
+			data: {"inf": "H3K27Ac", "start": start, "end": end, "chr": chr},
+			success: function(chip_seq) {
+				for (var i = 0; i < chip_seq["content"].length; i++){
+					var max_score = getMax(chip_seq["content"][i])
+					var step = 3300/chip_seq["content"][i].length;
+					var path = "M0 " + chip_height + " ";
+					var x = 0;
+					for (var k = 0; k < chip_seq["content"][i].length; k++, x += step){
+						var y = chip_height - chip_seq["content"][i][k]*chip_height/max_score
+						path += "L" + x + " " + y + " ";
+					}
+					path += "L" + x + " " + chip_height + " z";
+					sample.append("path")
+						.attr({
+							d: path,
+							stroke: "none",
+							fill: H3K27Ac[i].col,
+							class: H3K27Ac[i].name,
+							opacity: 0.5
 						})
-				sample.append("text")
-					.attr({
-						x: 1100 + 15,
-						y: i*8 + 6,
-						"font-size": "6px",
-						color: "#000",
-						id: H3K27Ac[i].name,
-					})
-					.text(H3K27Ac[i].name)
-					.on("click", function(){
-						if ($("." + this.id).css("fill") != "none"){
-							$(this).css({color: "#c7c7c7"})
-								$("." + this.id).css({fill: "none"})
-						} else {
-							$(this).css({color: "#000"})
-							$("." + this.id).css({fill: H3K27Ac_2[this.id]}	)
-						}
-					})
-					.on("mouseover", function(){
-						$(this).css("font-weight", "bold")
-					})
-					.on("mouseout", function(){
-						$(this).css("font-weight", "normal")
-					})
-			}
-
-			sample.append("path")
-				.attr({
-					d: "M1655,2 L1650,2 L1650,50",
-					stroke: "#000",
-					"stroke-dasharray": "10,5,2,2,2,5",
-					fill: "none"
-				})
-			sample.append("text")
-				.attr({
-					x: 1658,
-					y: 8,
-					"font-size": "8px",
-				})
-				.text(max_score)
-			}
-	})
+					sample.append("circle")
+						.attr({
+							cx: 1100 + 10,
+							cy: i*8 + 4,
+							r: 3,
+							stroke: H3K27Ac[i].col,
+							'stroke-width': "2px",
+							fill: H3K27Ac[i].col,
+							class: H3K27Ac[i].name,
+							opacity: 0.5,
+						})
+					sample.append("text")
+						.attr({
+							x: 1100 + 15,
+							y: i*8 + 6,
+							"font-size": "6px",
+							color: "#000",
+							id: H3K27Ac[i].name,
+						})
+						.text(H3K27Ac[i].name)
+						.on("click", function(){
+							if ($("." + this.id).css("fill") != "none"){
+								$(this).css({color: "#c7c7c7"})
+									$("." + this.id).css({fill: "none"})
+							} else {
+								$(this).css({color: "#000"})
+								$("." + this.id).css({fill: H3K27Ac_2[this.id]}	)
+							}
+						})
+						.on("mouseover", function(){
+							$(this).css("font-weight", "bold")
+						})
+						.on("mouseout", function(){
+								$(this).css("font-weight", "normal")
+						})
+				}
+		})
+	}
 	
 	var extra = 0;
 	for (var i = 0; i < n_file; i++){
@@ -798,8 +785,8 @@ function ShowChromosome(name, start, end){
 		ix = current;
 	};
 
+	document.onmousedown = function(){mouse_up = false;}
 	document.onmousemove = function(e){
-		mouse_up = false;
 		// Select range ?
 		if (!isNaN(ox)) {
 			if (isNaN(dx)) box.style.display = 'block';
