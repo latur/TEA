@@ -73,7 +73,7 @@ def get_value(id_list):
 			chrs = 23
 		elif ind.chr == 'Y':
 			chrs = 24
-		else
+		else:
 			chrs = int(ind.chr)
 
 		score = []
@@ -92,7 +92,7 @@ def get_value(id_list):
 			x = struct.unpack("I", inp.read(4))
 			while x[0] > 0:
 				prev -= 12
-					inp.seek(prev + 4) 
+				inp.seek(prev + 4) 
 				x = struct.unpack("I", inp.read(4))
 	
 			max_size = os.path.getsize(file_path)
@@ -118,7 +118,6 @@ class MainHandler(tornado.web.RequestHandler):
 	ret = []
 
 	if self.request.arguments["inf"][0] == "file":
-		print self.request.arguments["inf"]
 		for name in self.request.arguments["id[]"]:
 			path = '../samples/' + name
 			content = open(path, "r")
@@ -126,6 +125,7 @@ class MainHandler(tornado.web.RequestHandler):
 	elif self.request.arguments["inf"][0] == "H3K27Ac":
 		ret = get_chip_seq(self.request.arguments["id_list[]"])
 	elif self.request.arguments["inf"][0] == "filter":
+		print self.request.arguments
 		ret = get_value(int(self.request.arguments["site"][0]), self.request.arguments["chr"][0])
         self.write("{jsfunc}({json});".format(jsfunc=callbackFunc, json=tornado.escape.json_encode(ret)))
         self.finish()
