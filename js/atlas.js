@@ -30,7 +30,7 @@ var visibleType = 0;
 var visibleMode = 0;
 var mode = 0;
 var mouse_up = true;
-var chip_seq_range = []
+var chip_seq_range = [];
 /* -------------------------------------------- */
 
 const density_len = {
@@ -564,9 +564,10 @@ function load_detail_content(name, start, end){
 			data: {"inf": "H3K27Ac", "start": start, "end": end, "chr": chr},
 			success: function(chip_seq) {
 				var minVal = 100000, maxVal = -100000;
+				chip_seq_range = [];
+				for (var s = 0; s < chip_seq[0].length; s++)
+					chip_seq_range.push(chip_seq[0][s]);
 				for (var i = 0; i < chip_seq.length; i++){
-					for (var s = 0; s < chip_seq[0].length; s++)
-						chip_seq_range.push(chip_seq[0][s]);
 					var max_score = getMax(chip_seq[i])
 					var step = 3300/chip_seq[i].length;
 					var path = "M0 " + chip_height + " ";
@@ -632,6 +633,7 @@ function load_detail_content(name, start, end){
 				$(".chipScore").html(minVal == 100000? 0 : minVal);
 				$(".chipMax").html(maxVal == -100000? 0 : maxVal);
 				$(".chipFil").css("left", "0px");
+				console.log(chip_seq_range)
 			}
 		})
 	}
