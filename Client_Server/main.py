@@ -69,12 +69,12 @@ def get_value(id_list):
 
 	for ind in id_list:
 		chrs = 0
-		if ind.chr == 'X':
+		if ind[2] == 'X':
 			chrs = 23
-		elif ind.chr == 'Y':
+		elif ind[2] == 'Y':
 			chrs = 24
 		else:
-			chrs = int(ind.chr)
+			chrs = int(ind[2])
 
 		score = []
 
@@ -96,7 +96,7 @@ def get_value(id_list):
 				x = struct.unpack("I", inp.read(4))
 	
 			max_size = os.path.getsize(file_path)
-			line = int(ind.site/25)
+			line = int(ind[1]/25)
 			if line >= 0 & line*12 <= max_size -12:
 				inp.seek(prev + line*12 + 8)
 				s = struct.unpack("f", inp.read(4))
@@ -104,7 +104,7 @@ def get_value(id_list):
 			else:			
 				score.append(0)
 			inp.close()
-		ret.append({"id": ind.id, "score": score})
+		ret.append({"id": ind[0], "score": score})
 	return ret
 
 class MainHandler(tornado.web.RequestHandler):
@@ -116,6 +116,7 @@ class MainHandler(tornado.web.RequestHandler):
 
 		self.set_header('Content-Type', 'application/javascript')
 		ret = []
+		print self.request.arguments
 
 		if self.request.arguments["inf"][0] == "file":
 			for name in self.request.arguments["id[]"]:
@@ -125,7 +126,7 @@ class MainHandler(tornado.web.RequestHandler):
 		elif self.request.arguments["inf"][0] == "H3K27Ac":
 			ret = get_chip_seq(int(self.request.arguments["start"][0]), int(self.request.arguments["end"][0]), int(self.request.arguments["chr"][0]))
 		elif self.request.arguments["inf"][0] == "filter":
-			print self.request.arguments["id_list[]"]
+			print self.request.arguments
 			ret = get_value(self.request.arguments["id_list[]"])
 
 		self.write("{jsfunc}({json});".format(jsfunc=callbackFunc, json=tornado.escape.json_encode(ret)))

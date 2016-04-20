@@ -455,7 +455,7 @@ function Parse(content, filename){
 		method: "get",
 		dataType: "jsonp",
 		url: " http://bioalgorithm.xyz/teatlas_ajax",
-		data: {"inf": "filter", "id": list},
+		data: {"inf": "filter", "id_list": list},
 		success: function(filter) {
 			console.log(filter)
 			var minVal = $(".chipMin").html() == "min" ? 100000: parseInt($(".chipMin").html());
