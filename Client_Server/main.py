@@ -67,14 +67,16 @@ def get_value(id_list):
 	ret = []
 	f = "../data/Bind25."
 
-	for i in range(0, len(id_list), 3) :
+	for mem in id_list:
+		idx = mem.split("-")
+
 		chrs = 0
-		if id_list[i] == 'X':
+		if idx[0][3] == 'X':
 			chrs = 23
-		elif id_list[i] == 'Y':
+		elif idx[0][3] == 'Y':
 			chrs = 24
 		else:
-			chrs = int(id_list[i])
+			chrs = int(idx[0][3:])
 
 		score = []
 
@@ -96,7 +98,7 @@ def get_value(id_list):
 				x = struct.unpack("I", inp.read(4))
 	
 			max_size = os.path.getsize(file_path)
-			line = int(int(id_list[i+1])/25)
+			line = int(int(idx[2])/25)
 			if line >= 0 & line*12 <= max_size -12:
 				inp.seek(prev + line*12 + 8)
 				s = struct.unpack("f", inp.read(4))
@@ -104,7 +106,7 @@ def get_value(id_list):
 			else:			
 				score.append(0)
 			inp.close()
-		ret.append({"id": id_list[2], "score": score})
+		ret.append({"id": mem, "score": score})
 	return ret
 
 class MainHandler(tornado.web.RequestHandler):
