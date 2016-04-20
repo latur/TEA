@@ -68,7 +68,7 @@ def get_value(id_list):
 	f = "/home/ginny/www/data/Bind25"
 
 	for mem in id_list:
-		ret.append({"id": mem, "score": []})
+		ret.append([])
 
 	for i in range(0, 6):
 		file_path = "%s.%d.bin" % (f,i)
@@ -104,9 +104,9 @@ def get_value(id_list):
 			if line >= 0 & line*12 <= max_size -12:
 				inp.seek(prev + line*12 + 8)
 				s = struct.unpack("f", inp.read(4))
-				ret[mem]['score'].append(s[0])
+				ret[mem].append(s[0])
 			else:			
-				ret[mem]['score'].append(0)
+				ret[mem].append(0)
 		inp.close()
 	return ret
 

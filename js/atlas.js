@@ -30,6 +30,7 @@ var visibleType = 0;
 var visibleMode = 0;
 var mode = 0;
 var mouse_up = true;
+var chip_seq_range = {}
 /* -------------------------------------------- */
 
 const density_len = {
@@ -302,30 +303,17 @@ function SamplesLoaded(){
 }
 
 function filter_score(score){	
-	var chr = location.hash.match(/^\#?(chr[0-9XY]+)\:([0-9]+)\-([0-9]+)\/?([0-9a-z]+)?$/);
-	var start = parseInt(chr[2]);
-	var end = parseInt(chr[3]);
-	var step = end - start;
-	for (var i = 0; i < file_list.length; i++){
-		for (var k = 0; k < expData[chr[1]][file_list[i]].length; k++){
-			if (expData[chr[1]][file_list[i]][k][0] < start - step)
-				continue;
-			if (expData[chr[1]][file_list[i]][k][0] > end + step)
+	for (var i = 0; i < chip_seq_range["id"].length; i++){
+		var has = 0;
+		for (var k = 0; k < chip_seq_range["score"][i].length; k++){
+			if (chip_seq_range["score"][i][k] >= score){
+				$("." + chip_seq_range["id"][i]).css("visibility", "visible")
+				has = 1;
 				break;
-			var id = expData[chr[1]][file_list[i]][k][7];
-			var has = 0;
-			for (var j = 1; j < 7; j++){
-				if (id_list[id][j] >= score){
-					$("." + id).css("visibility", "visible")
-					console.log(id, id_list[id][j])
-					has = 1;
-					break;
-				}
 			}
-			if (has == 0)
-					$("." + id).css("visibility", "hidden")
-
 		}
+		if (has == 0)
+			$("." +  chip_seq_range["id"][i]).css("visibility", "hidden")
 	}
 }
 
@@ -412,7 +400,6 @@ function Parse(content, filename){
 	file_list.push(filename);
 	++n_file;
 
-	var list = [];
 	content.split('\n').map(function(line){
 		var c = line.split('\t');
 		if (chrs[c[0]]) {
@@ -435,7 +422,6 @@ function Parse(content, filename){
 			// Use to trace for turn on/off element and show inf when needed
 			var id = c[0] + '-' + filename + '-' + c[1] + '-' + c[2];
 			id_list[id] = [0];
-			list.push(id)
 			
 
 			if (c[7] == '')
@@ -452,25 +438,6 @@ function Parse(content, filename){
 
 		}
 	});
-
-	for (var s = 0, e = 200; e < list.length; s += 200, e += 200){
-		if (e > list.length) e = list.length;
-		$.ajax({
-			method: "pos",
-			dataType: "jsonp",
-			url: " http://bioalgorithm.xyz/teatlas_ajax",
-			data: {"inf": "filter", "id_list": list.slice(s, e)},
-			success: function(filter) {
-				for (var i = 0; i < filter.length; i++){
-					var id = filter[i].id;
-					for (var k = 0; k < 6; k++){
-						var score = filter[i].score[k];
-						id_list[id].push(score)
-					}
-				}
-			}
-		})
-	}
 }
 
 // Get experiment data by ID
@@ -577,72 +544,72 @@ function load_detail_content(name, start, end){
 	sample.html('').attr("height", n_file*50 + chip_height);
 
 	var chr = name.substr(3) == 'X'? 23: name.substr(3) == 'Y'? 24 : parseInt(name.substr(3));
-	if (mouse_up){
-		$.ajax({
-			method: "get",
-			dataType: "jsonp",
-			url: " http://bioalgorithm.xyz/teatlas_ajax",
-			data: {"inf": "H3K27Ac", "start": start, "end": end, "chr": chr},
-			success: function(chip_seq) {
-				for (var i = 0; i < chip_seq.length; i++){
-					var max_score = getMax(chip_seq[i])
-					var step = 3300/chip_seq[i].length;
-					var path = "M0 " + chip_height + " ";
-					var x = 0;
-					for (var k = 0; k < chip_seq[i].length; k++, x += step){
-						var y = chip_height - chip_seq[i][k]*chip_height/max_score
-						path += "L" + x + " " + y + " ";
-					}
-					path += "L" + x + " " + chip_height + " z";
-					sample.append("path")
-						.attr({
-							d: path,
-							stroke: "none",
-							fill: H3K27Ac[i].col,
-							class: H3K27Ac[i].name,
-							opacity: 0.5
-						})
-					sample.append("circle")
-						.attr({
-							cx: 1100 + 10,
-							cy: i*8 + 4,
-							r: 3,
-							stroke: H3K27Ac[i].col,
-							'stroke-width': "2px",
-							fill: H3K27Ac[i].col,
-							class: H3K27Ac[i].name,
-							opacity: 0.5,
-						})
-					sample.append("text")
-						.attr({
-							x: 1100 + 15,
-							y: i*8 + 6,
-							"font-size": "6px",
-							color: "#000",
-							id: H3K27Ac[i].name,
-						})
-						.text(H3K27Ac[i].name)
-						.on("click", function(){
-							if ($("." + this.id).css("fill") != "none"){
-								$(this).css({color: "#c7c7c7"})
-									$("." + this.id).css({fill: "none"})
-							} else {
-								$(this).css({color: "#000"})
-								$("." + this.id).css({fill: H3K27Ac_2[this.id]}	)
-							}
-						})
-						.on("mouseover", function(){
-							$(this).css("font-weight", "bold")
-						})
-						.on("mouseout", function(){
-								$(this).css("font-weight", "normal")
-						})
+	$.ajax({
+		method: "get",
+		dataType: "jsonp",
+		url: " http://bioalgorithm.xyz/teatlas_ajax",
+		data: {"inf": "H3K27Ac", "start": start, "end": end, "chr": chr},
+		success: function(chip_seq) {
+			for (var i = 0; i < chip_seq.length; i++){
+				var max_score = getMax(chip_seq[i])
+				var step = 3300/chip_seq[i].length;
+				var path = "M0 " + chip_height + " ";
+				var x = 0;
+				for (var k = 0; k < chip_seq[i].length; k++, x += step){
+					var y = chip_height - chip_seq[i][k]*chip_height/max_score
+					path += "L" + x + " " + y + " ";
 				}
+				path += "L" + x + " " + chip_height + " z";
+				sample.append("path")
+					.attr({
+						d: path,
+						stroke: "none",
+						fill: H3K27Ac[i].col,
+						class: H3K27Ac[i].name,
+						opacity: 0.5
+					})
+				sample.append("circle")
+					.attr({
+						cx: 1100 + 10,
+						cy: i*8 + 4,
+						r: 3,
+						stroke: H3K27Ac[i].col,
+						'stroke-width': "2px",
+						fill: H3K27Ac[i].col,
+						class: H3K27Ac[i].name,
+						opacity: 0.5,
+					})
+				sample.append("text")
+					.attr({
+						x: 1100 + 15,
+						y: i*8 + 6,
+						"font-size": "6px",
+						color: "#000",
+						id: H3K27Ac[i].name,
+					})
+					.text(H3K27Ac[i].name)
+					.on("click", function(){
+						if ($("." + this.id).css("fill") != "none"){
+							$(this).css({color: "#c7c7c7"})
+								$("." + this.id).css({fill: "none"})
+						} else {
+							$(this).css({color: "#000"})
+							$("." + this.id).css({fill: H3K27Ac_2[this.id]}	)
+						}
+					})
+					.on("mouseover", function(){
+						$(this).css("font-weight", "bold")
+					})
+					.on("mouseout", function(){
+							$(this).css("font-weight", "normal")
+					})
 			}
-		})
-	}
+		}
+	})
 	
 	var extra = 0;
+	chip_seq_range["id"] = [];
+	chip_seq_range["score"] = [];
 	for (var i = 0; i < n_file; i++){
 		var f = file_list[i];
 		var y = i*50 + 15 + chip_height + extra;
@@ -672,7 +639,7 @@ function load_detail_content(name, start, end){
 				$(".pop_up").remove();
 			})
 			.text(f);
-		y += 30 + extra;
+		y += 30 + extra + chip_height;
 		var add = 0, minVal = 100000, maxVal = -100000;
 		for (var s in expData[name][f]){
 			var content = expData[name][f][s];
@@ -711,20 +678,25 @@ function load_detail_content(name, start, end){
 					align_contig(this.id);
 				});
 
-			if (content[0] > (start+screen) && content[0] <= (end-screen)){
-				for (var i = 1; i < 7; i++){
-					if (id_list[content[7]][i] < minVal)
-						minVal = id_list[content[7]][i];
-					if (id_list[content[7]][i] > maxVal)
-						maxVal = id_list[content[7]][i];
-				}
-			}
+				chip_seq_range["id"].push(content[7])
 		}
 		extra += add;
 	}
-	$(".chipMin").html(minVal == 100000? 0 : minVal);
-	$(".chipScore").html(minVal == 100000? 0 : minVal);
-	$(".chipMax").html(maxVal == -100000? 0 : maxVal);
+
+	$.ajax({
+		method: "post",
+		dataType: "jsonp",
+		url: " http://bioalgorithm.xyz/teatlas_ajax",
+		data: {"inf": "filter", "id_list": chip_seq_range["id"]},
+		success: function(filter) {
+			chip_seq_range["score"] = filter;
+			
+			$(".chipMin").html(minVal == 100000? 0 : minVal);
+			$(".chipScore").html(minVal == 100000? 0 : minVal);
+			$(".chipMax").html(maxVal == -100000? 0 : maxVal);
+			$(".chipFil").css("left", "0px");
+		}
+	})
 }
 
 // Selected region on chromosome
