@@ -711,12 +711,12 @@ function load_detail_content(name, start, end){
 				});
 
 			if (content[0] > (start+screen) && content[0] <= (end-screen)){
-				var ma = Math.max.apply( Math, id_list[content[8]].shift);
-				var mi = Math.min.apply( Math, id_list[content[8]].shift);
-				if (mi < minVal)
-					minVal = mi;
-				if (ma > maxVal)
-					maxVal = ma;
+				for (var i = 1; i < 7; i++){
+					if (id_list[content[7]][i] < minVal)
+						minVal = id_list[content[7]][i];
+					if (id_list[content[7]][i] > maxVal)
+						maxVal = id_list[content[7]][i];
+				}
 			}
 		}
 		extra += add;
