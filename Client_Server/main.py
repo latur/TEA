@@ -116,6 +116,7 @@ class MainHandler(tornado.web.RequestHandler):
 
         self.set_header('Content-Type', 'application/javascript')
 	ret = []
+	print self.request.arguments
 
 	if self.request.arguments["inf"][0] == "file":
 		for name in self.request.arguments["id[]"]:
@@ -123,7 +124,7 @@ class MainHandler(tornado.web.RequestHandler):
 			content = open(path, "r")
 			ret.append(content.read())
 	elif self.request.arguments["inf"][0] == "H3K27Ac":
-		ret = get_value(int(self.request.arguments["site"][0]), self.request.arguments["chr"][0])
+		ret = get_chip_seq(int(self.request.arguments["start"][0]), int(self.request.arguments["end"][0]), int(self.request.arguments["chr"][0]))
 	elif self.request.arguments["inf"][0] == "filter":
 		ret = get_chip_seq(self.request.arguments["id_list[]"])
         self.write("{jsfunc}({json});".format(jsfunc=callbackFunc, json=tornado.escape.json_encode(ret)))

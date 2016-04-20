@@ -838,7 +838,7 @@ function get_server_file(id){
 		url: " http://bioalgorithm.xyz/teatlas_ajax",
 		data: {"inf": "file", "id": id},
 		success: function(file) {
-			for (var i = 0; i < file.content.length; i++)
+			for (var i = 0; i < file.length; i++)
 				Parse(file[i], id[i]);
 			get_max();
 			if (file_list.length > 1)
