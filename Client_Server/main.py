@@ -13,7 +13,7 @@ chr_len = [0, 1287101697, 1691267844, 1889563403, 2087858962, 2269397221,
 def get_chip_seq(start, end, name):
 	chip_seq = [];
 	dis = end - start
-	f = "../data/Bind"
+	f = "/home/ginny/www/data/Bind"
 	step = 0
 
 	if (dis < 41250):
@@ -65,25 +65,26 @@ def get_chip_seq(start, end, name):
 
 def get_value(id_list):
 	ret = []
-	f = "../data/Bind25."
+	f = "/home/ginny/www/data/Bind25"
 
 	for mem in id_list:
-		idx = mem.split("-")
+		ret.append({"id": mem, "score": []})
+	for i in range(0, 6):
+		file_path = "%s.%d.bin" % (f,i)
+		inp = open(file_path, "r")
+		max_size = os.path.getsize(file_path)
+		for mem in range(0, len(id_list):
+			idx = id_list[mem].split("-")
+			chrs = 0
+			if idx[0][3] == 'X':
+				chrs = 23
+			elif idx[0][3] == 'Y':
+				chrs = 24
+			else:
+				chrs = int(idx[0][3:])
 
-		chrs = 0
-		if idx[0][3] == 'X':
-			chrs = 23
-		elif idx[0][3] == 'Y':
-			chrs = 24
-		else:
-			chrs = int(idx[0][3:])
-
-		score = []
-
-		for i in range(0, 6):
-			file_path = f + str(i) + ".bin"
-			inp = open(file_path, "r")
 			prev = int(chr_len[chrs-1]/25)*12
+			inp.seek(prev)
 			x = struct.unpack("H", inp.read(2))
 			while x[0] != chrs:
 				prev += 12
@@ -97,16 +98,14 @@ def get_value(id_list):
 				inp.seek(prev + 4) 
 				x = struct.unpack("I", inp.read(4))
 	
-			max_size = os.path.getsize(file_path)
 			line = int(int(idx[2])/25)
 			if line >= 0 & line*12 <= max_size -12:
 				inp.seek(prev + line*12 + 8)
 				s = struct.unpack("f", inp.read(4))
-				score.append(s[0])
+				ret[mem].score.append(s[0])
 			else:			
-				score.append(0)
+				ret[mem].score.append(0)
 			inp.close()
-		ret.append({"id": mem, "score": score})
 	return ret
 
 class MainHandler(tornado.web.RequestHandler):
