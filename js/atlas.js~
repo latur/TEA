@@ -284,7 +284,6 @@ function SamplesLoaded(){
 			minVal = parseInt($(".chipMin").html());
 			maxVal = parseInt($(".chipMax").html());
 		})
-	$(".chipFilHol")
 		.on("mousemove", function(e){
 			if (!is_fil) return;
 			left += e.pageX - xpos;
@@ -293,7 +292,7 @@ function SamplesLoaded(){
 				left = 141;
 			score = parseInt(left*(maxVal-minVal)/141 + minVal);
 			$(".chipScore").html(score);
-			$(".chipFil").css("left", left); 
+			$(this).css("left", left); 
 			xpos = e.pageX;
 			filter_score(score);
 		})

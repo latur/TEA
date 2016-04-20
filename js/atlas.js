@@ -318,6 +318,11 @@ function filter_score(score){
 
 function disable_button(){
 	// Disable some function when number of file is lower than needed
+	if (n_file < 1)
+		$(".filter").css("display", "none")
+	else
+		$(".filter").css("display", "inline-block")
+
 	if (n_file < 2)
 		$('.comparision').addClass("disabled");
  	else
