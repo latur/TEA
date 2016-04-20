@@ -123,15 +123,14 @@
 				<li><a class="cnt" data-e="10" href="#">10x </a></li>
 			</ul>
 		</div>
-		<div class="filter">
+		<div class="filter">ChiP-seq score >
 			<div class="chipFilHol">
+				<div class="chipMin">min</div>
 				<div class="chipFil">
 					<div class="chipScore">score</div>
 				</div>
-				<div class="chipMin">min</div>
 				<div class="chipMax">max</div>
 			</div>
-			ChiP-seq score >
 		</div>
 
 	</div>

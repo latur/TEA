@@ -763,6 +763,11 @@ hr {
 	margin: auto;
 	border: 1px solid;
 	border-radius: 3px;
+	background: #bdbdbd;
+    background: -webkit-linear-gradient(#d9d9d9, #bdbdbd, #bdbdbd, #d9d9d9); 
+    background: -o-linear-gradient(#d9d9d9, #bdbdbd, #bdbdbd, #d9d9d9);
+    background: -moz-linear-gradient(#d9d9d9, #bdbdbd, #bdbdbd, #d9d9d9);
+    background: linear-gradient(#d9d9d9, #bdbdbd, #bdbdbd, #d9d9d9);
 }
 
 .chipFil {
@@ -793,14 +798,14 @@ hr {
 
 .chipScore {
 	position: relative;
-	margin-top: 10px;
+	margin-top: 12px;
 	display: block;
 	font-size: 8px;
 }
 
 .chipMin {
 	position: relative;
-	margin-top: -17px;
+	margin-top: -20px;
 	display: inline-block;
 	float: left;
 	font-size: 8px;
@@ -808,7 +813,7 @@ hr {
 
 .chipMax {
 	position: relative;
-	margin-top: -17px;
+	margin-top: -20px;
 	display: inline-block;
 	float: right;
 	font-size: 8px;
@@ -816,8 +821,8 @@ hr {
 
 .filter {
 	position: relative;
-	display: inline-block;
-	margin-top: -5px;
+	display: none;
+	top: -10px;
 	margin-left: 15px;
 	width: 150px;
 	font-size: 8px;

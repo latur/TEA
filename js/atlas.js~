@@ -701,6 +701,7 @@ function load_detail_content(name, start, end){
 				$(".chipScore").html(minVal == 100000? 0 : minVal);
 				$(".chipMax").html(maxVal == -100000? 0 : maxVal);
 				$(".chipFil").css("left", "0px");
+				$(".filter").css("display", "inline-block");
 			}
 		})
 	}

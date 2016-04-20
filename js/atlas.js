@@ -318,11 +318,6 @@ function filter_score(score){
 
 function disable_button(){
 	// Disable some function when number of file is lower than needed
-	if (n_file < 1)
-		$(".filter").css("display", "none")
-	else
-		$(".filter").css("display", "inline-block")
-
 	if (n_file < 2)
 		$('.comparision').addClass("disabled");
  	else
@@ -333,6 +328,7 @@ function disable_button(){
 		$('.showtree').removeClass("disabled");
 
 	if (location.hash == "#general"){
+		$(".filter").css("display", "none");
 		$('.chr-view-mode a').removeClass('disabled');
 		$('.chr-view-mode .asline').addClass('disabled');
 		$('.move-c').attr("style", "visibility:hidden");
@@ -706,6 +702,7 @@ function load_detail_content(name, start, end){
 				$(".chipScore").html(minVal == 100000? 0 : minVal);
 				$(".chipMax").html(maxVal == -100000? 0 : maxVal);
 				$(".chipFil").css("left", "0px");
+				$(".filter").css("display", "inline-block");
 			}
 		})
 	}
