@@ -683,20 +683,22 @@ function load_detail_content(name, start, end){
 		extra += add;
 	}
 
-	$.ajax({
-		method: "post",
-		dataType: "jsonp",
-		url: " http://bioalgorithm.xyz/teatlas_ajax",
-		data: {"inf": "filter", "id_list": chip_seq_range["id"]},
-		success: function(filter) {
-			chip_seq_range["score"] = filter;
+	if (n_file > 0){
+		$.ajax({
+			method: "post",
+			dataType: "jsonp",
+			url: " http://bioalgorithm.xyz/teatlas_ajax",
+			data: {"inf": "filter", "id_list": chip_seq_range["id"]},
+			success: function(filter) {
+				chip_seq_range["score"] = filter;
 			
-			$(".chipMin").html(minVal == 100000? 0 : minVal);
-			$(".chipScore").html(minVal == 100000? 0 : minVal);
-			$(".chipMax").html(maxVal == -100000? 0 : maxVal);
-			$(".chipFil").css("left", "0px");
-		}
-	})
+				$(".chipMin").html(minVal == 100000? 0 : minVal);
+				$(".chipScore").html(minVal == 100000? 0 : minVal);
+				$(".chipMax").html(maxVal == -100000? 0 : maxVal);
+				$(".chipFil").css("left", "0px");
+			}
+		})
+	}
 }
 
 // Selected region on chromosome
