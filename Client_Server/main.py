@@ -64,15 +64,23 @@ def get_chip_seq(start, end, name):
 	return chip_seq
 
 def get_value(site, name):
+	chrs = 0
+	if name == 'X':
+		chrs = 23
+	elif name == 'Y':
+		chrs = 24
+	else
+		chrs = int(name)
+
 	score = []
 	f = "../data/Bind25."
 
 	for i in range(0, 6):
 		file_path = f + str(i) + ".bin"
 		inp = open(file_path, "r")
-		prev = int(chr_len[name-1]/25)*12
+		prev = int(chr_len[chrs-1]/25)*12
 		x = struct.unpack("H", inp.read(2))
-		while x[0] != name:
+		while x[0] != chrs:
 			prev += 12
 			inp.seek(prev)
 			x = struct.unpack("H", inp.read(2))
@@ -113,7 +121,7 @@ class MainHandler(tornado.web.RequestHandler):
 	elif self.request.arguments["inf"][0] == "H3K27Ac":
 		ret = get_chip_seq(int(self.request.arguments["start"][0]), int(self.request.arguments["end"][0]), int(self.request.arguments["chr"][0]))
 	elif self.request.arguments["inf"][0] == "filter":
-		ret = get_value(int(self.request.arguments["site"][0]), int(self.request.arguments["chr"][0]))
+		ret = get_value(int(self.request.arguments["site"][0]), self.request.arguments["chr"][0])
         self.write("{jsfunc}({json});".format(jsfunc=callbackFunc, json=tornado.escape.json_encode({"content": ret})))
         self.finish()
 
