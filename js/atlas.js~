@@ -452,8 +452,8 @@ function Parse(content, filename){
 		}
 	});
 
-	$.ajax({
-		method: "post",
+	$.post({
+		type: "post",
 		dataType: "jsonp",
 		url: " http://bioalgorithm.xyz/teatlas_ajax",
 		data: {"inf": "filter", "id_list": list},
