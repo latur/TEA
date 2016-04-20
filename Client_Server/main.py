@@ -74,9 +74,7 @@ def get_value(id_list):
 		file_path = "%s.%d.bin" % (f,i)
 		inp = open(file_path, "r")
 		max_size = os.path.getsize(file_path)
-		print file_path
 		for mem in range(0, len(id_list)):
-			print id_list[mem]
 			idx = id_list[mem].split("-")
 			chrs = 0
 			if idx[0][3] == 'X':
@@ -87,6 +85,9 @@ def get_value(id_list):
 				chrs = int(idx[0][3:])
 
 			prev = int(chr_len[chrs-1]/25)*12
+			inp.seek(prev)
+			print struct.unpack("HHIf", inp.read(12))
+
 			inp.seek(prev)
 			x = struct.unpack("H", inp.read(2))
 			while x[0] != chrs:

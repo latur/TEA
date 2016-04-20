@@ -452,21 +452,24 @@ function Parse(content, filename){
 		}
 	});
 
-	$.ajax({
-		method: "post",
-		dataType: "jsonp", 
-		url: " http://bioalgorithm.xyz/teatlas_ajax",
-		data: {"inf": "filter", "id_list": list},
-		success: function(filter) {
-			for (var i = 0; i < filter.length; i++){
-				var id = filter[i].id;
-				for (var k = 0; k < 6; k++){
-					var score = filter[i].score[k];
-					id_list[id].push(score)
+	for (var s = 0, e = 200; i < list.length; s += 200, e += 200){
+		if (e > list.length) e = list.length;
+		$.ajax({
+			method: "get",
+			dataType: "jsonp",
+			url: " http://bioalgorithm.xyz/teatlas_ajax",
+			data: {"inf": "filter", "id_list": list.slice(s, e)},
+			success: function(filter) {
+				for (var i = 0; i < filter.length; i++){
+					var id = filter[i].id;
+					for (var k = 0; k < 6; k++){
+						var score = filter[i].score[k];
+						id_list[id].push(score)
+					}
 				}
 			}
-		}
-	})	
+		})	
+	}
 }
 
 // Get experiment data by ID
