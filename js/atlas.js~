@@ -609,7 +609,7 @@ function load_detail_content(name, start, end){
 	
 	var extra = 0;
 	chip_seq_range["id"] = [];
-	chip_seq_range["score"] = []
+	chip_seq_range["score"] = [];
 	for (var i = 0; i < n_file; i++){
 		var f = file_list[i];
 		var y = i*50 + 15 + chip_height + extra;
@@ -639,7 +639,7 @@ function load_detail_content(name, start, end){
 				$(".pop_up").remove();
 			})
 			.text(f);
-		y += 30 + extra;
+		y += 30 + extra + chip_height;
 		var add = 0, minVal = 100000, maxVal = -100000;
 		for (var s in expData[name][f]){
 			var content = expData[name][f][s];
