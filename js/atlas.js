@@ -452,13 +452,13 @@ function Parse(content, filename){
 		}
 	});
 
-	for (i = 0, k = 200; i < list.length; i += 200, k += 200){
-		if (k > list.length) k = list.length;
+	for (var s = 0, e = 200; i < list.length; s += 200, e += 200){
+		if (e > list.length) e = list.length;
 		$.ajax({
 			method: "get",
 			dataType: "jsonp",
 			url: " http://bioalgorithm.xyz/teatlas_ajax",
-			data: {"inf": "filter", "id_list": list.slice(i, k)},
+			data: {"inf": "filter", "id_list": list.slice(s, e)},
 			success: function(filter) {
 				for (var i = 0; i < filter.length; i++){
 					var id = filter[i].id;

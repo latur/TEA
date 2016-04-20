@@ -452,7 +452,7 @@ function Parse(content, filename){
 		}
 	});
 
-	for (i = 0, k = 200; i < list.length; i += 200, k += 200){
+	for (var i = 0, k = 200; i < list.length; i += 200, k += 200){
 		if (k > list.length) k = list.length;
 		$.ajax({
 			method: "get",
