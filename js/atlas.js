@@ -451,33 +451,25 @@ function Parse(content, filename){
 
 		}
 	});
-	$.ajax({
-		method: "get",
-		dataType: "jsonp",
-		url: " http://bioalgorithm.xyz/teatlas_ajax",
-		data: {"inf": "filter", "id_list": list},
-		success: function(filter) {
-			console.log(filter)
-			var minVal = $(".chipMin").html() == "min" ? 100000: parseInt($(".chipMin").html());
-			var maxVal = $(".chipMax").html() == "max" ? -100000: parseInt($(".chipMin").html());
-			for (var i = 0; i < filter.length; i++){
-				var id = filter[i].id;
-				for (var k = 0; k < 6; k++){
-					var score = filter[i].score[k];
-					id_list[id].push(score)
-					if (score < minVal){
-						minVal = score;
-						$(".chipMin").html(minVal);
-						$(".chipScore").html(minVal);
-					}
-					if (score > maxVal){
-						maxVal = score;
-						$(".chipMax").html(maxVal)
+
+	for (i = 0, k = 200; i < list.length; i += 200, k += 200){
+		if (k > list.length) k = list.length;
+		$.ajax({
+			method: "get",
+			dataType: "jsonp",
+			url: " http://bioalgorithm.xyz/teatlas_ajax",
+			data: {"inf": "filter", "id_list": list.slice(i, k)},
+			success: function(filter) {
+				for (var i = 0; i < filter.length; i++){
+					var id = filter[i].id;
+					for (var k = 0; k < 6; k++){
+						var score = filter[i].score[k];
+						id_list[id].push(score)
 					}
 				}
 			}
-		}
-	})	
+		})	
+	}
 }
 
 // Get experiment data by ID
@@ -680,7 +672,7 @@ function load_detail_content(name, start, end){
 			})
 			.text(f);
 		y += 30 + extra;
-		var add = 0;
+		var add = 0, minVal = 100000, maxVal = -100000;
 		for (var s in expData[name][f]){
 			var content = expData[name][f][s];
 			if (content[0] < start) continue;
@@ -705,7 +697,8 @@ function load_detail_content(name, start, end){
 				.attr("height", "10")
 				.attr("opacity", "0.8")
 				.attr("x", x)
-				.attr("y", y);
+				.attr("y", y)
+				.attr("id", content[8]);
 			sample.append("text")
 				.attr("id", name + '-' + f + '-' + s)
 				.attr("x", x + 8)
@@ -715,10 +708,22 @@ function load_detail_content(name, start, end){
 				.text(content[5])
 				.on("click", function(){
 					align_contig(this.id);
-				});			
+				});
+
+			if (content[0] > (start+screen) && content[0] <= (end-screen)){
+				var ma = Math.max.apply( Math, id_list[content[8]].shift);
+				var mi = Math.min.apply( Math, id_list[content[8]].shift);
+				if (mi < minVal)
+					minVal = mi;
+				if (ma > maxVal)
+					maxVal = ma;
+			}
 		}
 		extra += add;
 	}
+	$(".chipMin").html(minVal);
+	$(".chipScore").html(minVal);
+	$(".chipMax").html(maxVal);
 }
 
 // Selected region on chromosome
