@@ -118,15 +118,15 @@ class MainHandler(tornado.web.RequestHandler):
 	ret = []
 
 	if self.request.arguments["inf"][0] == "file":
-		print self.request.arguments["inf"]
 		for name in self.request.arguments["id[]"]:
 			path = '../samples/' + name
 			content = open(path, "r")
 			ret.append(content.read())
 	elif self.request.arguments["inf"][0] == "H3K27Ac":
-		ret = get_chip_seq(self.request.arguments["id_list[]"])
-	elif self.request.arguments["inf"][0] == "filter":
 		ret = get_value(int(self.request.arguments["site"][0]), self.request.arguments["chr"][0])
+	elif self.request.arguments["inf"][0] == "filter":
+		print self.request.arguments
+		ret = get_chip_seq(self.request.arguments["id_list[]"])
         self.write("{jsfunc}({json});".format(jsfunc=callbackFunc, json=tornado.escape.json_encode(ret)))
         self.finish()
 
