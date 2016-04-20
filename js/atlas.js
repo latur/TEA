@@ -434,8 +434,7 @@ function Parse(content, filename){
 			// Use to trace for turn on/off element and show inf when needed
 			var id = c[0] + '-' + filename + '-' + c[1] + '-' + c[2];
 			id_list[id] = [0];
-			if (list.length <= 2)
-				list.push(id)
+			list.push(id)
 			
 
 			if (c[7] == '')

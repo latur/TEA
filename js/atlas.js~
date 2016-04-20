@@ -435,7 +435,7 @@ function Parse(content, filename){
 			var id = c[0] + '-' + filename + '-' + c[1] + '-' + c[2];
 			id_list[id] = [0];
 			if (list.length <= 2)
-				list.push(c[0].substr(3), c[1], id)
+				list.push(id)
 			
 
 			if (c[7] == '')

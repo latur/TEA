@@ -118,7 +118,6 @@ class MainHandler(tornado.web.RequestHandler):
 
 		self.set_header('Content-Type', 'application/javascript')
 		ret = []
-		print self.request.arguments
 
 		if self.request.arguments["inf"][0] == "file":
 			for name in self.request.arguments["id[]"]:
@@ -130,7 +129,6 @@ class MainHandler(tornado.web.RequestHandler):
 		elif self.request.arguments["inf"][0] == "filter":
 			ret = get_value(self.request.arguments["id_list[]"])
 
-		print ret
 		self.write("{jsfunc}({json});".format(jsfunc=callbackFunc, json=tornado.escape.json_encode(ret)))
 		self.finish()
 
