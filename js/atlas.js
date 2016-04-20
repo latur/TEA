@@ -315,7 +315,7 @@ function filter_score(score){
 				break;
 			var site = expData[chr[1]][file_list[i]][0];
 			var cell = (site-start)*chip_seq_range.length/(end-start);
-			if (chip_seq_range[cell] >= score){
+			if (chip_seq_range[cell] >= score)
 				$("." + id).css("visibility", "visible")
 			else 
 				$("." + id).css("visibility", "hidden")
@@ -552,8 +552,7 @@ function load_detail_content(name, start, end){
 	var sample = d3.select(".samples")
 	sample.html('').attr("height", n_file*50 + chip_height);
 
-	var chr = name.substr(3) == 'X'? 23: name.substr(3) == 'Y'? 24 : parseInt(name.substr(3));
-	var minVal = 100000, maxVal = -100000; 
+	var chr = name.substr(3) == 'X'? 23: name.substr(3) == 'Y'? 24 : parseInt(name.substr(3)); 
 	if (mouse_up){
 		$.ajax({
 			method: "get",
@@ -561,6 +560,7 @@ function load_detail_content(name, start, end){
 			url: " http://bioalgorithm.xyz/teatlas_ajax",
 			data: {"inf": "H3K27Ac", "start": start, "end": end, "chr": chr},
 			success: function(chip_seq) {
+				var minVal = 100000, maxVal = -100000;
 				for (var i = 0; i < chip_seq.length; i++){
 					chip_seq_range = chip_seq[0];
 					var max_score = getMax(chip_seq[i])
@@ -577,6 +577,7 @@ function load_detail_content(name, start, end){
 						if (chip_seq[i][k] > chip_seq_range)
 							chip_seq_range = chip_seq[i][k]
 					}
+
 					path += "L" + x + " " + chip_height + " z";
 					sample.append("path")
 						.attr({
@@ -622,6 +623,11 @@ function load_detail_content(name, start, end){
 								$(this).css("font-weight", "normal")
 						})
 				}
+
+				$(".chipMin").html(minVal == 100000? 0 : minVal);
+				$(".chipScore").html(minVal == 100000? 0 : minVal);
+				$(".chipMax").html(maxVal == -100000? 0 : maxVal);
+				$(".chipFil").css("left", "0px");
 			}
 		})
 	}
@@ -657,7 +663,7 @@ function load_detail_content(name, start, end){
 			})
 			.text(f);
 		y += 30 + extra;
-		var add = 0, minVal = 100000, maxVal = -100000;
+		var add = 0;
 		for (var s in expData[name][f]){
 			var content = expData[name][f][s];
 			if (content[0] < start) continue;
@@ -697,10 +703,6 @@ function load_detail_content(name, start, end){
 		}
 		extra += add;
 	}
-	$(".chipMin").html(minVal == 100000? 0 : minVal);
-	$(".chipScore").html(minVal == 100000? 0 : minVal);
-	$(".chipMax").html(maxVal == -100000? 0 : maxVal);
-	$(".chipFil").css("left", "0px");
 }
 
 // Selected region on chromosome

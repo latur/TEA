@@ -315,10 +315,10 @@ function filter_score(score){
 				break;
 			var site = expData[chr[1]][file_list[i]][0];
 			var cell = (site-start)*chip_seq_range.length/(end-start);
-			if (chip_seq_range[cell] >= score){
-				$("#" + id).css("visibility", "visible")
+			if (chip_seq_range[cell] >= score)
+				$("." + id).css("visibility", "visible")
 			else 
-				$("#" + id).css("visibility", "hidden")
+				$("." + id).css("visibility", "hidden")
 
 		}
 	}
@@ -577,6 +577,12 @@ function load_detail_content(name, start, end){
 						if (chip_seq[i][k] > chip_seq_range)
 							chip_seq_range = chip_seq[i][k]
 					}
+
+					$(".chipMin").html(minVal == 100000? 0 : minVal);
+					$(".chipScore").html(minVal == 100000? 0 : minVal);
+					$(".chipMax").html(maxVal == -100000? 0 : maxVal);
+					$(".chipFil").css("left", "0px");
+
 					path += "L" + x + " " + chip_height + " z";
 					sample.append("path")
 						.attr({
@@ -657,7 +663,7 @@ function load_detail_content(name, start, end){
 			})
 			.text(f);
 		y += 30 + extra;
-		var add = 0, minVal = 100000, maxVal = -100000;
+		var add = 0;
 		for (var s in expData[name][f]){
 			var content = expData[name][f][s];
 			if (content[0] < start) continue;
@@ -697,10 +703,6 @@ function load_detail_content(name, start, end){
 		}
 		extra += add;
 	}
-	$(".chipMin").html(minVal == 100000? 0 : minVal);
-	$(".chipScore").html(minVal == 100000? 0 : minVal);
-	$(".chipMax").html(maxVal == -100000? 0 : maxVal);
-	$(".chipFil").css("left", "0px");
 }
 
 // Selected region on chromosome
