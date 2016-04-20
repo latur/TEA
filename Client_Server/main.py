@@ -69,11 +69,13 @@ def get_value(id_list):
 
 	for mem in id_list:
 		ret.append({"id": mem, "score": []})
+
+	print ret
 	for i in range(0, 6):
 		file_path = "%s.%d.bin" % (f,i)
 		inp = open(file_path, "r")
 		max_size = os.path.getsize(file_path)
-		for mem in range(0, len(id_list):
+		for mem in range(0, len(id_list)):
 			idx = id_list[mem].split("-")
 			chrs = 0
 			if idx[0][3] == 'X':
