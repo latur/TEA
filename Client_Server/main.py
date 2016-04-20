@@ -125,9 +125,9 @@ class MainHandler(tornado.web.RequestHandler):
 		elif self.request.arguments["inf"][0] == "H3K27Ac":
 			ret = get_chip_seq(int(self.request.arguments["start"][0]), int(self.request.arguments["end"][0]), int(self.request.arguments["chr"][0]))
 		elif self.request.arguments["inf"][0] == "filter":
-			ret = get_chip_seq(self.request.arguments["id_list[]"])
+			print self.request.arguments["id_list[]"]
+			ret = get_value(self.request.arguments["id_list[]"])
 
-		print ret
 		self.write("{jsfunc}({json});".format(jsfunc=callbackFunc, json=tornado.escape.json_encode(ret)))
 		self.finish()
 
