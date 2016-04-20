@@ -460,6 +460,7 @@ function Parse(content, filename){
 			url: " http://bioalgorithm.xyz/teatlas_ajax",
 			data: {"inf": "filter", "id_list": list.slice(s, e)},
 			success: function(filter) {
+				console.log(filter)
 				for (var i = 0; i < filter.length; i++){
 					var id = filter[i].id;
 					for (var k = 0; k < 6; k++){
@@ -711,19 +712,19 @@ function load_detail_content(name, start, end){
 				});
 
 			if (content[0] > (start+screen) && content[0] <= (end-screen)){
-				var ma = Math.max.apply( Math, id_list[content[7]].shift());
-				var mi = Math.min.apply( Math, id_list[content[7]].shift());
-				if (mi < minVal)
-					minVal = mi;
-				if (ma > maxVal)
-					maxVal = ma;
+				for (var i = 1; i < 7; i++){
+					if (id_list[content[7]][i] < minVal)
+						minVal = id_list[content[7]][i];
+					if (id_list[content[7]][i] > maxVal)
+						maxVal = id_list[content[7]][i];
+				}
 			}
 		}
 		extra += add;
 	}
-	$(".chipMin").html(minVal);
-	$(".chipScore").html(minVal);
-	$(".chipMax").html(maxVal);
+	$(".chipMin").html(minVal == 100000? 0 : minVal);
+	$(".chipScore").html(minVal == 100000? 0 : minVal);
+	$(".chipMax").html(maxVal == -100000? 0 : maxVal);
 }
 
 // Selected region on chromosome
