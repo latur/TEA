@@ -308,13 +308,14 @@ function filter_score(score){
 	var end = parseInt(chr[3]);
 	var step = end - start;
 	for (var i = 0; i < file_list.length; i++){
-		for (var k = 0; k < expData[chr[1]][file_list[i]]; k++){
-			if (expData[chr[1]][file_list[i]][0] < start - step)
+		console.log(file_list[i]);
+		for (var k = 0; k < expData[chr[1]][file_list[i]].length; k++){
+			if (expData[chr[1]][file_list[i]][k][0] < start - step)
 				continue;
-			if (expData[chr[1]][file_list[i]][0] > end + step)
+			if (expData[chr[1]][file_list[i]][k][0] > end + step)
 				break;
-			var id = expData[chr[1]][file_list[i]][7]
-			var site = expData[chr[1]][file_list[i]][0];
+			var id = expData[chr[1]][file_list[i]][k][7]
+			var site = expData[chr[1]][file_list[i]][k][0];
 			var cell = (site-start)*chip_seq_range.length/(end-start);
 			console.log(chip_seq_range[cell], id)
 			if (chip_seq_range[cell] >= score)
