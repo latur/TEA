@@ -126,7 +126,20 @@ class MainHandler(tornado.web.RequestHandler):
 				ret.append(content.read())
 		elif self.request.arguments["inf"][0] == "H3K27Ac":
 			ret = get_chip_seq(int(self.request.arguments["start"][0]), int(self.request.arguments["end"][0]), int(self.request.arguments["chr"][0]))
-		elif self.request.arguments["inf"][0] == "filter":
+
+		self.write("{jsfunc}({json});".format(jsfunc=callbackFunc, json=tornado.escape.json_encode(ret)))
+		self.finish()
+
+	def post(self):    	
+		callbackFunc = ""
+		if("callback" in self.request.arguments):
+			callbackFunc = self.request.arguments["callback"][0]
+			callbackFunc = str(callbackFunc)
+
+		self.set_header('Content-Type', 'application/javascript')
+		ret = []
+
+		if self.request.arguments["inf"][0] == "filter":
 			ret = get_value(self.request.arguments["id_list[]"])
 
 		self.write("{jsfunc}({json});".format(jsfunc=callbackFunc, json=tornado.escape.json_encode(ret)))
