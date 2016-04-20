@@ -565,7 +565,8 @@ function load_detail_content(name, start, end){
 			success: function(chip_seq) {
 				var minVal = 100000, maxVal = -100000;
 				for (var i = 0; i < chip_seq.length; i++){
-					chip_seq_range = chip_seq[0];
+					for (var s = 0; s < chip_seq[0].length; s++)
+						chip_seq_range.push(chip_seq[0][s]);
 					var max_score = getMax(chip_seq[i])
 					var step = 3300/chip_seq[i].length;
 					var path = "M0 " + chip_height + " ";

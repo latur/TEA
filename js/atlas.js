@@ -578,8 +578,8 @@ function load_detail_content(name, start, end){
 							minVal = chip_seq[i][k];
 						if (chip_seq[i][k] > maxVal)
 							maxVal = chip_seq[i][k];
-						if (chip_seq[i][k] > chip_seq_range)
-							chip_seq_range = chip_seq[i][k]
+						if (chip_seq[i][k] > chip_seq_range[k])
+							chip_seq_range[k] = chip_seq[i][k]
 					}
 
 					path += "L" + x + " " + chip_height + " z";
