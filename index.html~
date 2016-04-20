@@ -32,17 +32,6 @@
 				<li><a data-map="2" class="type"> Line</a></li>
 				<li><a data-map="3" class="type"> Others</a></li>
 				<li><a data-map="0" class="type glyphicon glyphicon-ok"></span> All</a></li>
-			    <li role="separator" class="divider"></li>
-				<li><a class="cnt">ChiP-seq signal value</a></li>
-				<li>
-					<div class="chipFilHol">
-						<div class="chipFil">
-							<div class="chipScore">score</div>
-						</div>
-						<div class="chipMin">min</div>
-						<div class="chipMax">max</div>
-					</div>
-				</li>
 			</ul>
 		</div>
 		<div class="dropdown" style="display: inline-block">
@@ -134,6 +123,17 @@
 				<li><a class="cnt" data-e="10" href="#">10x </a></li>
 			</ul>
 		</div>
+		<div class="filter">
+			<div class="chipFilHol">
+				<div class="chipFil">
+					<div class="chipScore">score</div>
+				</div>
+				<div class="chipMin">min</div>
+				<div class="chipMax">max</div>
+			</div>
+			ChiP-seq score >
+		</div>
+
 	</div>
 	<div class="chr-line"></div>
 	<div class="gene_wrap">

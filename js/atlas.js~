@@ -640,7 +640,7 @@ function load_detail_content(name, start, end){
 			})
 			.text(f);
 		y += 30;
-		var add = 0, minVal = 100000, maxVal = -100000;
+		var add = 0;
 		for (var s in expData[name][f]){
 			var content = expData[name][f][s];
 			if (content[0] < start) continue;
@@ -691,7 +691,13 @@ function load_detail_content(name, start, end){
 			data: {"inf": "filter", "id_list": chip_seq_range["id"]},
 			success: function(filter) {
 				chip_seq_range["score"] = filter;
-			
+				var minVal = 100000, maxVal = -100000;
+				for (var i = 0; i < filter.length; i++){
+					for (var k = 0; k < filter[i].length; k++){
+						if (filter[i][k] < minVal) minVal = filter[i][k];
+						if (filter[i][k] > maxVal) maxVal = filter[i][k];
+					}
+				}
 				$(".chipMin").html(minVal == 100000? 0 : minVal);
 				$(".chipScore").html(minVal == 100000? 0 : minVal);
 				$(".chipMax").html(maxVal == -100000? 0 : maxVal);

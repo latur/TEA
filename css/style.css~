@@ -759,9 +759,8 @@ hr {
 	position: relative;
 	display: block;
 	height: 6px;
-	width: 100px;
+	width: 150px;
 	margin: auto;
-	margin-top: 15px;
 	border: 1px solid;
 	border-radius: 3px;
 }
@@ -794,14 +793,14 @@ hr {
 
 .chipScore {
 	position: relative;
-	margin-top: -15px;
+	margin-top: 20px;
 	display: block;
 	font-size: 8px;
 }
 
 .chipMin {
 	position: relative;
-	margin-top: 5px;
+	margin-top: -17px;
 	display: inline-block;
 	float: left;
 	font-size: 8px;
@@ -809,8 +808,18 @@ hr {
 
 .chipMax {
 	position: relative;
-	margin-top: 5px;
+	margin-top: -17px;
 	display: inline-block;
 	float: right;
 	font-size: 8px;
+}
+
+.filter {
+	position: relative;
+	display: inline-block;
+	margin-top: -5px;
+	margin-left: 15px;
+	width: 150px;
+	font-size: 8px;
+	text-align: center;
 }
