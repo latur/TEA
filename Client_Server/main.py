@@ -85,8 +85,6 @@ def get_value(id_list):
 				chrs = int(idx[0][3:])
 
 			prev = int(chr_len[chrs-1]/25)*12
-			inp.seek(prev)
-			print struct.unpack("HHIf", inp.read(12))
 
 			inp.seek(prev)
 			x = struct.unpack("H", inp.read(2))

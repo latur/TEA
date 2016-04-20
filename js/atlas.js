@@ -307,22 +307,23 @@ function filter_score(score){
 	var end = parseInt(chr[3]);
 	var step = end - start;
 	for (var i = 0; i < file_list.length; i++){
-		for (var k = 0; k < expData[chr[1]][file_list[i]]; k++){
-			if (expData[chr[1]][file_list[i]][0] < start - step)
+		for (var k = 0; k < expData[chr[1]][file_list[i]].length; k++){
+			if (expData[chr[1]][file_list[i]][k][0] < start - step)
 				continue;
-			if (expData[chr[1]][file_list[i]][0] > end + step)
+			if (expData[chr[1]][file_list[i]][k][0] > end + step)
 				break;
-			var id = expData[chr[1]][file_list[i]][8];
+			var id = expData[chr[1]][file_list[i]][k][7];
 			var has = 0;
 			for (var j = 1; j < 7; j++){
 				if (id_list[id][j] >= score){
-					$("#" + id).css("visibility", "visible")
+					$("." + id).css("visibility", "visible")
+					console.log(id, id_list[id][j])
 					has = 1;
 					break;
 				}
 			}
 			if (has == 0)
-					$("#" + id).css("visibility", "hidden")
+					$("." + id).css("visibility", "hidden")
 
 		}
 	}
@@ -452,10 +453,10 @@ function Parse(content, filename){
 		}
 	});
 
-	for (var s = 0, e = 200; i < list.length; s += 200, e += 200){
+	for (var s = 0, e = 200; e < list.length; s += 200, e += 200){
 		if (e > list.length) e = list.length;
 		$.ajax({
-			method: "get",
+			method: "pos",
 			dataType: "jsonp",
 			url: " http://bioalgorithm.xyz/teatlas_ajax",
 			data: {"inf": "filter", "id_list": list.slice(s, e)},
@@ -468,7 +469,7 @@ function Parse(content, filename){
 					}
 				}
 			}
-		})	
+		})
 	}
 }
 
@@ -698,12 +699,12 @@ function load_detail_content(name, start, end){
 				.attr("opacity", "0.8")
 				.attr("x", x)
 				.attr("y", y)
-				.attr("id", content[8]);
+				.attr("class", content[7]);
 			sample.append("text")
 				.attr("id", name + '-' + f + '-' + s)
 				.attr("x", x + 8)
 				.attr("y", y + 8)
-				.attr("class", "content_name")
+				.attr("class", "content_name " + content[7])
 				.attr("style", "font-size: 10px")
 				.text(content[5])
 				.on("click", function(){
