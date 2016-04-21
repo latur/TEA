@@ -699,8 +699,9 @@ function load_detail_content(name, start, end){
 				url: " http://bioalgorithm.xyz/teatlas_ajax",
 				data: {"inf": "filter", "id_list": list, "pos": i},
 				success: function(filter) {
+					var pos = parseInt(filter["pos"])
 					for (var s = 0; s < filter["score"].length; s++)
-						chip_seq_range["score"][s + filter["pos"]] = filter["score"][s];
+						chip_seq_range["score"][s + pos] = filter["score"][s];
 
 					for (var i = 0; i < filter["score"].length; i++){
 						for (var k = 0; k < filter["score"][i].length; k++){
