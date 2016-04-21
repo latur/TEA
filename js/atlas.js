@@ -686,8 +686,8 @@ function load_detail_content(name, start, end){
 	}
 
 	if (n_file > 0){
-		var minVal = 100000, maxVal = -100000;
-		for (var i = 0; i < chip_seq_range["id"].length; i += 10){
+		var minVal = 100000, maxVal = -100000, count = 0, total = 0;
+		for (var i = 0; i < chip_seq_range["id"].length; i += 10, total++){
 			var list = []
 			for (var k = i; k < i + 10 && k < chip_seq_range["id"].length; k++){
 				list.push(chip_seq_range["id"][k]);
@@ -708,8 +708,8 @@ function load_detail_content(name, start, end){
 								if (filter["score"][i][k] > maxVal) maxVal = filter["score"][i][k];
 						}
 					}
-
-					if (filter["pos"] + filter["score"].length == chip_seq_range["id"].length){
+					++count;
+					if (count == total){
 						$(".chipMin").html(minVal == 100000? 0 : minVal);
 						$(".chipScore").html(minVal == 100000? 0 : minVal);
 						$(".chipMax").html(maxVal == -100000? 0 : maxVal);
