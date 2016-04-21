@@ -145,7 +145,7 @@ class MainHandler(tornado.web.RequestHandler):
 
 		if self.request.arguments["inf"][0] == "filter":
 			ret["score"] = get_value(self.request.arguments["id_list[]"])
-
+		print("done")
 		self.write("{jsfunc}({json});".format(jsfunc=callbackFunc, json=tornado.escape.json_encode(ret)))
 		self.finish()
 

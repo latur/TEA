@@ -689,7 +689,7 @@ function load_detail_content(name, start, end){
 		var minVal = 100000, maxVal = -100000;
 		for (var i = 0; i < chip_seq_range["id"].length; i += 10){
 			var list = []
-			for (var k = i; k < i + 10 || k < chip_seq_range[id].length; k++){
+			for (var k = i; k < i + 10 && k < chip_seq_range["id"].length; k++){
 				list.push(chip_seq_range["id"][k]);
 				chip_seq_range["score"].push(0)
 			}
@@ -708,8 +708,6 @@ function load_detail_content(name, start, end){
 								if (filter["score"][i][k] > maxVal) maxVal = filter["score"][i][k];
 						}
 					}
-
-					if (filter["pos"] + filter["score"].length == chip_seq_range["score"].length){
 						$(".chipMin").html(minVal == 100000? 0 : minVal);
 						$(".chipScore").html(minVal == 100000? 0 : minVal);
 						$(".chipMax").html(maxVal == -100000? 0 : maxVal);
@@ -718,6 +716,7 @@ function load_detail_content(name, start, end){
 					}
 				}
 			})
+		}
 	}
 }
 
