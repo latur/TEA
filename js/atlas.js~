@@ -708,6 +708,8 @@ function load_detail_content(name, start, end){
 								if (filter["score"][i][k] > maxVal) maxVal = filter["score"][i][k];
 						}
 					}
+
+					if (filter["pos"] + filter["score"].length == chip_seq_range["id"].length){
 						$(".chipMin").html(minVal == 100000? 0 : minVal);
 						$(".chipScore").html(minVal == 100000? 0 : minVal);
 						$(".chipMax").html(maxVal == -100000? 0 : maxVal);

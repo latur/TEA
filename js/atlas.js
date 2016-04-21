@@ -691,7 +691,7 @@ function load_detail_content(name, start, end){
 			var list = []
 			for (var k = i; k < i + 10 && k < chip_seq_range["id"].length; k++){
 				list.push(chip_seq_range["id"][k]);
-				chip_seq_range["score"].push(0)
+				chip_seq_range["score"].push([])
 			}
 			$.ajax({
 				method: "post",
@@ -708,11 +708,14 @@ function load_detail_content(name, start, end){
 								if (filter["score"][i][k] > maxVal) maxVal = filter["score"][i][k];
 						}
 					}
-					$(".chipMin").html(minVal == 100000? 0 : minVal);
-					$(".chipScore").html(minVal == 100000? 0 : minVal);
-					$(".chipMax").html(maxVal == -100000? 0 : maxVal);
-					$(".chipFil").css("left", "0px");
-					$(".filter").css("display", "inline-block");
+
+					if (filter["pos"] + filter["score"].length == chip_seq_range["id"].length){
+						$(".chipMin").html(minVal == 100000? 0 : minVal);
+						$(".chipScore").html(minVal == 100000? 0 : minVal);
+						$(".chipMax").html(maxVal == -100000? 0 : maxVal);
+						$(".chipFil").css("left", "0px");
+						$(".filter").css("display", "inline-block");
+					}
 				}
 			})
 		}
