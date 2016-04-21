@@ -68,7 +68,7 @@ def get_chip_seq(start, end, name):
 
 def get_value(id_list):
 	ret = []
-	f = "/home/ginny/www/data/Bind25"
+	f = "/home/ginny/www/data/Bind100"
 
 	for mem in id_list:
 		ret.append([])
@@ -87,7 +87,7 @@ def get_value(id_list):
 			else:
 				chrs = int(idx[0][3:])
 
-			prev = int(chr_len[chrs-1]/25)*12
+			prev = int(chr_len[chrs-1]/100)*12
 			inp.seek(prev)
 			x = struct.unpack("H", inp.read(2))
 			while x[0] != chrs:
@@ -102,7 +102,7 @@ def get_value(id_list):
 				inp.seek(prev + 4) 
 				x = struct.unpack("I", inp.read(4))
 	
-			line = int(int(idx[2])/25)
+			line = int(int(idx[2])/100)
 			if line >= 0 & line*12 <= max_size -12:
 				inp.seek(prev + line*12 + 8)
 				s = struct.unpack("f", inp.read(4))
@@ -133,17 +133,18 @@ class MainHandler(tornado.web.RequestHandler):
 		self.write("{jsfunc}({json});".format(jsfunc=callbackFunc, json=tornado.escape.json_encode(ret)))
 		self.finish()
 
-	def post(self):    	
+	def post(self):
+		print self.request.arguments
 		callbackFunc = ""
 		if("callback" in self.request.arguments):
 			callbackFunc = self.request.arguments["callback"][0]
 			callbackFunc = str(callbackFunc)
 
 		self.set_header('Content-Type', 'application/javascript')
-		ret = []
+		ret = {"score": [], "pos": self.request.arguments["pos"][0]}
 
 		if self.request.arguments["inf"][0] == "filter":
-			ret = get_value(self.request.arguments["id_list[]"])
+			ret["score"] = get_value(self.request.arguments["id_list[]"])
 
 		self.write("{jsfunc}({json});".format(jsfunc=callbackFunc, json=tornado.escape.json_encode(ret)))
 		self.finish()
