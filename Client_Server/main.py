@@ -11,7 +11,10 @@ chr_len = [0, 1287101697, 1691267844, 1889563403, 2087858962, 2269397221,
 			1640449376, 1691267844, 2883082526, 3039123421]
 
 def get_chip_seq(start, end, name):
-	chip_seq = [];
+	chip_seq = {"pos": [], "point": []};
+	chip_seq["pos"].append(start)
+	chip_seq["pos"].append(end)
+
 	dis = end - start
 	f = "/home/ginny/www/data/Bind"
 	step = 0
@@ -34,7 +37,7 @@ def get_chip_seq(start, end, name):
 
 	for i in range(0, 6):
 		file_path = f + str(i) + ".bin"
-		chip_seq.append([])
+		chip_seq["point"].append([])
 		inp = open(file_path, "r")
 		prev = int(chr_len[name-1]/step)*12
 		x = struct.unpack("H", inp.read(2))
@@ -56,9 +59,9 @@ def get_chip_seq(start, end, name):
 			if line >= 0 & line*12 <= max_size -12:
 				inp.seek(prev + line*12 + 8)
 				score = struct.unpack("f", inp.read(4))
-				chip_seq[i].append(score[0])
+				chip_seq["point"][i].append(score[0])
 			else:			
-				chip_seq[i].append(0)
+				chip_seq["point"][i].append(0)
 		inp.close()
 
 	return chip_seq

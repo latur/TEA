@@ -552,14 +552,15 @@ function load_detail_content(name, start, end){
 		url: " http://bioalgorithm.xyz/teatlas_ajax",
 		data: {"inf": "H3K27Ac", "start": start, "end": end, "chr": chr},
 		success: function(chip_seq) {
-			console.log(this)
-			for (var i = 0; i < chip_seq.length; i++){
-				var max_score = getMax(chip_seq[i])
-				var step = 3300/chip_seq[i].length;
+			if (chip_seq["pos"][0] != chip_seq_range["pos"][0] || chip_seq["pos"][1] != chip_seq_range["pos"][1]) return
+			console.log(chip_seq["pos"]
+			for (var i = 0; i < chip_seq["point"].length; i++){
+				var max_score = getMax(chip_seq["point"][i])
+				var step = 3300/chip_seq["point"][i].length;
 				var path = "M0 " + chip_height + " ";
 				var x = 0;
-				for (var k = 0; k < chip_seq[i].length; k++, x += step){
-					var y = chip_height - chip_seq[i][k]*chip_height/max_score
+				for (var k = 0; k < chip_seq["point"][i].length; k++, x += step){
+					var y = chip_height - chip_seq["point"][i][k]*chip_height/max_score
 					path += "L" + x + " " + y + " ";
 				}
 				path += "L" + x + " " + chip_height + " z";

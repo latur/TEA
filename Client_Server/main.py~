@@ -85,7 +85,6 @@ def get_value(id_list):
 				chrs = int(idx[0][3:])
 
 			prev = int(chr_len[chrs-1]/25)*12
-
 			inp.seek(prev)
 			x = struct.unpack("H", inp.read(2))
 			while x[0] != chrs:
@@ -104,9 +103,9 @@ def get_value(id_list):
 			if line >= 0 & line*12 <= max_size -12:
 				inp.seek(prev + line*12 + 8)
 				s = struct.unpack("f", inp.read(4))
-				ret[mem]['score'].append(s[0])
+				ret[mem].append(s[0])
 			else:			
-				ret[mem]['score'].append(0)
+				ret[mem].append(0)
 		inp.close()
 	return ret
 
