@@ -383,9 +383,9 @@ function align_seq(s1, s2){
 	 
 			for (var a=1; a<= l1; a++){
 			 for (var b=1; b<= l2; b++){
-				var score = -2;
-				if (s1[a-1] == s2[b-1]) score = 4;
-				Matrix[a][b] = Math.max(Matrix[a][b-1] -5, Matrix[a-1][b] -5, Matrix[a-1][b-1] + score)
+				var score = -1;
+				if (s1[a-1] == s2[b-1]) score = 5;
+				Matrix[a][b] = Math.max(Matrix[a][b-1] -10, Matrix[a-1][b] -10, Matrix[a-1][b-1] + score)
 			 }
 		 }
 		if (Matrix[l1][l2] > m){
@@ -393,19 +393,21 @@ function align_seq(s1, s2){
 			itr = i;
 		}
 
-		var ret = [];
+		var ret = [], start = false;
 		while (l1 > 0 && l2 > 0){
-			var score = -2;
-			if (s1[l1-1] == s2[l2-1]) score = 4;
+			var score = -1;
+			if (s1[l1-1] == s2[l2-1]) score = 5;
 			if (Matrix[l1][l2] == Matrix[l1-1][l2-1] + score){
+				start = true;
 				ret.push(s1[l1-1]);
 				--l1;
 				--l2;
-			} else if (Matrix[l1][l2] == Matrix[l1-1][l2] - 5){
-				ret.push(s1[l1-1] + '*')
+			} else if (Matrix[l1][l2] == Matrix[l1-1][l2] - 10){
+//				ret.push(s1[l1-1] + '*')
 				--l1;
 			} else {
-				ret.push("_")
+				if (!start)
+					ret.push("_")
 				--l2;
 			}
 		}
