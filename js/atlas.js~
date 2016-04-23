@@ -294,6 +294,10 @@ function SamplesLoaded(){
 			$(this).css("left", left); 
 			xpos = e.pageX;
 			filter_score(score);
+			if (left == 0 || left == 141){
+				is_fil = false;
+				return;
+			}
 		})
 		.on("mouseup", function(e){
 			is_fil = false;
