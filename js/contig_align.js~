@@ -383,9 +383,9 @@ function align_seq(s1, s2){
 	 
 			for (var a=1; a<= l1; a++){
 			 for (var b=1; b<= l2; b++){
-				var score = 0;
-				if (s1[a-1] == s2[b-1]) score = 4;
-				Matrix[a][b] = Math.max(Matrix[a][b-1] -10, Matrix[a-1][b] -10, Matrix[a-1][b-1] + score)
+				var score = -1;
+				if (s1[a-1] == s2[b-1]) score = 5;
+				Matrix[a][b] = Math.max(Matrix[a][b-1] -5, Matrix[a-1][b] -5, Matrix[a-1][b-1] + score)
 			 }
 		 }
 		if (Matrix[l1][l2] > m){
