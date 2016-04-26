@@ -260,9 +260,6 @@ function draw_seq(info, ref, len){
 				start = r.p;
 			if (r.p + r.s.length > end){
 				end = r.p + r.s.length
-				if (end*11 + 10 > len){
-					$(".mini_browser").attr("width", end*11 + 10);
-				}
 			}
 			 y += 25
 		}
