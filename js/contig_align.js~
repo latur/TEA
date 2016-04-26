@@ -408,7 +408,7 @@ function align_seq(s1, s2){
 			r["s"].push(s1[l1-1]);
 			--l1;
 			--l2;
-		} else if (Matrix[l1][l2] == Matrix[l1-1][l2]){
+		} else if (Matrix[l1][l2] == Matrix[l1-1][l2] - 10){
 			--l1;
 		} else {
 			if (start)
