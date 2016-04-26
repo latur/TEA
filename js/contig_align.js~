@@ -389,9 +389,8 @@ function align_seq(s1, s2){
 
 	m = getMax(Matrix[l1])
 	while (Matrix[l1][l2] != m){
-		 --l2;
+		--l2;
 		r["s"].push("_");
-
 	}
 
 	var start = false;
@@ -412,14 +411,14 @@ function align_seq(s1, s2){
 		}
 	}
 
-	while (r["s"] == '_') r["s"].shift();
+	while (r["s"][0] == '_') r["s"].shift();
 	r["s"].reverse();
 
-	while (ret[0] == '_'){
-		ret.shift();
+	while (r["s"][0] == '_'){
+		r["s"].shift();
 		++l2;
 	}
-	r.push({"s": ret, "p": l2});
+	r["p"] = l2;
 
 	return r;
 }

@@ -376,7 +376,7 @@ function align_seq(s1, s2){
 	var Matrix = []
 	var l1 = s1.length;
 	var l2 = s2.length;
-	for (var a=0; a<= l1; a++) Matrix.push([0])
+	for (var a=0; a<= l1; a++) Matrix.push([-10*a])
 	for (var a=1; a<= l2; a++) Matrix[0].push(0)
  
 	for (var a=1; a<= l1; a++){
@@ -389,9 +389,8 @@ function align_seq(s1, s2){
 
 	m = getMax(Matrix[l1])
 	while (Matrix[l1][l2] != m){
-		 --l2;
+		--l2;
 		r["s"].push("_");
-
 	}
 
 	var start = false;
@@ -412,7 +411,7 @@ function align_seq(s1, s2){
 		}
 	}
 
-	while (r["s"] == '_') r["s"].shift();
+	while (r["s"][0] == '_') r["s"].shift();
 	r["s"].reverse();
 
 	while (r["s"][0] == '_'){
