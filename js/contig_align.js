@@ -226,11 +226,16 @@ function draw_seq(info, ref, len){
 	var canvas = document.getElementsByClassName("mini_browser")[0].getContext("2d");
 	canvas.strokeStyle = "#6E6E6E";
 
+	if (info[6] != "Unknown"){
+		draw_ruler(canvas, len);
+	}
 	if (info[5] != "Unknown"){
 		ref = ref.toUpperCase().split("");
 		var start = ref.length, end = 0;
 
 		var x = 100;
+		for (var i = 0; i < ref.length; i++, x += 11)
+			draw_text(x, 45, "15px sans-serif", "#6E6E6E", ref[i], canvas);
 
 		var seq = info[6].split("/")
 		for (var i = 0, y = 90; i < seq.length; i++){
@@ -257,8 +262,6 @@ function draw_seq(info, ref, len){
 			}
 			 y += 25
 		}
-		for (var i = 0; i < ref.length; i++, x += 11)
-			draw_text(x, 45, "15px sans-serif", "#6E6E6E", ref[i], canvas);
 		last_left = -start*11 - 100;
 		$(".mini_browser").css({"left": last_left + "px"});
 	} else {
@@ -279,10 +282,6 @@ function draw_seq(info, ref, len){
 				x += 11;
 			}
 		}
-	}
-
-	if (info[6] != "Unknown"){
-		draw_ruler(canvas, len);
 	}
 	
 }
@@ -332,6 +331,12 @@ function align_contig(id){
 		len = 780;
 	}
 
+	$(".mini_wrap").append(function(){
+			return $("<canvas/>")
+				.attr("width",  len)
+				.attr("height", height)
+				.attr("class", "mini_browser")
+	});
 	draw_seq(info, ref, len);
 
 	if (info[6] != "Unknown")
