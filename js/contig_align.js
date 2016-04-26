@@ -241,7 +241,7 @@ function draw_seq(info, ref, len){
 		for (var i = 0, y = 90; i < seq.length; i++){
 			seq[i] = seq[i].split("");
 			var r = align_seq(seq[i], ref);
-			x = r.p*11 + 10;
+			x = r.p*11 + 100;
 			if (i > 0 && r.p > end) y -= 25;
 			for (var k = 0, j = k + r.p; k < r.s.length && k < ref.length + r.p; k++, j++, x += 11){
 				if (r.s[k].indexOf('*') != -1){
