@@ -311,7 +311,7 @@ function align_contig(id){
 	var len = 0, height = 0, ref = '';
 	if (info[5] != "Unknown"){
 		if (TE_ref[info[5]].length > 600){
-			ref = TE_ref[info[5]].substr(0, 300) + "..." + TE_ref[info[5]].substr(-300, 300);
+			ref = TE_ref[info[5]].substr(0, 500) + "..." + TE_ref[info[5]].substr(-500, 500);
 		} else
 			ref = TE_ref[info[5]];
 
@@ -323,7 +323,7 @@ function align_contig(id){
 	} else if (info[6] != "Unknown"){
 		var seq = info[6].split("/");
 		height = seq.length*25 + 90
-		len = 10;
+		len = 60;
 		for (var i = 0; i < seq.length; i++)
 			len += seq[i].length*11;
 	} else {
@@ -376,7 +376,7 @@ function align_seq(s1, s2){
 	var Matrix = []
 	var l1 = s1.length;
 	var l2 = s2.length;
-	for (var a=0; a<= l1; a++) Matrix.push([0])
+	for (var a=0; a<= l1; a++) Matrix.push([-10*a])
 	for (var a=1; a<= l2; a++) Matrix[0].push(0)
  
 	for (var a=1; a<= l1; a++){
