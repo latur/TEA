@@ -239,10 +239,10 @@ function draw_seq(info, ref, len){
 
 		var seq = info[6].split("/")
 		for (var i = 0, y = 90; i < seq.length; i++){
-			if (seq[i].length < 80) continue;
 			seq[i] = seq[i].split("");
 			var r = align_seq(seq[i], ref);
 			x = r.p*11 + 10;
+			if (i > 0 && x > end) y -= 25;
 			for (var k = 0, j = k + r.p; k < r.s.length && k < ref.length + r.p; k++, j++, x += 11){
 				if (ref[j] == '.') break;
 				if (r.s[k].indexOf('*') != -1){
@@ -258,8 +258,12 @@ function draw_seq(info, ref, len){
 			}
 			if (r.p < start)
 				start = r.p;
-			if (r.p + r.s.length > end)
-				 end = r.p + r.s.length
+			if (r.p + r.s.length > end){
+				end = r.p + r.s.length
+				if (end*11 + 10 > len){
+					$(".mini_browser").attr("width", end*11 + 10);
+				}
+			}
 			 y += 25
 		}
 		last_left = -start*11;
@@ -312,7 +316,7 @@ function align_contig(id){
 	if (info[5] != "Unknown"){
 		ref = TE_ref[info[5]];
 
-		len = ref.length*11 + 60;
+		len = ref.length*11 + 10;
 		if (info[6] != "Unknown")
 			height = info[6].split("/").length*25 + 90;
 		else
@@ -406,6 +410,7 @@ function align_seq(s1, s2){
 			--l1;
 			--l2;
 		} else if (Matrix[l1][l2] == Matrix[l1-1][l2] - 2){
+			r["s"].push("*");
 			--l1;
 		} else {
 			if (start)
