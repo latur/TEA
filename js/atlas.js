@@ -314,10 +314,8 @@ function filter_score(score){
 				break;
 			}
 		}
-		if (has == 0){
+		if (has == 0)
 			$("." +  chip_seq_range["id"][i]).css("visibility", "hidden")
-			console.log(chip_seq_range["id"][i]);
-		}
 	}
 }
 

@@ -130,13 +130,6 @@ function draw_tsd(info){
 				}
 				if (char != ''){
 					draw_text(x, 45, "13px sans-serif", "#000", complete(char), canvas)
-					var y = 45 + 15;
-					for (k in tmp){
-						if (tmp[k] != char){
-							draw_text(x + 2, y, "8px sans-serif", "#6E6E6E", complete(tmp[k]), canvas)
-							y += 10
-						}
-					}
 				} else {
 					var y = 45;
 					for (k in tmp){
@@ -190,13 +183,6 @@ function draw_tsd(info){
 				}
 				if (char != ''){
 					draw_text(x, 80, "13px sans-serif", "#000", char, canvas)
-					var y = 80 - 5;
-					for (k in tmp){
-						if (tmp[k] != char){
-							draw_text(x + 2, y, "8px sans-serif", "#6E6E6E", tmp[k], canvas)
-							y -= 10
-						}
-					}
 				} else {
 					var y = 80;
 					for (k in tmp){
