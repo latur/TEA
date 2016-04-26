@@ -377,14 +377,14 @@ function align_seq(s1, s2){
 	var Matrix = []
 	var l1 = s1.length;
 	var l2 = s2.length;
-	for (var a=0; a<= l1; a++) Matrix.push([-10*a])
-	for (var a=1; a<= l2; a++) Matrix[0].push(0)
+	for (var a=0; a<= l1; a++) Matrix.push([0])
+	for (var a=1; a<= l2; a++) Matrix[0].push(-10*a)
  
 	for (var a=1; a<= l1; a++){
 	 for (var b=1; b<= l2; b++){
-		var score = -1;
+		var score = 0;
 		if (s1[a-1] == s2[b-1]) score = 5;
-		Matrix[a][b] = Math.max(Matrix[a][b-1], Matrix[a-1][b] -10, Matrix[a-1][b-1] + score)
+		Matrix[a][b] = Math.max(Matrix[a][b-1] -10, Matrix[a-1][b], Matrix[a-1][b-1] + score)
 		if (Matrix[a][b] > m){
 			m = Matrix[a][b];
 			x = a;
@@ -401,14 +401,14 @@ function align_seq(s1, s2){
 
 	var start = false;
 	while (l1 > 0 && l2 > 0){
-		var score = -1;
+		var score = 0;
 		if (s1[l1-1] == s2[l2-1]) score = 5;
 		if (Matrix[l1][l2] == Matrix[l1-1][l2-1] + score){
 			start = true;
 			r["s"].push(s1[l1-1]);
 			--l1;
 			--l2;
-		} else if (Matrix[l1][l2] == Matrix[l1-1][l2] - 10){
+		} else if (Matrix[l1][l2] == Matrix[l1-1][l2]){
 			--l1;
 		} else {
 			if (start)
