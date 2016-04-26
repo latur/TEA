@@ -212,9 +212,9 @@ function draw_tsd(info){
 }
 
 function draw_ruler(canvas, len){
-	draw_line(10, 10, len, 10, 1, canvas)
+	draw_line(0, 10, len, 10, 1, canvas)
 
-	for (var i = 10, k = 0; i < len; i += 110, k += 10){
+	for (var i = 100, k = 0; i < len - 100; i += 110, k += 10){
 		draw_line(i, 10, i, 15, 1, canvas)
 		draw_text(i, 8, "8px sans-serif", "#6E6E6E", k + " bp", canvas)
 		if (i%1100 == 0)
@@ -233,7 +233,7 @@ function draw_seq(info, ref, len){
 		ref = ref.toUpperCase().split("");
 		var start = ref.length, end = 0;
 
-		var x = 10;
+		var x = 100;
 		for (var i = 0; i < ref.length; i++, x += 11)
 			draw_text(x, 45, "15px sans-serif", "#6E6E6E", ref[i], canvas);
 
@@ -313,7 +313,7 @@ function align_contig(id){
 	if (info[5] != "Unknown"){
 		ref = TE_ref[info[5]];
 
-		len = ref.length*11 + 10;
+		len = ref.length*11 + 200;
 		if (info[6] != "Unknown")
 			height = info[6].split("/").length*25 + 90;
 		else
