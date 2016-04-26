@@ -591,7 +591,7 @@ function load_detail_content(name, start, end){
 						y: i*8 + 6,
 						"font-size": "6px",
 						color: "#000",
-						id: H3K27Ac[i].name,
+						class: H3K27Ac[i].name,
 					})
 					.text(H3K27Ac[i].name)
 					.on("click", function(){

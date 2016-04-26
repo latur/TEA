@@ -244,6 +244,7 @@ function draw_seq(info, ref, len){
 			x = r.p*11 + 100;
 			if (i > 0 && r.p > end) y -= 25;
 			for (var k = 0, j = k + r.p; k < r.s.length && k < ref.length + r.p; k++, j++, x += 11){
+				if (ref[j] == ".") break;
 				if (r.s[k].indexOf('*') != -1){
 					draw_text(x-5, y-15, "8px sans-serif", "#6E6E6E", r.s[k][0], canvas)
 					x -= 11;
