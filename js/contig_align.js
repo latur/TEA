@@ -373,24 +373,30 @@ function align_contig(id){
 function align_seq(s1, s2){
 	var r = {"s": []};
 	var m = 0;
+	var x, y;
 	var Matrix = []
 	var l1 = s1.length;
 	var l2 = s2.length;
-	for (var a=0; a<= l1; a++) Matrix.push([0])
-	for (var a=1; a<= l2; a++) Matrix[0].push(-10*a)
+	for (var a=0; a<= l1; a++) Matrix.push([-10*a])
+	for (var a=1; a<= l2; a++) Matrix[0].push(0)
  
 	for (var a=1; a<= l1; a++){
 	 for (var b=1; b<= l2; b++){
 		var score = -1;
 		if (s1[a-1] == s2[b-1]) score = 5;
 		Matrix[a][b] = Math.max(Matrix[a][b-1], Matrix[a-1][b] -10, Matrix[a-1][b-1] + score)
+		if (Matrix[a][b] > m){
+			m = Matrix[a][b];
+			x = a;
+			y = b;
+		}
 	 }
 	}
 
-	m = getMax(Matrix[l1])
-	while (Matrix[l1][l2] != m){
-		--l2;
-		r["s"].push("_");
+	l2 = y;
+	while (l1 > x){
+		--l1;
+		r["s"].push(s1[l1-1]);		
 	}
 
 	var start = false;
@@ -405,7 +411,7 @@ function align_seq(s1, s2){
 		} else if (Matrix[l1][l2] == Matrix[l1-1][l2] - 10){
 			--l1;
 		} else {
-			if (!start)
+			if (start)
 				r["s"].push("_")
 			--l2;
 		}
