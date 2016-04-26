@@ -187,7 +187,7 @@ function draw_tsd(info){
 					var y = 70;
 					for (k in tmp){
 						draw_text(x + 2, y, "10px sans-serif", txt_color[tmp[k]], tmp[k], canvas)
-						y -= 10;
+						y -= 12;
 					}
 				}
 			}
