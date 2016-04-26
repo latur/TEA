@@ -310,7 +310,7 @@ function align_contig(id){
 
 	var len = 0, height = 0, ref = '';
 	if (info[5] != "Unknown"){
-			ref = TE_ref[info[5]];
+		ref = TE_ref[info[5]];
 
 		len = ref.length*11 + 60;
 		if (info[6] != "Unknown")
