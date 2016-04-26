@@ -772,6 +772,7 @@ hr {
 
 .chipFil {
 	position: absolute;
+	z-index: 1000;
 	display: block;
 	top: -5px;
 	left: 0;

@@ -821,7 +821,7 @@ hr {
 
 .filter {
 	position: relative;
-	display: inline-block;
+	display: none;
 	top: -10px;
 	margin-left: 15px;
 	width: 150px;

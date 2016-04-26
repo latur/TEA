@@ -314,8 +314,10 @@ function filter_score(score){
 				break;
 			}
 		}
-		if (has == 0)
+		if (has == 0){
 			$("." +  chip_seq_range["id"][i]).css("visibility", "hidden")
+			console.log(chip_seq_range["id"][i]);
+		}
 	}
 }
 
@@ -591,7 +593,7 @@ function load_detail_content(name, start, end){
 						y: i*8 + 6,
 						"font-size": "6px",
 						color: "#000",
-						class: H3K27Ac[i].name,
+						id: H3K27Ac[i].name,
 					})
 					.text(H3K27Ac[i].name)
 					.on("click", function(){
