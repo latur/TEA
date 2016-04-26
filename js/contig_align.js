@@ -401,14 +401,14 @@ function align_seq(s1, s2){
 
 	var start = false;
 	while (l1 > 0 && l2 > 0){
-		var score = 1;
-		if (s1[l1-1] == s2[l2-1]) score = 5;
+		var score = -1;
+		if (s1[l1-1] == s2[l2-1]) score = 4;
 		if (Matrix[l1][l2] == Matrix[l1-1][l2-1] + score){
 			start = true;
 			r["s"].push(s1[l1-1]);
 			--l1;
 			--l2;
-		} else if (Matrix[l1][l2] == Matrix[l1-1][l2] - 10){
+		} else if (Matrix[l1][l2] == Matrix[l1-1][l2] - 2){
 			--l1;
 		} else {
 			if (start)
