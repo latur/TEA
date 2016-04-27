@@ -57,10 +57,6 @@
 			<a class="btn btn-default showtree"><span class="glyphicon glyphicon-grain"></span> Phylogenetic tree</a>
 		</div>
 		<div class="btn-group btn-group move-c">
-			<a class="cnt btn btn-default" data-e="-1">
-				<span class="glyphicon glyphicon-chevron-left"></span>
-				<span class="glyphicon glyphicon-chevron-left ll"></span>
-			</a>
 			<a class="cnt btn btn-default" data-e="-0.5"><span class="glyphicon glyphicon-chevron-left"></span></a>
 			<button class="btn btn-default dropdown-toggle list_name" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="border-radius: 0; border-right: none">
 				Chr1 <span class="caret"></span>
@@ -92,13 +88,9 @@
     				<a data-map="chrY"> ChrY</a>
   			</div>
 			<a class="cnt btn btn-default" data-e="0.5"><span class="glyphicon glyphicon-chevron-right"></span></a>
-			<a class="cnt btn btn-default" data-e="1">
-				<span class="glyphicon glyphicon-chevron-right"></span>
-				<span class="glyphicon glyphicon-chevron-right ll"></span>
-			</a>
 		</div>
 		<div class="btn-group btn-group-sm zoom-c">
-			<a class="btn btn-default cnt" data-e="0.666666666"><span class="glyphicon glyphicon-plus"></span> Zoom In</a>
+			<a class="btn btn-default cnt" data-e="0.666666666"><span class="glyphicon glyphicon-plus"></span></a>
 			<a class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				<span class="caret"></span>
 				<span class="sr-only">Toggle Dropdown</span>
@@ -111,7 +103,7 @@
 			</ul>
 		</div>
 		<div class="btn-group btn-group-sm zoom-c">
-			<a class="btn btn-default cnt" data-e="1.5"><span class="glyphicon glyphicon-minus"></span> Zoom Out</a>
+			<a class="btn btn-default cnt" data-e="1.5"><span class="glyphicon glyphicon-minus"></span></a>
 			<a class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				<span class="caret"></span>
 				<span class="sr-only">Toggle Dropdown</span>
@@ -121,6 +113,16 @@
 				<li><a class="cnt" data-e="2.0" href="#">2.0x</a></li>
 				<li><a class="cnt" data-e="3.2" href="#">3.0x</a></li>
 				<li><a class="cnt" data-e="10" href="#">10x </a></li>
+			</ul>
+		</div>
+		<div class="btn-group">
+			<button class="btn btn-default dropdown-toggle chipseq_name" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+				H3K27Ac <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu chipseq_dropdown">
+				<li><a data-map="chr14"> H3K27Ac</a></li>
+				<li><a data-map="chr15"> H3K4Me1</a></li>
+				<li><a data-map="chr16"> H3K4Me3</a></li>
 			</ul>
 		</div>
 		<div class="filter">ChiP-seq score >

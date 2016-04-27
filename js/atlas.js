@@ -693,7 +693,7 @@ function load_detail_content(name, start, end){
 		extra += add;
 	}
 
-	if (n_file > 0){
+	if (n_file > 0 && chip_seq_range["id"].length > 0){
 		var minVal = 100000, maxVal = -100000, count = 0, total = 0;
 		for (var i = 0; i < chip_seq_range["id"].length; i += 10, total++){
 			var list = []
@@ -735,7 +735,9 @@ function load_detail_content(name, start, end){
 function ShowChromosome(name, start, end){
 	$(".list_name").html(name.charAt(0).toUpperCase() + name.substr(1) + '<span class="caret"></span>');
 	$(".gene_wrap").css({"visibility": "visible", "height": "auto"});
-	doc.style.marginTop = (parseInt($('.fixed-nav')[0].offsetHeight) + 30) + 'px';
+	setTimeout(function(){
+		doc.style.marginTop = (parseInt($('.fixed-nav')[0].offsetHeight) + 30) + 'px';
+	}, 3000);
 
 	// Impossible states:
 	if (!chrs[name])
@@ -828,7 +830,6 @@ function ShowChromosome(name, start, end){
 			doc.style.marginTop = (parseInt($('.fixed-nav')[0].offsetHeight) + 30) + 'px';
 			}
 		if (!isNaN(vx)) {
-//			Resized([(ix[0] + vx*3)*size/ww, (ix[1] + vx*3)*size/ww]);
 			start = (ix[0] + vx*3)*size/ww;
 			end = (ix[1] + vx*3)*size/ww;
 			var obj = getBwtWeb('svgHolderT0');

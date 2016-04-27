@@ -683,6 +683,7 @@ hr {
 	width: 240px;
 	padding: 15px;
 }
+
 .chr-btn  a {
 	cursor: pointer;
 	float: left;
@@ -693,10 +694,18 @@ hr {
 	word-spacing: 10px;
 	font-size: 13px;
 }
-.chr-btn a:hover {
+.chr-btn a:hover{
 	color: #000;
 	border-radius: 5px;
 	background: #eee;
+}
+
+.dropdown-menu{
+    min-width: 30px;
+}
+.dropdown-menu>li>a{
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 /* Detail */
