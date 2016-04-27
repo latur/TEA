@@ -600,7 +600,7 @@ function load_detail_content(name, start, end){
 		method: "get",
 		dataType: "jsonp",
 		url: " http://bioalgorithm.xyz/teatlas_ajax",
-		data: {"inf": "chip_seq", "start": start, "end": end, "chr": chr},
+		data: {"inf": "chip_seq", "layer": layer, "start": start, "end": end, "chr": chr},
 		success: function(chip_seq) {
 			if (chip_seq["pos"][0] != chip_seq_range["pos"][0] || chip_seq["pos"][1] != chip_seq_range["pos"][1]) return
 			for (var i = 0; i < chip_seq["point"].length; i++){
