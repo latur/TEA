@@ -82,7 +82,7 @@ def get_value(id_list, t, layer):
 			chrs = 24
 		else:
 			chrs = int(idx[0][3:])
-			prev = int(chr_len[chrs-1]/100)*12
+		prev = int(chr_len[chrs-1]/100)*12
 		inp.seek(prev)
 		x = struct.unpack("H", inp.read(2))
 		while x[0] != chrs:

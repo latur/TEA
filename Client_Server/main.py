@@ -89,7 +89,8 @@ def get_value(id_list, t, layer):
 			prev += 12
 			inp.seek(prev)
 			x = struct.unpack("H", inp.read(2))
-			inp.seek(prev + 4)
+
+		inp.seek(prev + 4)
 		x = struct.unpack("I", inp.read(4))
 		while x[0] > 0:
 			prev -= 12

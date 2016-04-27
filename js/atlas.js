@@ -113,7 +113,6 @@ function Route(loc){
 }
 
 function query_score(layer, type){
-	console.log(layer, type);
 	if (n_file > 0 && chip_seq_range["id"].length > 0){
 		var minVal = 100000, maxVal = -100000, count = 0, total = 0;
 		for (var i = 0; i < chip_seq_range["id"].length; i += 10, total++){
