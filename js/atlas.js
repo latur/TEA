@@ -829,7 +829,7 @@ function ShowChromosome(name, start, end){
 			}
 		if (!isNaN(vx)) {
 //			Resized([(ix[0] + vx*3)*size/ww, (ix[1] + vx*3)*size/ww]);
-			star = (ix[0] + vx*3)*size/ww;
+			start = (ix[0] + vx*3)*size/ww;
 			end = (ix[1] + vx*3)*size/ww;
 			var obj = getBwtWeb('svgHolderT0');
  			obj.search(name.substr(3)+ ":" + (ix[0] + vx*3)*size/ww + ".." + (ix[1] + vx*3)*size/ww, function(err) {});
