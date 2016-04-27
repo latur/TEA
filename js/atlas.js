@@ -120,7 +120,7 @@ function query_score(layer, type){
 			var list = []
 			for (var k = i; k < i + 10 && k < chip_seq_range["id"].length; k++){
 				list.push(chip_seq_range["id"][k]);
-				chip_seq_range["score"].append(0);
+				chip_seq_range["score"].push(0);
 			}
 
 			$.ajax({
@@ -134,8 +134,8 @@ function query_score(layer, type){
 						chip_seq_range["score"][s + pos] = filter["score"][s];
 
 					for (var i = 0; i < filter["score"].length; i++){
-						if (filter["score"][i][k] < minVal) minVal = filter["score"][i];
-						if (filter["score"][i][k] > maxVal) maxVal = filter["score"][i];
+						if (filter["score"][i] < minVal) minVal = filter["score"][i];
+						if (filter["score"][i] > maxVal) maxVal = filter["score"][i];
 					}
 
 					++count;
