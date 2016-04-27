@@ -822,7 +822,6 @@ hr {
 
 .chipMax {
 	position: relative;
-	margin-top: 10px;
 	display: inline-block;
 	float: right;
 	font-size: 8px;
