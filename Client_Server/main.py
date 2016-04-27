@@ -69,7 +69,7 @@ def get_chip_seq(layer, start, end, name):
 
 def get_value(id_list, t, layer):
 	ret = []
-	f = "/home/ginny/www/data/%s/Bind100.%s.bin" % (layer, t)
+	file_path = "/home/ginny/www/data/%s/Bind100.%s.bin" % (layer, t)
 
 	inp = open(file_path, "r")
 	max_size = os.path.getsize(file_path)
