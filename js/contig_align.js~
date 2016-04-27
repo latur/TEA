@@ -253,6 +253,7 @@ function draw_seq(info, ref, len){
 //			 y += 25
 		}
 		last_left = -start*11 - 100;
+		if (last_left > 0) last_left = 0;
 		$(".mini_browser").css({"left": last_left + "px"});
 	} else {
 		if (info[6] == "Unknown")
