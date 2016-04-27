@@ -398,7 +398,7 @@ function SamplesHM(chr){
 function Parse(content, filename){
 	var x = filename.indexOf(".csv");
 	filename = filename.substr(0, x);
-	filename = filename.replace(/./g, "_")
+	filename = filename.replace(/\./g, "_")
 
 	for (var i in file_list)
 		if (file_list[i] == filename) return;
