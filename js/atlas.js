@@ -819,6 +819,8 @@ function ShowChromosome(name, start, end){
 			ResizePre([(ix[0] + vx)*size/ww, (ix[1] + vx)*size/ww]);
 		}
 	};
+	Resized([start, end]);
+	$(".status").css("visibility", "hidden");
 
 	document.onmouseup = function(e){
 		if (!isNaN(dx)) {
@@ -836,9 +838,6 @@ function ShowChromosome(name, start, end){
 		box.style.display = 'none';
 		ox = NaN, px = NaN, dx = NaN, tx = NaN, vx = NaN;
 	};
-	console.log("h");
-	Resized([start, end]);
-	$(".status").css("visibility", "hidden");
 }
 
 function get_server_file(id){
