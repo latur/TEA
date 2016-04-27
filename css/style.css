@@ -814,7 +814,8 @@ hr {
 
 .chipMin {
 	position: relative;
-	margin-top: 10px;
+	margin-top: -7px;
+	margin-left: -20px;
 	display: inline-block;
 	float: left;
 	font-size: 8px;
@@ -823,14 +824,15 @@ hr {
 .chipMax {
 	position: relative;
 	display: inline-block;
-	margin-top: 10px;
+	margin-top: -7px;
 	float: right;
+	margin-right: -20px;
 	font-size: 8px;
 }
 
 .filter {
 	position: relative;
-	display: none;
+	display: inline-block;
 	top: -5px;
 	margin-left: 15px;
 	width: 150px;
