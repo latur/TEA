@@ -263,7 +263,7 @@ function ShowChromosome(name, start, end){
 				var t = row.split(':');
 				t[0] = parseInt(t[0], 32);
 				var gene = {
-					left  : t[0] * H.kpx + H.offset,
+					left  : (t[0] + 3) * H.kpx + H.offset,
 					dir   : t[6] == '+' ? 'dirR' : 'dirL',
 					width : 1,
 					name  : nmbr + '_',
@@ -304,9 +304,13 @@ function ShowChromosome(name, start, end){
 				expand.classList.remove('gray')
 				if (px >= def + 22 + (inc <= 100 ? 28 : 0)) expand.classList.add('gray')
 			}
-
+			
 			var _ = Align(genesInfo, 12);
-			genes.innerHTML = _.el.map(function(e){ return Template('zoom-' + mode, e); }).join('');
+			if (genesInfo.length > 1) {
+				genes.innerHTML = _.el.map(function(e){ return Template('zoom-' + mode, e); }).join('');
+			} else {
+				genes.innerHTML = '<div class="zoomplease">Zoom in to see the genes</div>';
+			}
 
 			// GENES area size
 			var gar = false, garpx = false;

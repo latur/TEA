@@ -66,13 +66,8 @@ class Requests extends PDO {
 	 */
 	public function BindLevels($chr, $x1, $x2){
 
-		if ($x2 - $x1 < 1000) {
-			$c = round(($x2 + $x1)/2);
-			$x1 = $c - 500;
-			$x2 = $c + 500;
-		}
 		$step = 25;
-		if ($x2 - $x1 > 500000)   $step = 1000;
+		if ($x2 - $x1 > 500000)  $step = 1000;
 		if ($x2 - $x1 > 5000000) $step = 50000;
 
 		$query = $this->FQuery("select `type`,`start`,`data` from `rnaseq{$step}x` 
@@ -152,7 +147,7 @@ class Requests extends PDO {
 			where `knownGene`.`chrom` = ? and 
 				(`knownGene`.`txStart` > $start and `knownGene`.`txStart` < $stop or `knownGene`.`txEnd` > $start and `knownGene`.`txEnd` < $stop or `knownGene`.`txStart` < $start and `knownGene`.`txEnd` > $stop)
 			order by `knownGene`.`txStart`", [$chr]);
-		#print_r($query);
+		# print_r($query);
 		$genes = array_map(function($e){
 			$init = base_convert($e['txStart'], 10, 32);
 			$len  = base_convert($e['txEnd'] - $e['txStart'], 10, 32);
