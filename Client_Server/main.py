@@ -21,19 +21,19 @@ def get_chip_seq(layer, start, end, name):
 	step = 0
 
 	if (dis < 41250):
-		f += "25."
+		f += "25"
 		step = 25
 	elif (dis < 165000):
-		f += "100."
+		f += "100"
 		step = 100
 	elif (dis < 1650000):
-		f += "1000."
+		f += "1000"
 		step = 1000
 	elif (dis < 16500000):
-		f += "10000."
+		f += "10000"
 		step = 10000
 	else:
-		f += "100000."
+		f += "100000"
 		step = 100000
 
 	for i in range(0, 6):
