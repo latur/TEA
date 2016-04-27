@@ -228,7 +228,7 @@ function draw_seq(info, ref, len){
 			seq[i] = seq[i].split("");
 			var r = align_seq(seq[i], ref);
 			x = r.p*11 + 100;
-//			if (i > 0 && (r.p > end || r.p + r.s.length < start)) y -= 25;
+			if (i > 0 && (r.p > end || r.p + r.s.length < start)) y -= 25;
 			for (var k = 0, j = k + r.p; k < r.s.length && k < ref.length + r.p; k++, j++, x += 11){
 				if (ref[j] == ".") break;
 				if (r.s[k].indexOf('*') != -1){
@@ -240,7 +240,7 @@ function draw_seq(info, ref, len){
 						canvas.clearRect(x, y-15, 11, 15);
 
 					draw_text(x, y, "15px sans-serif", "#000", r.s[k], canvas)
-//					if (j < start || j > end)
+					if (j < start || j > end)
 						draw_line(x+5.5, 53, x+5.5, y-17, 1, canvas)
 				} else if (k < start || k > end)
 					draw_text(x, y, "15px sans-serif", txt_color[r.s[k]], r.s[k], canvas)
@@ -250,7 +250,7 @@ function draw_seq(info, ref, len){
 			if (r.p + r.s.length > end){
 				end = r.p + r.s.length
 			}
-//			 y += 25
+			 y += 25
 		}
 		last_left = -start*11 - 100;
 		if (last_left > 0) last_left = 0;
