@@ -232,13 +232,10 @@ function draw_seq(info, ref, len){
 			for (var k = 0, j = k + r.p; k < r.s.length && k < ref.length + r.p; k++, j++, x += 11){
 				if (ref[j] == ".") break;
 				if (r.s[k].indexOf('*') != -1){
-					draw_text(x-5, y-15, "8px sans-serif", "#6E6E6E", r.s[k][0], canvas)
+					draw_text(x-5, y-15, "10px sans-serif", "#6E6E6E", r.s[k][0], canvas)
 					x -= 11;
 					--j;
 				} else if (x >=100 && r.s[k] == ref[j]){
-					if (k >= start && k <= end)
-						canvas.clearRect(x, y-15, 11, 15);
-
 					draw_text(x, y, "15px sans-serif", "#000", r.s[k], canvas)
 					if (j < start || j > end)
 						draw_line(x+5.5, 53, x+5.5, y-17, 1, canvas)
