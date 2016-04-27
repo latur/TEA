@@ -815,7 +815,7 @@ hr {
 .chipMin {
 	position: relative;
 	margin-top: -7px;
-	margin-left: -17px;
+	margin-left: -20px;
 	display: inline-block;
 	float: left;
 	font-size: 8px;
@@ -832,7 +832,7 @@ hr {
 
 .filter {
 	position: relative;
-	display: inline-block;
+	display: none;
 	top: -5px;
 	margin-left: 15px;
 	width: 150px;
