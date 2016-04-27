@@ -242,7 +242,7 @@ function draw_seq(info, ref, len){
 					draw_text(x, y, "15px sans-serif", "#000", r.s[k], canvas)
 //					if (j < start || j > end)
 						draw_line(x+5.5, 53, x+5.5, y-17, 1, canvas)
-				} else if (k < start && k > start)
+				} else if (k < start || k > end)
 					draw_text(x, y, "15px sans-serif", txt_color[r.s[k]], r.s[k], canvas)
 			}
 			if (r.p < start)
