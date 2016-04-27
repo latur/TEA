@@ -216,6 +216,9 @@
 				<div class="genes">
 					<div id="bases"></div>
 					<div class="hm" id="ghmap"></div>
+					<div class="g-expand" id="expand">
+						<span class="rescale"></span>
+					</div>
 					<div id="genes"></div>
 				</div>
 				<div id="bind-graph"></div>
@@ -244,7 +247,15 @@
 	<div class="{vis} bx {dir}" style="left:{left}px; top:{top}px"><i style="width:{width}px;"></i><e>{name}</e></div>
 </script>
 <script data-name="zoom-XS" class="template" type="text/x-handlebars-template">
-	<div class="{vis} bx {dir}" style="left:{left}px; top:{top}px"><i style="width:{width}px;">{exons}</i><e>{name}</e></div>
+	<div class="{vis} bx detail {dir}" style="left:{left}px; top:{top}px">
+		<i style="width:{width}px;">
+			<b class="xt c1" style="width:{offset}px"></b>
+			<b class="xt c2" style="width:{roffset}px"></b>
+			<b class="xt c3" style="width:{roffset}px"></b>
+			<b class="xt c4" style="width:{offset}px"></b>
+			{exons}
+		</i><e>{name}</e>
+	</div>
 </script>
 <script data-name="rule" class="template" type="text/x-handlebars-template">
 	<div class="rule" style="width:{width}px">

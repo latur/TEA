@@ -45,6 +45,8 @@ function ShowChromosome(name, start, end){
 	zoom.style.width = (ww * 3) + 'px'; // |(<-w)|visible|(w->)|
 	zoom.style.marginLeft = - parseInt(ww) + 'px';
 
+	var heightGenesArea = 84;
+
 	// Actions:
 	// - Parsing mousemove data (pixels -> bp)
 	function Parse(a, b, k){
@@ -132,7 +134,7 @@ function ShowChromosome(name, start, end){
 		if (bp <  8000000) detail++; // M
 		if (bp <  5500000) detail++; // S
 		if (bp <  2000000) detail++; // XS
-		var genes = $('#genes')[0], bgraph = $('#bind-graph')[0], bpanel = $('#bind-panel')[0], bases = $('#bases')[0];
+		var genes = $('#genes')[0], bgraph = $('#bind-graph')[0], bpanel = $('#bind-panel')[0], bases = $('#bases')[0], expand = $('#expand')[0];
 		var mode = ['L','L','M','S','XS'][detail];
 
 		// -- > --
@@ -220,11 +222,17 @@ function ShowChromosome(name, start, end){
 			var bingPanel = '', bingGraph = '';
 			var bindInfo = inf[1].split(';').map(function(btype, k){
 				if (btype == 0) return false;
-				var BT = btype.split(':');
-				BT[2] = BT[2].split(',').map(function(v){ return parseInt(v, 36); });
+				var BT = btype.split('|');
+				if (!BT[2]) return;
+				// Неведомая просто хитрость
+				BT[2] = BT[2].split(',').map(function(v){
+					var v = v.split(':');
+					if (v[1]) return Array.apply(null, Array(parseInt(v[1]))).map(function(){ return v[0]; }).join(',')
+					return v[0];
+				}).join(',').split(',');
 				// Draw:
 				var line = '0,100';
-				for (var i in BT[2]) line += ' ' + (BT[1] * i * H.kpx) + ',' + Math.min(100,(100 - BT[2][i]/100));
+				for (var i in BT[2]) line += ' ' + (BT[1] * i * H.kpx) + ',' + Math.min(100,(100 - parseFloat(BT[2][i])));
 				var send = Math.round(BT[1] * BT[2].length * H.kpx) + 1;
 				line += ' ' + send + ',100';
 				bingGraph += Template('bindlevel', {
@@ -251,14 +259,14 @@ function ShowChromosome(name, start, end){
 			if (detail == 0) genes.innerHTML = Template('zoom-Z', {name : name, left : H.offset});
 
 			// Genes
-			var genesInfo = inf[0].split(';').map(function(row){
+			var genesInfo = inf[0].split(';').map(function(row, nmbr){
 				var t = row.split(':');
 				t[0] = parseInt(t[0], 32);
 				var gene = {
 					left  : t[0] * H.kpx + H.offset,
-					dir   : t[4] == '+' ? 'dirR' : 'dirL',
+					dir   : t[6] == '+' ? 'dirR' : 'dirL',
 					width : 1,
-					name  : '',
+					name  : nmbr + '_',
 					exons : '',
 					space : 1,
 				};
@@ -266,17 +274,21 @@ function ShowChromosome(name, start, end){
 				if (t[1]){
 					gene.width = parseInt(t[1], 32) * H.kpx;
 				}
-				if (t[2]) {
-					gene.name = t[2] + (t[3] ? ', ' : '') + (t[3] || '');
+				if (t.length > 2) {
+					// Name
+					gene.name = t[4] + (t[5] ? ', ' : '') + (t[5] || '');
 					gene.space = gene.width + name.length * 6.63 + 150;
+					// CDS
+					gene.offset  = (parseInt(t[2], 32) - t[0]) * H.kpx;
+					gene.roffset = (parseInt(t[1], 32) - parseInt(t[3], 32)) * H.kpx - gene.offset + 1;
 				}
 
 				if (t[0] > H.bp[0] && t[0] < H.bp[1]) gene.vis = 'inw';
 				if (t[1] > H.bp[0] && t[0] < H.bp[1]) gene.vis = 'inw';
 				if (t[0] < H.bp[0] && t[1] > H.bp[1]) gene.vis = 'inw';
 				
-				var ex1 = t[5] ? t[5].split(',') : [];
-				var ex2 = t[6] ? t[6].split(',') : [];
+				var ex1 = t[7] ? t[7].split(',') : [];
+				var ex2 = t[8] ? t[8].split(',') : [];
 				for (var k = 0; k < ex1.length - 1; k++) {
 					var exleft  = (ex1[k] - t[0]) * H.kpx;
 					var exwidth = (ex2[k] - ex1[k]) * H.kpx + 1;
@@ -285,35 +297,55 @@ function ShowChromosome(name, start, end){
 				return gene;
 			});
 			
-			if (detail > 0) {
-				var _ = Align(genesInfo, 12);
-				genes.innerHTML = _.el.map(function(e){ return Template('zoom-' + mode, e); }).join('');
+			function GenesAreaHeight(px, def){
+				genes.style.height = px - 15 - (inc <= 100 ? 15 : 0) + 'px';
+				bpanel.style.top = px + 8 + 'px';
+				expand.style.top = px + 'px';
+				expand.classList.remove('gray')
+				if (px >= def + 22 + (inc <= 100 ? 28 : 0)) expand.classList.add('gray')
 			}
-			var gh = 74;
-			if (detail < 2) gh = 20;
-			if (detail > 2) gh = Math.max(74, _.h);
-			genes.style.height = gh + 'px';
-			bpanel.style.top = gh + 22 + (inc <= 100 ? 15 : 0) + 'px';
+
+			var _ = Align(genesInfo, 12);
+			genes.innerHTML = _.el.map(function(e){ return Template('zoom-' + mode, e); }).join('');
+
+			// GENES area size
+			var gar = false, garpx = false;
+			expand.onmousedown = function(e){
+				gar = e.clientY;
+				garpx = expand.offsetTop;
+			};
+			zoom.onmouseup = function(){
+				gar = false;
+			};
+			zoom.onmousemove = function(e){
+				if (!gar) return ;
+				var px = Math.max(garpx + (e.clientY - gar), 48);
+				heightGenesArea = px;
+				GenesAreaHeight(px, inc <= 100 ? _.L : _.h);
+			};
+			GenesAreaHeight(heightGenesArea, inc <= 100 ? _.L : _.h);
 		});
 	}
 	
 	// HTML-helpers: multiple lines
 	function Align(elements, one){
-		var visHeight = one;
-		var lines = [0];
-		var Can = function(p){
-			for (var i in lines) if (p > lines[i]) return i;
-			return false;
+		var visibeHeight = one;
+		var lines = [-999999];
+		var Place = function(th, right){
+			for (var i = 0; i < lines.length; i++) {
+				if (th > lines[i]) { lines[i] = right; return i;
+				}
+			}
+			lines.push(right);
+			return i;
 		};
 		for (var k in elements) {
-			var e = elements[k], level = Can(e.left);
-			if (e.width == 1) continue ;
-			if (level) lines[level] = e.left + e.space;
-			if (level === false) lines.push(e.left + e.space), level = lines.length;
-			if (e.vis) visHeight = Math.max(visHeight, level * one + one + 3);
-			elements[k].top = level * one;
+			var e = elements[k];
+			var i = Place(e.left, e.left + e.space);
+			if (e.vis) visibeHeight = Math.max(visibeHeight, i * one + one + 3);
+			elements[k].top = i * one;
 		}
-		return { el : elements, h : visHeight };
+		return { el : elements, h : visibeHeight, L : lines.length * one };
 	}
 
 	// Events:

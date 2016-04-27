@@ -308,6 +308,45 @@ hr {
 	opacity: 0.2
 }
 
+.g-expand {
+	position: absolute;
+    right: -1px;
+    left: -1px;
+    top: 85px;
+	background: #FAECFF;
+    text-align: center;
+    border: 1px solid #F5DAFF;
+    z-index: 20;
+    cursor: pointer;
+    cursor: row-resize;
+    min-height: 9px;
+}
+.gray.g-expand {
+	background: #eee;
+	border-color: #ddd;
+}
+.g-expand .rescale {
+	display: block;
+	margin: 3px auto;
+	width: 7px;
+	height: 1px;
+	position: relative;
+	background: #888;
+}
+.g-expand .rescale:after,
+.g-expand .rescale:before {
+	content: '';
+	position: absolute;
+	left: 0;
+	width: 7px;
+	top: -2px;
+	background: #888;
+    height: 1px;
+}
+.g-expand .rescale:before {
+	top:2px;
+}
+
 /* -------------------------------------------- */
 #content {
 	position: relative;
@@ -663,12 +702,22 @@ span.bp.e.C { background: rgba(0, 52, 255, 0.4); }
 	font-weight: 100;
     overflow: hidden;
 }
+#genes .bx .xt {
+	height: 4px; 
+	z-index: 15;
+	position: absolute;
+	background: #FFF;
+}
+#genes .bx .xt.c1 { left:  0; top:0px; }
+#genes .bx .xt.c2 { right: -1px; top:0px; }
+#genes .bx .xt.c3 { right: -1px; bottom:0; }
+#genes .bx .xt.c4 { left:  0; bottom:0; }
+
+
 #genes .bx i {
 	position: relative;
 	float: left;
 	margin: 3px 7px 0px 0;
-	border-left: 1px solid rgba(0, 0, 0, 0.7);
-	border-right: 1px solid rgba(0, 0, 0, 0.7);
 	background-color: rgba(89, 0, 255, 0.06);
 	height: 10px;
 	box-sizing: content-box;
@@ -712,7 +761,6 @@ span.bp.e.C { background: rgba(0, 52, 255, 0.4); }
 #bind-graph {
 	position: relative;
 	height: 100px;
-	border-top: 1px dashed #eee;
 }
 #bind-panel {
 	text-shadow: 0 0 1px #FFF, 0 0 2px #FFF;

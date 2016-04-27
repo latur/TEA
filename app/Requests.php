@@ -8,6 +8,7 @@ class Requests extends PDO {
 		
 		$this->method  = @$_SERVER['REQUEST_METHOD'];
 		$this->request = @$_SERVER['REQUEST_URI'];
+		#sleep(1);
 		
 		# Get genes:
 		$pattern = "/tea/app/([LMSX]+)/(chr[0-9XY]+)/([0-9]+)/([0-9]+)";
@@ -15,14 +16,30 @@ class Requests extends PDO {
 		if (preg_match("/^$url$/", $this->request, $e)) {
 			list($req, $mode, $chr, $start, $stop) = $e;
 			$mode = "_$mode";
-			if (method_exists($this, $mode)) $this->{$mode}($chr, $start, $stop);
+			$start = (int) $start;
+			$stop =  (int) $stop;
+			if (method_exists($this, $mode)) {
+				if ($stop - $start < 70000000) {
+					$this->{$mode}($chr, (int) $start, (int) $stop);
+				} else {
+					echo "\n";
+				}
+				$this->BindLevels($chr, $start, $stop);
+			}
+			exit;
 		}
 
-		# Get samples:
+		# Get samples (old version):
 		$pattern = "/tea/app/sample/([0-9A-z\-\_]+)";
 		$url = str_replace('/', '\\/', $pattern);
 		if (preg_match("/^$url$/", $this->request, $e)) {
 			$this->_GetSample($e[1]);
+		}
+
+		$pattern = "/tea/app/data/([0-9A-z\-\_]+)";
+		$url = str_replace('/', '\\/', $pattern);
+		if (preg_match("/^$url$/", $this->request, $e)) {
+			$this->_GetData($e[1]);
 		}
 
 		return die('false');
@@ -48,42 +65,52 @@ class Requests extends PDO {
 	 * Bind-levels:
 	 */
 	public function BindLevels($chr, $x1, $x2){
-		$step = 100;
-		if ($x2 - $x1 > 800000)   $step = 1000;
-		if ($x2 - $x1 > 8000000)  $step = 10000;
-		if ($x2 - $x1 > 80000000) $step = 100000;
-		# =] 			3882699
-		$query = $this->FQuery("select `type`,`start`,`data` from `bindx{$step}` 
-			where `chr` = ? AND (`start` > ? and `start` < ?)", [substr($chr, 3), $x1 - $step * 1000 - 1000, $x2 + $step * 1000 + 1000]);
-		$T = [0,0,0,0,0,0];
+
+		if ($x2 - $x1 < 1000) {
+			$c = round(($x2 + $x1)/2);
+			$x1 = $c - 500;
+			$x2 = $c + 500;
+		}
+		$step = 25;
+		if ($x2 - $x1 > 500000)   $step = 1000;
+		if ($x2 - $x1 > 5000000) $step = 50000;
+
+		$query = $this->FQuery("select `type`,`start`,`data` from `rnaseq{$step}x` 
+			where `chr` = ? AND (`start` >= ? and `start` <= ?)", 
+			[substr($chr, 3), $x1 - $step * 1000, $x2 + $step * 1000]);
+		$T = [0, 0, 0, 0, 0, 0];
 		foreach ($query as $e) {
 			if ($T[$e['type']] == 0) {
-				$init = $e['start'] + 28550 - $step * 10; # ¯\_(ツ)_/¯
-				$T[$e['type']] = "{$init}:{$step}:{$e['data']}";
+				$init = $e['start'] - 25 * 2050;
+				$T[$e['type']] = "{$init}|{$step}|{$e['data']}";
 			} else {
 				$T[$e['type']] .= ",{$e['data']}";
 			}
 		}
 		echo implode(";", $T);
+
+		if ($x2 - $x1 < 10000) {
+			$E = substr($chr, 3);
+			exec("samtools faidx genome/Homo_sapiens.GRCh38.dna.chromosome.$E.fa $E:$x1-$x2", $seq);
+			echo "\n", implode('', @array_slice($seq, 1));
+		}
 	}
 	
 
 	# Large [interval] = Transcripts inits (no repeats) by 32 base
 	public function _L($chr, $start, $stop){
 		$query = $this->FQuery("
-			select `txStart` from `genes` 
+			select `txStart` from `knownGene` 
 			where `chrom` = ? and `txStart` > ? and `txStart` < ?
 			group by `txStart` order by `txStart`", [$chr, $start, $stop]);
 		$genes = array_map(function($e){ return base_convert($e['txStart'], 10, 32); }, $query);
 		echo implode(";", $genes), "\n";
-		$this->BindLevels($chr, $start, $stop);
-		exit;
 	}
 
 	# Medium [interval] = Transcripts (start,length)
 	public function _M($chr, $start, $stop){
 		$query = $this->FQuery("
-			select `txStart`, `txEnd` from `genes` 
+			select `txStart`, `txEnd` from `knownGene` 
 			where `chrom` = ? and `txStart` > ? and `txEnd` < ?
 			order by `txStart`", [$chr, $start, $stop]);
 		$genes = array_map(function($e){
@@ -92,45 +119,59 @@ class Requests extends PDO {
 			return "$init:$len";
 		}, $query);
 		echo implode(";", $genes), "\n";
-		$this->BindLevels($chr, $start, $stop);
-		exit;
 	}
 
 	# Small [interval] = Transcripts (name,protein,start,length)
 	public function _S($chr, $start, $stop){
 		$query = $this->FQuery("
-			select `txStart`, `txEnd`, `name`, `strand`, `proteinID` from `genes` 
-			where `chrom` = ? and `txStart` > ? and `txEnd` < ?
-			order by `txStart`", [$chr, $start, $stop]);
+			select `knownGene`.`txStart`, `knownGene`.`txEnd`, 
+				`knownGene`.`cdsStart`, `knownGene`.`cdsEnd`,
+				`knownGene`.`alignID`, `knownGene`.`strand`, `knownGene`.`proteinID`, `knownGene`.`exonStarts`, `knownGene`.`exonEnds`, `knownToLynx`.`value` from `knownGene` 
+			left join `knownToLynx` on `knownGene`.`name` = `knownToLynx`.`name`
+			where `knownGene`.`chrom` = ? and `knownGene`.`txStart` > ? and `knownGene`.`txEnd` < ?
+			order by `knownGene`.`txStart`", [$chr, $start, $stop]);
 		$genes = array_map(function($e){
 			$init = base_convert($e['txStart'], 10, 32);
 			$len  = base_convert($e['txEnd'] - $e['txStart'], 10, 32);
-			return "$init:$len:{$e['name']}:{$e['proteinID']}:{$e['strand']}";
+			$cinit = base_convert($e['cdsStart'], 10, 32);
+			$clen  = base_convert($e['cdsEnd'] - $e['cdsStart'], 10, 32);
+			return "$init:$len:$cinit:$clen:{$e['value']}:{$e['proteinID']}:{$e['strand']}";
 		}, $query);
 		echo implode(";", $genes), "\n";
-		$this->BindLevels($chr, $start, $stop);
-		exit;
 	}
 
 	# XSmall [interval] = Exons of genes
-	public function _XS($chr, $start, $stop){
+	public function _XS($chr, $x1, $x2){
+		$start = $x1 - 15000;
+		$stop  = $x2 + 15000;
 		$query = $this->FQuery("
-			select `txStart`, `txEnd`, `name`, `strand`, `proteinID`, `exonStarts`, `exonEnds`  from `genes` 
-			where `chrom` = ? and `txStart` > ? and `txEnd` < ?
-			order by `txStart`", [$chr, $start, $stop]);
+			select `knownGene`.`txStart`, `knownGene`.`txEnd`, 
+				`knownGene`.`cdsStart`, `knownGene`.`cdsEnd`,
+				`knownGene`.`alignID`, `knownGene`.`strand`, `knownGene`.`proteinID`, `knownGene`.`exonStarts`, `knownGene`.`exonEnds`, `knownToLynx`.`value` from `knownGene` 
+			left join `knownToLynx` on `knownGene`.`name` = `knownToLynx`.`name`
+			where `knownGene`.`chrom` = ? and 
+				(`knownGene`.`txStart` > $start and `knownGene`.`txStart` < $stop or `knownGene`.`txEnd` > $start and `knownGene`.`txEnd` < $stop or `knownGene`.`txStart` < $start and `knownGene`.`txEnd` > $stop)
+			order by `knownGene`.`txStart`", [$chr]);
+		#print_r($query);
 		$genes = array_map(function($e){
 			$init = base_convert($e['txStart'], 10, 32);
 			$len  = base_convert($e['txEnd'] - $e['txStart'], 10, 32);
-			return "$init:$len:{$e['name']}:{$e['proteinID']}:{$e['strand']}:{$e['exonStarts']}:{$e['exonEnds']}";
+			$cinit = base_convert($e['cdsStart'], 10, 32);
+			$clen  = base_convert($e['cdsEnd'] - $e['cdsStart'], 10, 32);
+			if (!$e['value']) $e['value'] = $e['alignID'];
+			return "$init:$len:$cinit:$clen:{$e['value']}:{$e['proteinID']}:{$e['strand']}:{$e['exonStarts']}:{$e['exonEnds']}";
 		}, $query);
 		echo implode(";", $genes), "\n";
-		$this->BindLevels($chr, $start, $stop);
-		exit;
 	}
-	
 	# Load sample file
 	public function _GetSample($file){
-		$name = "samples/$file.csv";
+		$name = "samples.csv/$file.csv";
+		if (!file_exists($name)) die('false');
+		echo file_get_contents($name);
+	}
+	# Load sample file
+	public function _GetData($file){
+		$name = "samples/$file";
 		if (!file_exists($name)) die('false');
 		echo file_get_contents($name);
 	}

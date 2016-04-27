@@ -26,6 +26,7 @@ var expPoints = {}; // Positions info (for compare)
 var samples   = {};
 
 var cache = {}; // Cache for imagedata
+var genesPane = false; // Open = true / Close = false / genes pane
 var XHR = false;
 
 /* -------------------------------------------- */
@@ -315,7 +316,6 @@ var Finder = (function(){
 	}
 
 }());
-
 
 // Downloading samples from library
 function Download(samples, onload, onstop){
