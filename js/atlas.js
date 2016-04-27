@@ -285,7 +285,7 @@ function SamplesLoaded(){
 	$('.cell_type a').click(function(){
 		var name = $(this).data('map');
 		$('.cellTypeLabel').html(name + '<span class="caret"></span>');
-		var layer = $('.chipseqLabel').text();
+		var layer = $('.chipseqLabel').text().replace(/\s/g, '');
 		var type = $(this).data('e');
 		query_score(layer, type);
 	});
@@ -586,7 +586,7 @@ function load_detail_content(name, start, end){
 	$('.cellTypeLabel').html('All cell type <span class="caret"></span>');
 	$(".filter").css("display", "none");
 
-	var layer = $('.chipseqLabel').text().replace(/\s/g, '');;	
+	var layer = $('.chipseqLabel').text().replace(/\s/g, '');	
 	var screen = end-start;
 	var chip_height = 50;
 	start -= screen;
