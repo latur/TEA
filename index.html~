@@ -90,7 +90,7 @@
 			<a class="cnt btn btn-default" data-e="0.5"><span class="glyphicon glyphicon-chevron-right"></span></a>
 		</div>
 		<div class="btn-group btn-group-sm zoom-c">
-			<a class="btn btn-default cnt" data-e="0.666666666"><span class="glyphicon glyphicon-zoom-in"></span></a>
+			<a class="btn btn-default cnt" data-e="0.666666666"><span class="glyphicon glyphicon-plus"></span></a>
 			<a class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				<span class="caret"></span>
 				<span class="sr-only">Toggle Dropdown</span>
@@ -103,7 +103,7 @@
 			</ul>
 		</div>
 		<div class="btn-group btn-group-sm zoom-c">
-			<a class="btn btn-default cnt" data-e="1.5"><span class="glyphicon glyphicon-zoom-out"></span></a>
+			<a class="btn btn-default cnt" data-e="1.5"><span class="glyphicon glyphicon-minus"></span></a>
 			<a class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				<span class="caret"></span>
 				<span class="sr-only">Toggle Dropdown</span>

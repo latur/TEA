@@ -6,8 +6,8 @@ body {
 	background: #fff;
 }
 hr {
-	margin-bottom: 15px;
-	margin-top: 10px;
+	margin-bottom: 5px;
+	margin-top: 5px;
 }
 .animate { 
 	-webkit-transition:all .35s ease-out;
@@ -71,7 +71,7 @@ hr {
 }
 .btn-group {
 	margin-right: 5px;
-	margin-top: 10px;
+	margin-top: 5px;
 }
 .selecter {
 	display: block;
@@ -168,7 +168,7 @@ hr {
 .chr {
 	position: relative;
 	margin-left: 45px;
-	margin-bottom: 7px 
+	margin-bottom: 5px 
 }
 .chr-name {
 	text-transform: capitalize;
@@ -432,7 +432,7 @@ hr {
 	width: 1150px;
 	margin: auto;
 	margin-top: 10px;
-	margin-bottom: 10px;
+	margin-bottom: 5px;
 }
 
 .map{
@@ -808,14 +808,13 @@ hr {
 
 .chipScore {
 	position: relative;
-	margin-top: 12px;
-	display: block;
+	display: inline-block;
 	font-size: 8px;
 }
 
 .chipMin {
 	position: relative;
-	margin-top: -20px;
+	margin-top: 10px;
 	display: inline-block;
 	float: left;
 	font-size: 8px;
@@ -823,7 +822,7 @@ hr {
 
 .chipMax {
 	position: relative;
-	margin-top: -20px;
+	margin-top: 10px;
 	display: inline-block;
 	float: right;
 	font-size: 8px;
@@ -832,7 +831,7 @@ hr {
 .filter {
 	position: relative;
 	display: none;
-	top: -10px;
+	top: -5px;
 	margin-left: 15px;
 	width: 150px;
 	font-size: 8px;
