@@ -841,8 +841,3 @@ hr {
 	text-align: center;
 }
 
-.chipseq_layer {
-	margin-right: 0px;
-	border-radius: 3px 0px 0px 3px;
-}
-
