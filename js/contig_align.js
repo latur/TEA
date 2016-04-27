@@ -236,10 +236,13 @@ function draw_seq(info, ref, len){
 					x -= 11;
 					--j;
 				} else if (x >=100 && r.s[k] == ref[j]){
+					if (k >= start && k <= end)
+						canvas.clearRect(x, y-15, 11, 15);
+
 					draw_text(x, y, "15px sans-serif", "#000", r.s[k], canvas)
-					if (j < start || j > end)
+//					if (j < start || j > end)
 						draw_line(x+5.5, 53, x+5.5, y-17, 1, canvas)
-				} else
+				} else if (k < start && k > start)
 					draw_text(x, y, "15px sans-serif", txt_color[r.s[k]], r.s[k], canvas)
 			}
 			if (r.p < start)
