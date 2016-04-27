@@ -285,7 +285,7 @@ function SamplesLoaded(){
 	$('.cell_type a').click(function(){
 		var name = $(this).data('map');
 		$('.cellTypeLabel').html(name + '<span class="caret"></span>');
-		var layer = $('.chipseqLabel').text();
+		var layer = $('.chipseqLabel').text().replace(/\s/g, '');
 		var type = $(this).data('e');
 		query_score(layer, type);
 	});
@@ -743,7 +743,7 @@ function ShowChromosome(name, start, end){
 	$(".gene_wrap").css({"visibility": "visible", "height": "auto"});
 	setTimeout(function(){
 		doc.style.marginTop = (parseInt($('.fixed-nav')[0].offsetHeight) + 30) + 'px';
-	}, 3000);
+	}, 1000);
 
 	// Impossible states:
 	if (!chrs[name])

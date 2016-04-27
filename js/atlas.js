@@ -113,6 +113,7 @@ function Route(loc){
 }
 
 function query_score(layer, type){
+	console.log(layer, type);
 	if (n_file > 0 && chip_seq_range["id"].length > 0){
 		var minVal = 100000, maxVal = -100000, count = 0, total = 0;
 		for (var i = 0; i < chip_seq_range["id"].length; i += 10, total++){
@@ -743,7 +744,7 @@ function ShowChromosome(name, start, end){
 	$(".gene_wrap").css({"visibility": "visible", "height": "auto"});
 	setTimeout(function(){
 		doc.style.marginTop = (parseInt($('.fixed-nav')[0].offsetHeight) + 30) + 'px';
-	}, 3000);
+	}, 1000);
 
 	// Impossible states:
 	if (!chrs[name])
