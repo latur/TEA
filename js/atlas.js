@@ -113,12 +113,15 @@ function Route(loc){
 }
 
 function query_score(layer, type){
+	
 	if (n_file > 0 && chip_seq_range["id"].length > 0){
 		var minVal = 100000, maxVal = -100000, count = 0, total = 0;
 		for (var i = 0; i < chip_seq_range["id"].length; i += 10, total++){
 			var list = []
-			for (var k = i; k < i + 10 && k < chip_seq_range["id"].length; k++)
+			for (var k = i; k < i + 10 && k < chip_seq_range["id"].length; k++){
 				list.push(chip_seq_range["id"][k]);
+				chip_seq_range["score"].append(0);
+			}
 
 			$.ajax({
 				method: "post",
