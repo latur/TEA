@@ -815,7 +815,7 @@ hr {
 .chipMin {
 	position: relative;
 	margin-top: -7px;
-	margin-left: -20px;
+	margin-left: -15px;
 	display: inline-block;
 	float: left;
 	font-size: 8px;
