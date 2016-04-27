@@ -112,31 +112,29 @@ function Route(loc){
 	return ShowAsLine();
 }
 
-function query_score(){
+function query_score(layer, type){
 	if (n_file > 0 && chip_seq_range["id"].length > 0){
 		var minVal = 100000, maxVal = -100000, count = 0, total = 0;
 		for (var i = 0; i < chip_seq_range["id"].length; i += 10, total++){
 			var list = []
-			for (var k = i; k < i + 10 && k < chip_seq_range["id"].length; k++){
+			for (var k = i; k < i + 10 && k < chip_seq_range["id"].length; k++)
 				list.push(chip_seq_range["id"][k]);
-				chip_seq_range["score"].push([])
-			}
+
 			$.ajax({
 				method: "post",
 				dataType: "jsonp",
 				url: " http://bioalgorithm.xyz/teatlas_ajax",
-				data: {"inf": "filter", "id_list": list, "pos": i},
+				data: {"inf": "filter", "id_list": list, "pos": i, "layer": layer, "type": type},
 				success: function(filter) {
 					var pos = parseInt(filter["pos"])
 					for (var s = 0; s < filter["score"].length; s++)
 						chip_seq_range["score"][s + pos] = filter["score"][s];
 
 					for (var i = 0; i < filter["score"].length; i++){
-						for (var k = 0; k < filter["score"][i].length; k++){
-							if (filter["score"][i][k] < minVal) minVal = filter["score"][i][k];
-								if (filter["score"][i][k] > maxVal) maxVal = filter["score"][i][k];
-						}
+						if (filter["score"][i][k] < minVal) minVal = filter["score"][i];
+						if (filter["score"][i][k] > maxVal) maxVal = filter["score"][i];
 					}
+
 					++count;
 					if (count == total){
 						$(".chipMin").html(minVal == 100000? 0 : minVal);
@@ -287,7 +285,9 @@ function SamplesLoaded(){
 	$('.cell_type a').click(function(){
 		var name = $(this).data('map');
 		$('.cellTypeLabel').html(name + '<span class="caret"></span>');
-		query_score;
+		var layer = $('.chipseqLabel').text();
+		var type = $(this).data('e');
+		query_score(layer, type);
 	});
 
 	// Buttons:
@@ -351,15 +351,9 @@ function SamplesLoaded(){
 
 function filter_score(score){	
 	for (var i = 0; i < chip_seq_range["id"].length; i++){
-		var has = 0;
-		for (var k = 0; k < chip_seq_range["score"][i].length; k++){
-			if (chip_seq_range["score"][i][k] >= score){
-				$("." + chip_seq_range["id"][i]).css("visibility", "visible")
-				has = 1;
-				break;
-			}
-		}
-		if (has == 0)
+		if (chip_seq_range["score"][i] >= score)
+			$("." + chip_seq_range["id"][i]).css("visibility", "visible")
+		else
 			$("." +  chip_seq_range["id"][i]).css("visibility", "hidden")
 	}
 }
@@ -591,7 +585,8 @@ function load_detail_content(name, start, end){
 	$(".pop_up").remove();
 	$('.cellTypeLabel').html('All cell type <span class="caret"></span>');
 	$(".filter").css("display", "none");
-	
+
+	var layer = $('.chipseqLabel').text();	
 	var screen = end-start;
 	var chip_height = 50;
 	start -= screen;
@@ -605,7 +600,7 @@ function load_detail_content(name, start, end){
 		method: "get",
 		dataType: "jsonp",
 		url: " http://bioalgorithm.xyz/teatlas_ajax",
-		data: {"inf": "H3K27Ac", "start": start, "end": end, "chr": chr},
+		data: {"inf": "chip_seq", "layer": layer, "start": start, "end": end, "chr": chr},
 		success: function(chip_seq) {
 			if (chip_seq["pos"][0] != chip_seq_range["pos"][0] || chip_seq["pos"][1] != chip_seq_range["pos"][1]) return
 			for (var i = 0; i < chip_seq["point"].length; i++){

@@ -11,13 +11,13 @@ chr_len = [0, 1287101697, 1691267844, 1889563403, 2087858962, 2269397221,
 			1064853355, 1148110796, 1228484081, 1529295226, 1593739393,
 			1640449376, 1691267844, 2883082526, 3039123421]
 
-def get_chip_seq(start, end, name):
-	chip_seq = {"pos": [], "point": []};
+def get_chip_seq(layer, start, end, name):
+	chip_seq = {"pos": [], "point": []}
 	chip_seq["pos"].append(start)
 	chip_seq["pos"].append(end)
 
 	dis = end - start
-	f = "/home/ginny/www/data/Bind"
+	f = "/home/ginny/www/data/%s/Bind" % (layer)
 	step = 0
 
 	if (dis < 41250):
@@ -37,7 +37,7 @@ def get_chip_seq(start, end, name):
 		step = 100000
 
 	for i in range(0, 6):
-		file_path = f + str(i) + ".bin"
+		file_path ="%s.%d.bin" %  (f,i) 
 		chip_seq["point"].append([])
 		inp = open(file_path, "r")
 		prev = int(chr_len[name-1]/step)*12
@@ -67,50 +67,43 @@ def get_chip_seq(start, end, name):
 
 	return chip_seq
 
-def get_value(id_list):
+def get_value(id_list, t, layer):
 	ret = []
-	f = "/home/ginny/www/data/Bind100"
+	f = "/home/ginny/www/data/%s/Bind100.%s.bin" % (layer, t)
 
-	for mem in id_list:
-		ret.append([])
-
-	for i in range(0, 6):
-		file_path = "%s.%d.bin" % (f,i)
-		inp = open(file_path, "r")
-		max_size = os.path.getsize(file_path)
-		for mem in range(0, len(id_list)):
-			idx = id_list[mem].split("-")
-			chrs = 0
-			if idx[0][3] == 'X':
-				chrs = 23
-			elif idx[0][3] == 'Y':
-				chrs = 24
-			else:
-				chrs = int(idx[0][3:])
-
+	inp = open(file_path, "r")
+	max_size = os.path.getsize(file_path)
+	for mem in range(0, len(id_list)):
+		idx = id_list[mem].split("-")
+		chrs = 0
+		if idx[0][3] == 'X':
+			chrs = 23
+		elif idx[0][3] == 'Y':
+			chrs = 24
+		else:
+			chrs = int(idx[0][3:])
 			prev = int(chr_len[chrs-1]/100)*12
+		inp.seek(prev)
+		x = struct.unpack("H", inp.read(2))
+		while x[0] != chrs:
+			prev += 12
 			inp.seek(prev)
 			x = struct.unpack("H", inp.read(2))
-			while x[0] != chrs:
-				prev += 12
-				inp.seek(prev)
-				x = struct.unpack("H", inp.read(2))
-
 			inp.seek(prev + 4)
+		x = struct.unpack("I", inp.read(4))
+		while x[0] > 0:
+			prev -= 12
+			inp.seek(prev + 4) 
 			x = struct.unpack("I", inp.read(4))
-			while x[0] > 0:
-				prev -= 12
-				inp.seek(prev + 4) 
-				x = struct.unpack("I", inp.read(4))
-	
-			line = int(int(idx[2])/100)
-			if line >= 0 & line*12 <= max_size -12:
-				inp.seek(prev + line*12 + 8)
-				s = struct.unpack("f", inp.read(4))
-				ret[mem].append(s[0])
-			else:			
-				ret[mem].append(0)
-		inp.close()
+
+		line = int(int(idx[2])/100)
+		if line >= 0 & line*12 <= max_size -12:
+			inp.seek(prev + line*12 + 8)
+			s = struct.unpack("f", inp.read(4))
+			ret.append(s[0])
+		else:			
+			ret.append(0)
+	inp.close()
 	return ret
 
 class MainHandler(tornado.web.RequestHandler):
@@ -130,8 +123,8 @@ class MainHandler(tornado.web.RequestHandler):
 				print path
 				content = open(path, "r")
 				ret.append(content.read())
-		elif self.request.arguments["inf"][0] == "H3K27Ac":
-			ret = get_chip_seq(int(self.request.arguments["start"][0]), int(self.request.arguments["end"][0]), int(self.request.arguments["chr"][0]))
+		elif self.request.arguments["inf"][0] == "chip_seq":
+			ret = get_chip_seq(self.request.arguments["layer"][0], int(self.request.arguments["start"][0]), int(self.request.arguments["end"][0]), int(self.request.arguments["chr"][0]))
 
 		self.write("{jsfunc}({json});".format(jsfunc=callbackFunc, json=tornado.escape.json_encode(ret)))
 		self.finish()

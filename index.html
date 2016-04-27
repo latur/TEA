@@ -115,11 +115,11 @@
 			<a class="btn btn-default comparision"><span class="glyphicon glyphicon-adjust"></span> <span class="txt">Group compare</span></a>
 			<a class="btn btn-default showtree"><span class="glyphicon glyphicon-grain"></span> Phylogenetic tree</a>
 		</div>
-		<div class="btn-group chipseq_layer" style="margin-right:0">
-			<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"  style="border-radius: 3px 0px 0px 3px">
+		<div class="btn-group" style="margin-right:0">
+			<button class="btn btn-default dropdown-toggle chipseqLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"  style="border-radius: 3px 0px 0px 3px">
 				H3K27Ac <span class="caret"></span>
 			</button>
-			<ul class="dropdown-menu chipseq_dropdown">
+			<ul class="dropdown-menu chipseq_layer">
 				<li><a data-map="H3K27Ac"> H3K27Ac</a></li>
 				<li><a data-map="H3K4Me1"> H3K4Me1</a></li>
 				<li><a data-map="H3K4Me3"> H3K4Me3</a></li>
@@ -131,13 +131,13 @@
 				All cell type <span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu cell_type">
-				<li><a data-map="GM12878"> GM12878</a></li>
-				<li><a data-map="H1-hESC"> H1-hESC</a></li>
-				<li><a data-map="HSMM"> HSMM</a></li>
-				<li><a data-map="HUVEC"> HUVEC</a></li>
-				<li><a data-map="K562"> K562</a></li>
-				<li><a data-map="NHEK"> NHEK</a></li>
-				<li><a data-map="NHLF"> NHLF</a></li>
+				<li><a data-map="GM12878" data-e='0'> GM12878</a></li>
+				<li><a data-map="H1-hESC" data-e='1'> H1-hESC</a></li>
+				<li><a data-map="HSMM" data-e='2'> HSMM</a></li>
+				<li><a data-map="HUVEC" data-e='3'> HUVEC</a></li>
+				<li><a data-map="K562" data-e='4'> K562</a></li>
+				<li><a data-map="NHEK" data-e='5'> NHEK</a></li>
+				<li><a data-map="NHLF" data-e='6'> NHLF</a></li>
 			</ul>
 		</div>
 		<div class="filter">ChiP-seq score >= <div class="chipScore">score</div>
