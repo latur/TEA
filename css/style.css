@@ -71,7 +71,7 @@ hr {
 }
 .btn-group {
 	margin-right: 5px;
-	margin-top: 5px;
+	margin-top: 10px;
 }
 .selecter {
 	display: block;
@@ -706,6 +706,7 @@ hr {
 .dropdown-menu>li>a{
   padding-left: 10px;
   padding-right: 10px;
+  cursor: pointer;
 }
 
 /* Detail */
@@ -839,3 +840,4 @@ hr {
 	font-size: 8px;
 	text-align: center;
 }
+

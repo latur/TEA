@@ -71,7 +71,7 @@ hr {
 }
 .btn-group {
 	margin-right: 5px;
-	margin-top: 5px;
+	margin-top: 10px;
 }
 .selecter {
 	display: block;
@@ -706,6 +706,7 @@ hr {
 .dropdown-menu>li>a{
   padding-left: 10px;
   padding-right: 10px;
+  cursor: pointer;
 }
 
 /* Detail */
@@ -783,7 +784,7 @@ hr {
 	position: absolute;
 	z-index: 1000;
 	display: block;
-	top: -5px;
+	top: -6px;
 	left: 0;
 	height: 15px;
 	width: 15px;
@@ -839,3 +840,9 @@ hr {
 	font-size: 8px;
 	text-align: center;
 }
+
+.chipseq_layer {
+	margin-right: 0px;
+	border-radius: 3px 0px 0px 3px;
+}
+

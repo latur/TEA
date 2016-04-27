@@ -112,6 +112,45 @@ function Route(loc){
 	return ShowAsLine();
 }
 
+function query_score(){
+	if (n_file > 0 && chip_seq_range["id"].length > 0){
+		var minVal = 100000, maxVal = -100000, count = 0, total = 0;
+		for (var i = 0; i < chip_seq_range["id"].length; i += 10, total++){
+			var list = []
+			for (var k = i; k < i + 10 && k < chip_seq_range["id"].length; k++){
+				list.push(chip_seq_range["id"][k]);
+				chip_seq_range["score"].push([])
+			}
+			$.ajax({
+				method: "post",
+				dataType: "jsonp",
+				url: " http://bioalgorithm.xyz/teatlas_ajax",
+				data: {"inf": "filter", "id_list": list, "pos": i},
+				success: function(filter) {
+					var pos = parseInt(filter["pos"])
+					for (var s = 0; s < filter["score"].length; s++)
+						chip_seq_range["score"][s + pos] = filter["score"][s];
+
+					for (var i = 0; i < filter["score"].length; i++){
+						for (var k = 0; k < filter["score"][i].length; k++){
+							if (filter["score"][i][k] < minVal) minVal = filter["score"][i][k];
+								if (filter["score"][i][k] > maxVal) maxVal = filter["score"][i][k];
+						}
+					}
+					++count;
+					if (count == total){
+						$(".chipMin").html(minVal == 100000? 0 : minVal);
+						$(".chipScore").html(minVal == 100000? 0 : minVal);
+						$(".chipMax").html(maxVal == -100000? 0 : maxVal);
+						$(".chipFil").css("left", "0px");
+						$(".filter").css("display", "inline-block");
+					}
+				}
+			})
+		}
+	}
+}
+
 // Sort of retrotransposons in the order on the chromosome
 function SamplesLoaded(){
 	// Clear cache
@@ -245,6 +284,11 @@ function SamplesLoaded(){
 		return ShowChromosome(name, parseInt(chr[2]), parseInt(chr[3]));
 	});
 
+	$('.cell_type a').click(function(){
+		var name = $(this).data('map');
+		$('.cellTypeLabel').html(name + '<span class="caret"></span>');
+	});
+
 	// Buttons:
 	$('.move-c a.cnt').click(function(){
 		var inc = parseFloat($(this).data('e'));
@@ -334,13 +378,15 @@ function disable_button(){
 		$(".filter").css("display", "none");
 		$('.chr-view-mode a').removeClass('disabled');
 		$('.chr-view-mode .asline').addClass('disabled');
-		$('.move-c').attr("style", "visibility:hidden");
-		$('.zoom-c').attr("style", "visibility:hidden");
+		$('.move-c a, .move-c button').addClass("disabled");
+		$('.zoom-c a').addClass("disabled");
+		$('.chipseq_layer a, .chipseq_layer button').addClass('disabled');
 	} else {
 		$('.chr-view-mode a').addClass('disabled');
 		$('.chr-view-mode .asline').removeClass('disabled');
-		$('.move-c').attr("style", "visibility:visible");
-		$('.zoom-c').attr("style", "visibility:visible");
+		$('.move-c a, .move-c button').removeClass('disabled');
+		$('.zoom-c a').removeClass('disabled');
+		$('.chipseq_layer a, .chipseq_layer button').removeClass('disabled');
 	}
 }
 
@@ -542,6 +588,7 @@ function getMax(array) {
 function load_detail_content(name, start, end){
 	$(".detail_content").css("margin-left", "-1100px");
 	$(".pop_up").remove();
+	$('.cellTypeLabel').html('All cell type <span class="caret"></span>');
 	$(".filter").css("display", "none");
 	
 	var screen = end-start;
@@ -691,43 +738,6 @@ function load_detail_content(name, start, end){
 				chip_seq_range["id"].push(content[7])
 		}
 		extra += add;
-	}
-
-	if (n_file > 0 && chip_seq_range["id"].length > 0){
-		var minVal = 100000, maxVal = -100000, count = 0, total = 0;
-		for (var i = 0; i < chip_seq_range["id"].length; i += 10, total++){
-			var list = []
-			for (var k = i; k < i + 10 && k < chip_seq_range["id"].length; k++){
-				list.push(chip_seq_range["id"][k]);
-				chip_seq_range["score"].push([])
-			}
-			$.ajax({
-				method: "post",
-				dataType: "jsonp",
-				url: " http://bioalgorithm.xyz/teatlas_ajax",
-				data: {"inf": "filter", "id_list": list, "pos": i},
-				success: function(filter) {
-					var pos = parseInt(filter["pos"])
-					for (var s = 0; s < filter["score"].length; s++)
-						chip_seq_range["score"][s + pos] = filter["score"][s];
-
-					for (var i = 0; i < filter["score"].length; i++){
-						for (var k = 0; k < filter["score"][i].length; k++){
-							if (filter["score"][i][k] < minVal) minVal = filter["score"][i][k];
-								if (filter["score"][i][k] > maxVal) maxVal = filter["score"][i][k];
-						}
-					}
-					++count;
-					if (count == total){
-						$(".chipMin").html(minVal == 100000? 0 : minVal);
-						$(".chipScore").html(minVal == 100000? 0 : minVal);
-						$(".chipMax").html(maxVal == -100000? 0 : maxVal);
-						$(".chipFil").css("left", "0px");
-						$(".filter").css("display", "inline-block");
-					}
-				}
-			})
-		}
 	}
 }
 
