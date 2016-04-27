@@ -65,7 +65,6 @@ class Requests extends PDO {
 	 * Bind-levels:
 	 */
 	public function BindLevels($chr, $x1, $x2){
-
 		$step = 25;
 		if ($x2 - $x1 > 500000)  $step = 1000;
 		if ($x2 - $x1 > 5000000) $step = 50000;
@@ -73,21 +72,19 @@ class Requests extends PDO {
 		$query = $this->FQuery("select `type`,`start`,`data` from `rnaseq{$step}x` 
 			where `chr` = ? AND (`start` >= ? and `start` <= ?)", 
 			[substr($chr, 3), $x1 - $step * 1000, $x2 + $step * 1000]);
-		$T = [0, 0, 0, 0, 0, 0];
+		$T = [];
 		foreach ($query as $e) {
-			if ($T[$e['type']] == 0) {
-				$init = $e['start'] - 25 * 2050;
-				$T[$e['type']] = "{$init}|{$step}|{$e['data']}";
-			} else {
-				$T[$e['type']] .= ",{$e['data']}";
-			}
+			if(!@$T[$e['type']]) $T[$e['type']] = [];
+			$T[$e['type']][] = "{$e['start']}!{$step}!{$e['data']}";
 		}
-		echo implode(";", $T);
+		echo implode(";", array_map(function($bl){
+			return implode("|", $bl);
+		}, $T)), "\n";
 
 		if ($x2 - $x1 < 10000) {
 			$E = substr($chr, 3);
 			exec("samtools faidx genome/Homo_sapiens.GRCh38.dna.chromosome.$E.fa $E:$x1-$x2", $seq);
-			echo "\n", implode('', @array_slice($seq, 1));
+			echo implode('', @array_slice($seq, 1));
 		}
 	}
 	

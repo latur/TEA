@@ -222,25 +222,27 @@ function ShowChromosome(name, start, end){
 			var bingPanel = '', bingGraph = '';
 			var bindInfo = inf[1].split(';').map(function(btype, k){
 				if (btype == 0) return false;
-				var BT = btype.split('|');
-				if (!BT[2]) return;
-				// Неведомая просто хитрость
-				BT[2] = BT[2].split(',').map(function(v){
-					var v = v.split(':');
-					if (v[1]) return Array.apply(null, Array(parseInt(v[1]))).map(function(){ return v[0]; }).join(',')
-					return v[0];
-				}).join(',').split(',');
-				// Draw:
-				var line = '0,100';
-				for (var i in BT[2]) line += ' ' + (BT[1] * i * H.kpx) + ',' + Math.min(100,(100 - parseFloat(BT[2][i])));
-				var send = Math.round(BT[1] * BT[2].length * H.kpx) + 1;
-				line += ' ' + send + ',100';
-				bingGraph += Template('bindlevel', {
-					color  : H3K27Ac[k].col,
-					points : line,
-					left   : BT[0] * H.kpx + H.offset,
-					key    : k,
-					width  : send
+				btype.split('|').map(function(BT){
+					BT = BT.split('!');
+					if (!BT[2]) return;
+					// Неведомая хитрость :D
+					var dots = BT[2].split(',').map(function(v){
+						var v = v.split(':');
+						if (v[1]) return Array.apply(null, Array(parseInt(v[1]))).map(function(){ return v[0]; }).join(',');
+						return v[0];
+					}).join(',').split(',');
+					// Draw:
+					var line = '0,100';
+					for (var i in dots) line += ' ' + (BT[1] * i * H.kpx) + ',' + Math.min(100,(100 - parseFloat(dots[i])));
+					var send = Math.round(BT[1] * dots.length * H.kpx) + 1;
+					line += ' ' + send + ',100';
+					bingGraph += Template('bindlevel', {
+						color  : H3K27Ac[k].col,
+						points : line,
+						left   : BT[0] * H.kpx + H.offset,
+						key    : k,
+						width  : send
+					});
 				});
 				bingPanel += Template('bindpanel', {
 					color  : H3K27Ac[k].col,
