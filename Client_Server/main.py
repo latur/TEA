@@ -82,7 +82,7 @@ def get_value(id_list, t, layer):
 			chrs = 24
 		else:
 			chrs = int(idx[0][3:])
-			prev = int(chr_len[chrs-1]/100)*12
+		prev = int(chr_len[chrs-1]/100)*12
 		inp.seek(prev)
 		x = struct.unpack("H", inp.read(2))
 		while x[0] != chrs:
@@ -140,7 +140,7 @@ class MainHandler(tornado.web.RequestHandler):
 		ret = {"score": [], "pos": self.request.arguments["pos"][0]}
 
 		if self.request.arguments["inf"][0] == "filter":
-			ret["score"] = get_value(self.request.arguments["id_list[]"], self.request.arguments["type"][0], self.request.arguments["layer"])
+			ret["score"] = get_value(self.request.arguments["id_list[]"], self.request.arguments["type"][0], self.request.arguments["layer"][0])
 
 		self.write("{jsfunc}({json});".format(jsfunc=callbackFunc, json=tornado.escape.json_encode(ret)))
 		self.finish()
