@@ -396,6 +396,10 @@ function SamplesHM(chr){
 
 // Parse samples files. Separators: Col: "\t", Row: "\n"
 function Parse(content, filename){
+	var x = filename.indexOf(".csv");
+	filename = filename.substr(0, x);
+	filename = filename.replace(/\./g, "_")
+
 	for (var i in file_list)
 		if (file_list[i] == filename) return;
 
@@ -864,10 +868,7 @@ function run_demo(){
 $(document).ready(function() {
     SamplesLoaded();
 
-	var loc = location.hash;
 	createSmallBwtWebByAl('svgHolderT0', 'sml0', '1', 5000000, 10000000, function() {
-		Route();
-		
 		var obj = getBwtWeb('svgHolderT0');
 		obj.addSuggestion($("#find"), function(suggestData) {
 			if (expData[suggestData['chr_id']]){
