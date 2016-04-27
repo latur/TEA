@@ -790,7 +790,6 @@ function ShowChromosome(name, start, end){
 		var bp1 = parseInt(e[2]);
 		var bp2 = parseInt(e[3]);
 		location.hash = '#' + name + ':' + bp1 + '-' + bp2;
-		console.log("h");
 		load_detail_content(name, bp1, bp2);
 	};
 
@@ -833,10 +832,11 @@ function ShowChromosome(name, start, end){
 			var obj = getBwtWeb('svgHolderT0');
  			obj.search(name.substr(3)+ ":" + (ix[0] + vx*3)*size/ww + ".." + (ix[1] + vx*3)*size/ww, function(err) {});
 			doc.style.marginTop = (parseInt($('.fixed-nav')[0].offsetHeight) + 30) + 'px';
-			}
+		}
 		box.style.display = 'none';
 		ox = NaN, px = NaN, dx = NaN, tx = NaN, vx = NaN;
 	};
+	console.log("h");
 	Resized([start, end]);
 	$(".status").css("visibility", "hidden");
 }

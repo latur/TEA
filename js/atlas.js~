@@ -836,6 +836,7 @@ function ShowChromosome(name, start, end){
 		box.style.display = 'none';
 		ox = NaN, px = NaN, dx = NaN, tx = NaN, vx = NaN;
 	};
+	console.log("h");
 	Resized([start, end]);
 	$(".status").css("visibility", "hidden");
 }
