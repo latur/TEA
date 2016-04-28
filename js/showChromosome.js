@@ -45,7 +45,7 @@ function ShowChromosome(name, start, end){
 	zoom.style.width = (ww * 3) + 'px'; // |(<-w)|visible|(w->)|
 	zoom.style.marginLeft = - parseInt(ww) + 'px';
 
-	var heightGenesArea = 84;
+	var heightGenesArea = 0;
 
 	// Actions:
 	// - Parsing mousemove data (pixels -> bp)
@@ -329,6 +329,9 @@ function ShowChromosome(name, start, end){
 				heightGenesArea = px;
 				GenesAreaHeight(px, inc <= 100 ? _.L : _.h);
 			};
+			
+			if (heightGenesArea == 0) heightGenesArea = 24; 
+			if (heightGenesArea == 0 && detail >  1) heightGenesArea = 96; 
 			GenesAreaHeight(heightGenesArea, inc <= 100 ? _.L : _.h);
 		});
 	}
