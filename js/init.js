@@ -6,6 +6,8 @@ $(function(){
 		Route();
 	}
 
+	if (Cookie.Get('H3Ktype')) H3Ktype = Cookie.Get('H3Ktype');
+
 	// Go to genome browser	
 	$('.show-general').click(function(){ Route('#chr1:152967038-154678079'); });
 
@@ -96,6 +98,7 @@ $(function(){
 	// Reset all
 	$('.clear').click(function(){
 		Cookie.Set('clear', 'true')
+		Cookie.Set('H3Ktype', '');
 		location.hash = '';
 		location.reload();
 	});

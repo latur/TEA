@@ -242,6 +242,15 @@ var Finder = (function(){
 				});
 			}
 		}
+		
+		if (actsList.length == 0 && str != '') {
+			$.post(server + ['find', str].join('/'), {}, function(inf){
+				if (inf.length > 0) {
+					actsList = inf;
+					Show();
+				}
+			}, "json");
+		}
 		Show();
 	}
 	function Show(){

@@ -11,10 +11,10 @@ class Requests extends PDO {
 		#sleep(1);
 		
 		# Get genes:
-		$pattern = "/tea/app/([LMSX]+)/(chr[0-9XY]+)/([0-9]+)/([0-9]+)";
+		$pattern = "/tea/app/([LMSX]+)/(chr[0-9XY]+)/([0-9]+)/([0-9]+)/?(.*)?";
 		$url = str_replace('/', '\\/', $pattern);
 		if (preg_match("/^$url$/", $this->request, $e)) {
-			list($req, $mode, $chr, $start, $stop) = $e;
+			list($req, $mode, $chr, $start, $stop, $other) = $e;
 			$mode = "_$mode";
 			$start = (int) $start;
 			$stop =  (int) $stop;
@@ -24,7 +24,7 @@ class Requests extends PDO {
 				} else {
 					echo "\n";
 				}
-				$this->BindLevels($chr, $start, $stop);
+				$this->BindLevels($chr, $start, $stop, $other);
 			}
 			exit;
 		}
@@ -36,10 +36,18 @@ class Requests extends PDO {
 			$this->_GetSample($e[1]);
 		}
 
+		# Get samples:
 		$pattern = "/tea/app/data/([0-9A-z\-\_]+)";
 		$url = str_replace('/', '\\/', $pattern);
 		if (preg_match("/^$url$/", $this->request, $e)) {
 			$this->_GetData($e[1]);
+		}
+
+		# Search:
+		$pattern = "/tea/app/find/(.*)";
+		$url = str_replace('/', '\\/', $pattern);
+		if (preg_match("/^$url$/", $this->request, $e)) {
+			$this->Find(urldecode(@$e[1]));
 		}
 
 		return die('false');
@@ -61,25 +69,63 @@ class Requests extends PDO {
 		return $this->Query($str, $data)->fetchAll(PDO::FETCH_ASSOC);
 	}
 	
+	/**
+	 * Genes searsh
+	 */
+	public function Find($str){
+		$results = []; 
+		$names = [];
+		$query = $this->FQuery("
+			select `knownGene`.`chrom`, `knownGene`.`txStart`, `knownGene`.`txEnd`, `knownToLynx`.`value`
+			from `knownToLynx` left join `knownGene`
+			on `knownToLynx`.`name` = `knownGene`.`name`
+			where `knownToLynx`.`value` like ? limit 50", [$str . '%']);
+		foreach ($query as $r) {
+			if (in_array($r['value'], $names)) continue;
+			$names[] = $r['value'];
+			$point = number_format($r['txStart'] - 100) . '-' . number_format($r['txEnd'] + 100);
+			$results[] = ['title' => "Gene: {$r['value']}", 'event' => "#{$r['chrom']}:$point"];
+		}
+		
+		echo json_encode($results);
+		exit;
+	}
+	
 	/*
 	 * Bind-levels:
 	 */
-	public function BindLevels($chr, $x1, $x2){
+	public function BindLevels($chr, $x1, $x2, $type){
 		$step = 25;
 		if ($x2 - $x1 > 500000)  $step = 1000;
 		if ($x2 - $x1 > 5000000) $step = 50000;
 
-		$query = $this->FQuery("select `type`,`start`,`data` from `rnaseq{$step}x` 
+		$C = substr($chr, 3);
+		if ($C == 'X') $C = 23;
+		if ($C == 'Y') $C = 24;
+		
+		$types = [
+			'H3k4me1' => "bind4me1_{$step}",
+			'H3k4me3' => "bind4me3_{$step}",
+			'H3k27ac' => "bind27ac_{$step}"
+		];
+		
+		$table = array_key_exists($type, $types) ? $types[$type] : "bind27ac_{$step}";
+
+		$query = $this->FQuery("select `type`,`start`,`data` from `{$table}` 
 			where `chr` = ? AND (`start` >= ? and `start` <= ?)", 
-			[substr($chr, 3), $x1 - $step * 1000, $x2 + $step * 1000]);
-		$T = [];
+			[$C, $x1 - $step * 500 * 30, $x2 + $step * 500 * 30]);
+
+		$T = [0, 0, 0, 0, 0, 0, 0];
 		foreach ($query as $e) {
-			if(!@$T[$e['type']]) $T[$e['type']] = [];
-			$T[$e['type']][] = "{$e['start']}!{$step}!{$e['data']}";
+			if ($T[$e['type']] == 0) {
+				$init = $e['start'] - 200;
+				$T[$e['type']] = "{$init}|{$step}|{$e['data']}";
+			} else {
+				$T[$e['type']] .= ",{$e['data']}";
+			}
 		}
-		echo implode(";", array_map(function($bl){
-			return implode("|", $bl);
-		}, $T)), "\n";
+
+		echo implode(";", $T), "\n";
 
 		if ($x2 - $x1 < 10000) {
 			$E = substr($chr, 3);
@@ -144,7 +190,7 @@ class Requests extends PDO {
 			where `knownGene`.`chrom` = ? and 
 				(`knownGene`.`txStart` > $start and `knownGene`.`txStart` < $stop or `knownGene`.`txEnd` > $start and `knownGene`.`txEnd` < $stop or `knownGene`.`txStart` < $start and `knownGene`.`txEnd` > $stop)
 			order by `knownGene`.`txStart`", [$chr]);
-		# print_r($query);
+		#print_r($query);
 		$genes = array_map(function($e){
 			$init = base_convert($e['txStart'], 10, 32);
 			$len  = base_convert($e['txEnd'] - $e['txStart'], 10, 32);

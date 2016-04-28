@@ -1,3 +1,14 @@
+var H3K = [
+	{name: 'GM12878', col : '255, 128, 128'},
+	{name: 'H1-hESC', col : '255, 212, 128'},
+	{name: 'HSMM',    col : '120, 235, 204'},
+	{name: 'HUVEC',   col : '128, 212, 255'},
+	{name: 'K562',    col : '128, 128, 255'},
+	{name: 'NHEK',    col : '212, 128, 255'},
+	{name: 'NHLF',    col : '255, 128, 212'}
+];
+var H3Ktype = 'H3k27ac';
+
 // Rendering page with Сhromosome detail view
 function ShowChromosome(name, start, end){
 	// Validate:
@@ -15,21 +26,11 @@ function ShowChromosome(name, start, end){
 	}).join('');
 	doc.innerHTML = Template('chromosome', { name: name, clist : chrList });
 
-	var H3K27Ac = [
-		{name: 'GM12878', col : '255, 128, 128'},
-		{name: 'H1-hESC', col : '255, 212, 128'},
-		{name: 'HSMM',    col : '120, 235, 204'},
-		{name: 'HUVEC',   col : '128, 212, 255'},
-		{name: 'K562',    col : '128, 128, 255'},
-		{name: 'NHEK',    col : '212, 128, 255'},
-		{name: 'NHLF',    col : '255, 128, 212'}
-	];
-
 	// Variables: Chromosome
 	var size = chrs[name];
 	var box = $('#sel-box')[0], sel = $('#range')[0];
 	var blurL = $('#blur-l')[0], blurR = $('#blur-r')[0];
-	var area = $('#z-area')[0], jump = $('#jump-to')[0];
+	var area = $('#z-area')[0], jump = $('#jump-to')[0], htype = $('#H-type')[0];
 	
 	// Variables: Zoom-box
 	var svg = $('#ch-svg')[0], svgL = $('#path-left')[0], svgR = $('#path-right')[0];
@@ -136,9 +137,13 @@ function ShowChromosome(name, start, end){
 		if (bp <  2000000) detail++; // XS
 		var genes = $('#genes')[0], bgraph = $('#bind-graph')[0], bpanel = $('#bind-panel')[0], bases = $('#bases')[0], expand = $('#expand')[0];
 		var mode = ['L','L','M','S','XS'][detail];
-
+		
+		// Binding data type
+		$('#H-type a').removeClass('current');
+		$('[data-id="'+H3Ktype+'"]').addClass('current');
+		
 		// -- > --
-		XHR = $.post(server + [mode, name, x1, x2].join('/'), {}, function(inf){
+		XHR = $.post(server + [mode, name, x1, x2, H3Ktype].join('/'), {}, function(inf){
 			var inf  = inf.split('\n');
 
 			// Rulers
@@ -222,40 +227,43 @@ function ShowChromosome(name, start, end){
 			var bingPanel = '', bingGraph = '';
 			var bindInfo = inf[1].split(';').map(function(btype, k){
 				if (btype == 0) return false;
-				btype.split('|').map(function(BT){
-					BT = BT.split('!');
-					if (!BT[2]) return;
-					// Неведомая хитрость :D
-					var dots = BT[2].split(',').map(function(v){
-						var v = v.split(':');
-						if (v[1]) return Array.apply(null, Array(parseInt(v[1]))).map(function(){ return v[0]; }).join(',');
-						return v[0];
-					}).join(',').split(',');
-					// Draw:
-					var line = '0,100';
-					for (var i in dots) line += ' ' + (BT[1] * i * H.kpx) + ',' + Math.min(100,(100 - parseFloat(dots[i])));
-					var send = Math.round(BT[1] * dots.length * H.kpx) + 1;
-					line += ' ' + send + ',100';
-					bingGraph += Template('bindlevel', {
-						color  : H3K27Ac[k].col,
-						points : line,
-						left   : BT[0] * H.kpx + H.offset,
-						key    : k,
-						width  : send
-					});
+				var BT = btype.split('|');
+				if (!BT[2]) return;
+				// Неведомая просто хитрость
+				BT[2] = BT[2].split(',').map(function(v){
+					var v = v.split(':');
+					if (v[1]) return Array.apply(null, Array(parseInt(v[1]))).map(function(){ return v[0]; }).join(',')
+					return v[0];
+				}).join(',').split(',');
+				// Draw:
+				var line = '0,130';
+				for (var i in BT[2]) line += ' ' + (BT[1] * i * H.kpx) + ',' + Math.min(130,(130 - parseFloat(BT[2][i])));
+				var send = Math.round(BT[1] * BT[2].length * H.kpx) + 1;
+				line += ' ' + send + ',130';
+				bingGraph += Template('bindlevel', {
+					color  : H3K[k].col,
+					points : line,
+					left   : BT[0] * H.kpx + H.offset,
+					key    : k,
+					width  : send
 				});
 				bingPanel += Template('bindpanel', {
-					color  : H3K27Ac[k].col,
-					name   : H3K27Ac[k].name,
+					color  : H3K[k].col,
+					name   : H3K[k].name,
 					key    : k
 				});
 			});
 			bgraph.innerHTML = bingGraph;
-			bpanel.innerHTML = bingPanel;
-			$('.bind-swith').click(function(){
+			bpanel.innerHTML = Template('bindpanel-type', {'type' : H3Ktype}) + bingPanel;
+			$('.bind-swith.cell').click(function(){
 				var nm = 'bl-hide' + $(this).data('k');
 				$('body')[$('body').hasClass(nm) ? 'removeClass' : 'addClass'](nm);
 			});
+			$('.bind-swith.type').click(function(){
+				htype.style.display = 'block';
+				htype.style.top = $('#H-chtype').offset().top - 15 - doc.offsetTop + 'px';
+			});
+			
 			
 			genes.style.height = 'auto';
 			if (detail == 0) genes.innerHTML = Template('zoom-Z', {name : name, left : H.offset});
@@ -329,9 +337,8 @@ function ShowChromosome(name, start, end){
 				heightGenesArea = px;
 				GenesAreaHeight(px, inc <= 100 ? _.L : _.h);
 			};
-			
-			if (heightGenesArea == 0) heightGenesArea = 24; 
-			if (heightGenesArea == 0 && detail >  1) heightGenesArea = 96; 
+			if (heightGenesArea == 0 && detail < 2) heightGenesArea = 48; 
+			if (heightGenesArea == 0 && detail > 1) heightGenesArea = 84; 
 			GenesAreaHeight(heightGenesArea, inc <= 100 ? _.L : _.h);
 		});
 	}
@@ -357,7 +364,6 @@ function ShowChromosome(name, start, end){
 		return { el : elements, h : visibeHeight, L : lines.length * one };
 	}
 
-	// Events:
 	var px,ox,dx, tx,vx,ix, se, we;
 	// Select range (chromosome)
 	sel.onmousedown = function(e){
@@ -429,6 +435,10 @@ function ShowChromosome(name, start, end){
 			jump.style.top = (top > 10 ? top : 10) + 'px';
 		}
 		ox = NaN, px = NaN, dx = NaN, tx = NaN, vx = NaN, se = NaN, we = NaN;
+		// Hide menu
+		if (htype.style.display != 'none' && e.target.id != 'H-chtype') {
+			setTimeout(function(){ htype.style.display = 'none'; }, 50)
+		}
 	};
 	window.onresize = function(e){
 		$('#content').addClass('blur');
@@ -474,6 +484,14 @@ function ShowChromosome(name, start, end){
 	$('.chr-btn .dropdown-menu a').click(function(){
 		Route($(this).attr('href'));
 	});
+	// Type select:
+	$('#H-type a').click(function(){
+		var id = $(this).data('id');
+		if (!id) return ;
+		H3Ktype = id;
+		Cookie.Set('H3Ktype', H3Ktype);
+		Rend();
+	});
 	
 	// Jump:
 	jump.children[0].onclick = function(){
@@ -491,6 +509,7 @@ function ShowChromosome(name, start, end){
 		jump.style.display = 'none';
 		area.style.display = 'none';
 	}
+	
 
 	BPParse(start, end);
 	Rend();

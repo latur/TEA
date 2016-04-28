@@ -205,7 +205,7 @@
 		</div>
 	</div>
 	<div class="pad">
-		<div id="jump-to">
+		<div id="jump-to" class="mdbox">
 			<a class="btn btn-default "><span class="glyphicon glyphicon-zoom-in"></span> Jump to region</a>
 			<a class="btn btn-default "><span class="glyphicon glyphicon-remove"></span> Close</a>
 		</div>
@@ -228,6 +228,12 @@
 				<div class="rules"></div>
 			</div>
 		</div>
+	</div>
+	<div id="H-type" class="mdbox">
+		<a data-id="H3k27ac"><b>H3k27ac</b> Mark<br><small>(Often Found Near Regulatory Elements)<br/> on 7 cell lines from ENCODE</small></a>
+		<a data-id="H3k4me3"><b>H3k4me3</b> Mark<br><small>(Often Found Near Promoters)<br/> on 7 cell lines from ENCODE</small></a>
+		<a data-id="H3k4me1"><b>H3k4me1</b> Mark<br><small>(Often Found Near Regulatory Elements)<br/> on 7 cell lines from ENCODE</small></a>
+		<a>Cancel</a>
 	</div>
 </script>
 
@@ -265,13 +271,17 @@
 </script>
 
 <script data-name="bindlevel" class="template" type="text/x-handlebars-template">
-	<svg id="b-gr{key}" class="blevel" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="100" style="left: {left}px; width: {width}px">
+	<svg id="b-gr{key}" class="blevel" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="130" style="left: {left}px; width: {width}px">
 		<polyline fill-opacity="0.5" fill="rgb({color})" points="{points}" style="stroke-width: 0;"/>
 	</svg>
 </script>
 <script data-name="bindpanel" class="template" type="text/x-handlebars-template">
-	<div class="bind-swith b-sw{key}" data-k="{key}"><span class="round" style="background-color: rgb({color});"></span> <a>{name}</a></div>
+	<div class="bind-swith cell b-sw{key}" data-k="{key}"><span class="round" style="background-color: rgb({color});"></span> <a>{name}</a></div>
 </script>
+<script data-name="bindpanel-type" class="template" type="text/x-handlebars-template">
+	<div class="bind-swith type"><a id="H-chtype">Type: {type}</a></div>
+</script>
+
 
 
 <script data-name="message" class="template" type="text/x-handlebars-template">

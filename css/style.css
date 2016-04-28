@@ -662,6 +662,21 @@ span.bp.e.T { background: rgba(255, 48, 0, 0.4); }
 span.bp.e.G { background: rgba(238, 255, 0, 0.4); }
 span.bp.e.C { background: rgba(0, 52, 255, 0.4); }
 
+.mdbox {
+	display: none;
+	z-index: 35;
+	position: absolute;
+    background: #FFF;
+    padding: 7px 0;
+    top: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.1);
+    width: 180px;
+}
+.mdbox a {
+	text-decoration: none;
+}
+
 #z-area {
 	display: none;
 	position: absolute;
@@ -672,22 +687,20 @@ span.bp.e.C { background: rgba(0, 52, 255, 0.4); }
     background: rgba(145, 0, 255, 0.04);
 }
 #jump-to {
-	display: none;
-	z-index: 35;
-	position: absolute;
-    background: #FFF;
-    padding: 7px;
-    top: 10px;
-    border-radius: 5px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.2);
-    width: 174px;
     text-align: center;
-    margin-left: -87px;
+    margin-left: -90px;
+    padding: 7px;
+    z-index: 45
 }
 #jump-to .btn {
 	padding: 3px 5px;
     font-size: 11px
 }
+
+#H-type { width: 250px; left: 115px; }
+#H-type a { padding: 3px 10px; display: block; line-height: 16px; color: #333 }
+#H-type a:hover { background: rgba(27, 0, 154, 0.04); }
+#H-type a.current { background: #F7F7F7; color: #888; cursor: default }
 
 #genes {
 	overflow: hidden;
@@ -768,7 +781,7 @@ span.bp.e.C { background: rgba(0, 52, 255, 0.4); }
 }
 #bind-graph {
 	position: relative;
-	height: 100px;
+	height: 130px;
 }
 #bind-panel {
 	text-shadow: 0 0 1px #FFF, 0 0 2px #FFF;
