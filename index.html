@@ -72,6 +72,7 @@
 <script data-name="library" class="template" type="text/x-handlebars-template">
 	<ul class="list-group sample-names">
 		<!-- Temporary solution -->
+		<!--
 		<li class="list-group-item selected" data-name="1ns-ready">1ns-ready <span class="glyphicon glyphicon-ok"></span></li>
 		<li class="list-group-item selected" data-name="1s-ready">1s-ready <span class="glyphicon glyphicon-ok"></span></li>
 		<li class="list-group-item selected" data-name="2nsready">2nsready <span class="glyphicon glyphicon-ok"></span></li>
@@ -81,6 +82,11 @@
 		<li class="list-group-item" data-name="61">61 <span class="glyphicon glyphicon-ok"></span></li>
 		<li class="list-group-item" data-name="81">81 <span class="glyphicon glyphicon-ok"></span></li>
 		<li class="list-group-item" data-name="91c">91c <span class="glyphicon glyphicon-ok"></span></li>
+		-->
+		<li class="list-group-item" data-name="MS2A">MS2A <span class="glyphicon glyphicon-ok"></span></li>
+		<li class="list-group-item" data-name="MS2B">MS2B <span class="glyphicon glyphicon-ok"></span></li>
+		<li class="list-group-item" data-name="MS2C">MS2C <span class="glyphicon glyphicon-ok"></span></li>
+		
 	</ul>
 	<div class="modal-footer">
 		<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
@@ -272,7 +278,7 @@
 
 <script data-name="bindlevel" class="template" type="text/x-handlebars-template">
 	<svg id="b-gr{key}" class="blevel" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="130" style="left: {left}px; width: {width}px">
-		<polyline fill-opacity="0.5" fill="rgb({color})" points="{points}" style="stroke-width: 0;"/>
+	<polyline fill-opacity="0.45" fill="rgb({color})" points="{points}" style="stroke-width: 0;"/>
 	</svg>
 </script>
 <script data-name="bindpanel" class="template" type="text/x-handlebars-template">
@@ -282,6 +288,25 @@
 	<div class="bind-swith type"><a id="H-chtype">Type: {type}</a></div>
 </script>
 
+
+<script data-name="transposone" class="template" type="text/x-handlebars-template">
+	<div class="msg">{msg}</div>
+	<div class="lines">
+		<div class="line">{lineR}</div>
+		<div class="line">{lineL}</div>
+		<svg width="10" height="50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 50">
+		    <path d="M 2 40 L 5 50 L 8 40 z" />
+			<line x1="5" y1="0" x2="5" y2="40" stroke="black" stroke-width="1"/>
+		</svg>
+	</div>
+	<div class="align"><div class="unk">Unknown</div></div>
+</script>
+<script data-name="align-block" class="template" type="text/x-handlebars-template">
+	<div class="align-block">
+		<div class="name">Name: <b>{name}</b>. Align score: {Hsp_bit-score}. E-value: {Hsp_evalue}</div>
+		<pre class="a">{text}</pre>
+	</div>
+</script>
 
 
 <script data-name="message" class="template" type="text/x-handlebars-template">

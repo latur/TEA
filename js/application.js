@@ -17,7 +17,7 @@ var chrs = {
 var hdr = $('#header')[0];
 var doc = $('#content')[0];
 var colors = [[0,220,0],[220,0,0],[0,0,220]];
-var demo = ['3ns_merged','61','81','2nsready'];
+var demo = ['MS2A','MS2B','MS2C'];
 
 var expData   = {}; // {chr1 : {file1 : [], ..}, chr2 ...}
 var expGroup  = false;
@@ -28,6 +28,16 @@ var samples   = {};
 var cache = {}; // Cache for imagedata
 var genesPane = false; // Open = true / Close = false / genes pane
 var XHR = false;
+
+String.prototype.repeat = function(num){
+    return new Array( num + 1 ).join( this );
+};
+
+String.prototype.reverseComplement = function(){
+	var inverse = { 'A' : 'T', 'G' : 'C', 'T' : 'A', 'C' : 'G'}, s = '';
+	for(var i = this.length - 1; i >= 0 ; i--) s += inverse[this[i]];
+	return s;
+};
 
 /* -------------------------------------------- */
 

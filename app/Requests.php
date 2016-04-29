@@ -50,6 +50,13 @@ class Requests extends PDO {
 			$this->Find(urldecode(@$e[1]));
 		}
 
+		# Align:
+		$pattern = "/tea/app/align/?";
+		$url = str_replace('/', '\\/', $pattern);
+		if (preg_match("/^$url$/", $this->request, $e)) {
+			$this->Align(@$_POST['seq']);
+		}
+
 		return die('false');
 	}
 
@@ -83,11 +90,23 @@ class Requests extends PDO {
 		foreach ($query as $r) {
 			if (in_array($r['value'], $names)) continue;
 			$names[] = $r['value'];
-			$point = number_format($r['txStart'] - 100) . '-' . number_format($r['txEnd'] + 100);
+			$point = number_format($r['txStart'] - 1500) . '-' . number_format($r['txEnd'] + 1500);
 			$results[] = ['title' => "Gene: {$r['value']}", 'event' => "#{$r['chrom']}:$point"];
 		}
-		
 		echo json_encode($results);
+		exit;
+	}
+	
+	/**
+	 * Genes searsh
+	 */
+	public function Align($str){
+		if (!preg_match("/^[A-z\[\,\]]+$/", $str)) die('false');
+		exec("echo -e \">Name\n$str\" | blastn -db te.data -outfmt 5", $xml);
+		$R = new SimpleXMLElement(implode("\n", $xml));
+		$H = (array) @$R->BlastOutput_iterations->Iteration->Iteration_hits;
+		if (!$H || count($H) == 0) die('0');
+		echo json_encode($H['Hit']);
 		exit;
 	}
 	

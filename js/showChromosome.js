@@ -192,11 +192,80 @@ function ShowChromosome(name, start, end){
 			
 			$('.spl a').click(function(){
 				var info = exp[name][$(this).data('f')][$(this).data('i')];
+				var Rep = function(type, k){
+					return ('<span class="nc k '+type+'">-</span>').repeat(k);
+				};
+				var Open = function(str){
+					return str = str.replace(/\[|\]/g, '|').split('|').map(function(e){
+						if (e.indexOf(',') != -1) return e.split(',')[0];
+						return e;
+					}).join('');
+				};
+				var Pack = function(str){
+					return str.split('').map(function(ch){
+						return '<span class="nc">'+ch+'</span>';
+					}).join('');
+				};
+
+				var N = 45, center = '<span class="nc mini">&nbsp;</span>';
+				var e = { 'msg' : '' };
+				if (info[3] == 'Delete' || info[4] == 'Delete'){
+					e.msg = 'Deletion of ' + info[1] + 'bp';
+					e.lineR = Rep('dott', N) + center + Rep('solid', N);
+					e.lineL = Rep('dott', N) + center + Rep('solid', N);
+				} else if (!info[3] || !info[4]){
+					e.lineR = Rep('solid', N) + center + Rep('solid', N);
+					e.lineL = Rep('solid', N) + center + Rep('solid', N);
+				} else {
+					e.msg = 'Target site duplication';
+					info[3] = (Open(info[3])).reverseComplement();
+					info[4] = Open(info[4]);
+					e.lineR = Rep('solid', N - info[3].length) 
+						+ Pack(info[3]) + center + Rep('dott', info[4].length) 
+						+ Rep('solid', N - info[4].length);
+					e.lineL = Rep('solid', N - info[3].length) 
+						+ Rep('dott', info[3].length) + center + Pack(info[4]) 
+						+ Rep('solid', N - info[4].length);
+				}
+				
+				var AlignHit = function(e){
+					if (!e.Hit_hsps.Hsp) return ;
+					var d = e.Hit_hsps.Hsp.length ? e.Hit_hsps.Hsp[0] : e.Hit_hsps.Hsp;
+					var s1 = 'Query  ' + d['Hsp_query-from'];
+					var s2 = 'Sbjct  ' + d['Hsp_hit-from'];
+					var sP = Math.max(s1.length, s2.length) + 2;
+					d.name = e['Hit_def'];
+					d.text = [
+						s2 + (' ').repeat(sP - s2.length) + d['Hsp_qseq'],
+						(' ').repeat(sP) + d['Hsp_midline'],
+						s1 + (' ').repeat(sP - s1.length) + d['Hsp_hseq'],
+					].join('\n');
+					$('.align').append(Template('align-block', d));
+				}
+				
 				Modal({
-					//title : '<b>' + info[3] + '</b>. Chromosome: <kbd>' + name + '</kbd>. Position: <kbd>' + info[0] + '</kbd>',
-					title : '=]',
-					data  : '<pre>' + info[4].match(/.{1,60}/g).join('\n') + '</pre>'
+					'title' : 'Location: <kbd>#' + name + ':' + info[0] + '</kbd><br/>Type: <b>' + info[5] + '</b>',
+					'data'  : Template('transposone', e),
+					'class' : 'transposone'
 				});
+				
+				console.log('...');
+				console.log(info);
+				console.log(e);
+				if (!info[6]) return ;
+				$.post(server + 'align', { seq : info[6].replace(/\//g, '') }, function(seq){
+					if (!seq || seq.length == 0) return ;
+					$('.align').html('');
+					seq.slice(0,3).map(AlignHit);
+					if (seq.length > 3) {
+						$('.align').append('<p><a class="all">Show all ('+seq.length+')</a></p>');
+						$('.align .all').click(function(){
+							$(this).parent().remove();
+							seq.slice(3).map(AlignHit);
+						});
+					}
+					console.log(seq);
+				}, "json");
 			});
 			
 			// Bases ?
