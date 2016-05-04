@@ -1,0 +1,80 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+# ----------------------------------------------------------------- #
+
+from sys import argv
+this, wig, T, prefix = argv
+
+# ---------------------------------------------------------------------------- #
+def Mean(line, K) :
+  mline = []
+  for ct in range(0, len(line), K) :
+    s = sum(line[ct:(ct + K)])
+    mline.append( round(float(s)/K, 2) )
+  return mline
+
+def Mini(part) :
+  mixline = [str(part[0])]; prev = part[0]
+  for x in part[1:] :
+    mixline.append(',' if x == prev else '!')
+    mixline.append(str(x))
+    prev = x
+  miniline = []
+  blocks = (('').join(mixline)).split('!')
+  for b in blocks :
+    bx = b.split(',')
+    if len(bx) == 1 : 
+      miniline.append(bx[0])
+    else :
+      miniline.append(bx[0] + ':' + str(len(bx)))
+  return (',').join(miniline)
+
+def Parts(row, chr, T, table, step) :
+  chr = chr[3:]
+  if chr == 'X' : chr = '23'
+  if chr == 'Y' : chr = '24'
+  f = open('bind_' + ('.').join([prefix, chr, T, str(step)]) + '.list', 'a+')
+  for i in range(0, len(row), 1000) :
+    f.write(Mini(row[i:(i+1000)]) + '\n')
+  f.close()
+
+def FULL(stack) :
+  row = []; frst = 0
+  for e in stack :
+    while frst < int(e[1]) :
+      frst += 25
+      row.append(0)
+    while frst < int(e[2]) :
+      frst += 25
+      row.append(float(e[3]))
+  return row
+
+# ---------------------------------------------------------------------------- #
+f = open(wig); stack = []; chr = 'chr1'
+for line in f.xreadlines():
+  if line[0] == '#' : continue
+  e = line.replace('\n','').split('\t')
+
+  if chr != e[0]:
+    row = FULL(stack)
+    stack = []
+    if (chr[3:]).isdigit() : 
+      Parts(Mean(row, 1), chr, T, prefix + '25', 25)
+      Parts(Mean(row, 8), chr, T, prefix + '200', 25 * 8)
+      Parts(Mean(row, 20), chr, T, prefix + '500', 25 * 20)
+      Parts(Mean(row, 80), chr, T, prefix + '2000', 25 * 80)
+      Parts(Mean(row, 400), chr, T, prefix + '10000', 25 * 400)
+      Parts(Mean(row, 40 * 50), chr, T, prefix + '50000', 25 * 40 * 50)
+  stack.append(e)
+  chr = e[0]
+f.close()
+
+if (chr[3:]).isdigit() : 
+  row = FULL(stack)
+  Parts(Mean(row, 1), chr, T, prefix + '25', 25)
+  Parts(Mean(row, 8), chr, T, prefix + '200', 25 * 8)
+  Parts(Mean(row, 20), chr, T, prefix + '500', 25 * 20)
+  Parts(Mean(row, 80), chr, T, prefix + '2000', 25 * 80)
+  Parts(Mean(row, 400), chr, T, prefix + '10000', 25 * 400)
+  Parts(Mean(row, 40 * 50), chr, T, prefix + '50000', 25 * 40 * 50)
+

@@ -8,7 +8,6 @@ class Requests extends PDO {
 		
 		$this->method  = @$_SERVER['REQUEST_METHOD'];
 		$this->request = @$_SERVER['REQUEST_URI'];
-		#sleep(1);
 		
 		# Get genes:
 		$pattern = "/tea/app/([LMSX]+)/(chr[0-9XY]+)/([0-9]+)/([0-9]+)/?(.*)?";
@@ -27,13 +26,6 @@ class Requests extends PDO {
 				$this->BindLevels($chr, $start, $stop, $other);
 			}
 			exit;
-		}
-
-		# Get samples (old version):
-		$pattern = "/tea/app/sample/([0-9A-z\-\_]+)";
-		$url = str_replace('/', '\\/', $pattern);
-		if (preg_match("/^$url$/", $this->request, $e)) {
-			$this->_GetSample($e[1]);
 		}
 
 		# Get samples:
@@ -115,34 +107,31 @@ class Requests extends PDO {
 	 */
 	public function BindLevels($chr, $x1, $x2, $type){
 		$step = 25;
-		if ($x2 - $x1 > 500000)  $step = 1000;
-		if ($x2 - $x1 > 5000000) $step = 50000;
+		if ($x2 - $x1 > 40000 * 3) $step = 200;
+		if ($x2 - $x1 > 100000 * 3) $step = 500;
+		if ($x2 - $x1 > 400000 * 3) $step = 2000;
+		if ($x2 - $x1 > 2000000 * 3) $step = 10000;
+		if ($x2 - $x1 > 10000000 * 3) $step = 50000;
 
 		$C = substr($chr, 3);
 		if ($C == 'X') $C = 23;
 		if ($C == 'Y') $C = 24;
-		
+
 		$types = [
-			'H3k4me1' => "bind4me1_{$step}",
-			'H3k4me3' => "bind4me3_{$step}",
-			'H3k27ac' => "bind27ac_{$step}"
+			'H3k4me1' => "bind_4me1.{$C}",
+			'H3k4me3' => "bind_4me3.{$C}",
+			'H3k27ac' => "bind_27ac.{$C}"
 		];
+		$file = array_key_exists($type, $types) ? $types[$type] : "bind_27ac.{$C}";
+
+		$l1 = round($x1 / (1000 * $step) - 1);
+		$l2 = round($x2 / (1000 * $step) + 1);
 		
-		$table = array_key_exists($type, $types) ? $types[$type] : "bind27ac_{$step}";
-
-		$query = $this->FQuery("select `type`,`start`,`data` from `{$table}` 
-			where `chr` = ? AND (`start` >= ? and `start` <= ?)", 
-			[$C, $x1 - $step * 500 * 30, $x2 + $step * 500 * 30]);
-
-		$T = [0, 0, 0, 0, 0, 0, 0];
-		foreach ($query as $e) {
-			if ($T[$e['type']] == 0) {
-				$init = $e['start'] - 200;
-				$T[$e['type']] = "{$init}|{$step}|{$e['data']}";
-			} else {
-				$T[$e['type']] .= ",{$e['data']}";
-			}
-		}
+		$T = array_map(function($t) use ($file, $step, $l1, $l2){
+			$l1++;
+			exec("sed -n {$l1},{$l2}p chipseq/{$file}.{$t}.{$step}.list", $exe);
+			return (($l1 - 1) * 1000 * $step) . "|{$step}|" . implode(',', $exe);
+		}, [0,1,2,3,4,5,6]);
 
 		echo implode(";", $T), "\n";
 
@@ -152,7 +141,6 @@ class Requests extends PDO {
 			echo implode('', @array_slice($seq, 1));
 		}
 	}
-	
 
 	# Large [interval] = Transcripts inits (no repeats) by 32 base
 	public function _L($chr, $start, $stop){
@@ -209,7 +197,6 @@ class Requests extends PDO {
 			where `knownGene`.`chrom` = ? and 
 				(`knownGene`.`txStart` > $start and `knownGene`.`txStart` < $stop or `knownGene`.`txEnd` > $start and `knownGene`.`txEnd` < $stop or `knownGene`.`txStart` < $start and `knownGene`.`txEnd` > $stop)
 			order by `knownGene`.`txStart`", [$chr]);
-		#print_r($query);
 		$genes = array_map(function($e){
 			$init = base_convert($e['txStart'], 10, 32);
 			$len  = base_convert($e['txEnd'] - $e['txStart'], 10, 32);
@@ -219,12 +206,6 @@ class Requests extends PDO {
 			return "$init:$len:$cinit:$clen:{$e['value']}:{$e['proteinID']}:{$e['strand']}:{$e['exonStarts']}:{$e['exonEnds']}";
 		}, $query);
 		echo implode(";", $genes), "\n";
-	}
-	# Load sample file
-	public function _GetSample($file){
-		$name = "samples.csv/$file.csv";
-		if (!file_exists($name)) die('false');
-		echo file_get_contents($name);
 	}
 	# Load sample file
 	public function _GetData($file){
