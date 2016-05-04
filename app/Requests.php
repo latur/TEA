@@ -114,8 +114,6 @@ class Requests extends PDO {
 		if ($x2 - $x1 > 10000000 * 3) $step = 50000;
 
 		$C = substr($chr, 3);
-		if ($C == 'X') $C = 23;
-		if ($C == 'Y') $C = 24;
 
 		$types = [
 			'H3k4me1' => "bind_4me1.{$C}",
