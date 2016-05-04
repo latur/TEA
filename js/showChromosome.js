@@ -388,7 +388,7 @@ function ShowChromosome(name, start, end){
 			if (genesInfo.length > 1) {
 				genes.innerHTML = _.el.map(function(e){ return Template('zoom-' + mode, e); }).join('');
 			} else {
-				genes.innerHTML = '<div class="zoomplease">Zoom in to see the genes</div>';
+				genes.innerHTML = detail > 2 ? '<div class="zoomplease">Empty</div>' : '<div class="zoomplease">Zoom in to see the genes</div>';
 			}
 
 			// GENES area size
