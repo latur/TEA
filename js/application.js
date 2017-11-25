@@ -1,6 +1,6 @@
 "use strict";
 
-var server  = 'http://dev.mazepa.us/tea/app/';
+var server  = 'https://te-atlas.ga/tea/app/';
 var chrsSum = 3088269832;
 var chrs = {
 	'chr1':  248956422, 'chr2':  242193529, 'chr3':  198295559, 
@@ -17,7 +17,7 @@ var chrs = {
 var hdr = $('#header')[0];
 var doc = $('#content')[0];
 var colors = [[0,220,0],[220,0,0],[0,0,220]];
-var demo = ['MS2A','MS2B','MS2C'];
+var demo = ['MS2A','MS2B','MS2C','2nsready','2sready','3ns_merged'];
 
 var expData   = {}; // {chr1 : {file1 : [], ..}, chr2 ...}
 var expGroup  = false;

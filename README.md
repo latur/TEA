@@ -1,42 +1,28 @@
 # TEA. Transposable Elements Atlas
 
-## Demo
+Goal: Development a web-based retrotransposons browser
 
-Check out a working demo here [http://te-atlas.ga](http://te-atlas.ga)
+![](https://te-atlas.ga/media/sc1.png)
 
-![Detailed view of the chromosome](http://dev.mazepa.us/tea/media/sc1.png)
+## Demo 
+[http://te-atlas.ga](http://te-atlas.ga)
 
-## Server side:
-
-### Binding sites data
-
-Download
-
+## Installation
 ~~~
-mkdir chipseq && cd chipseq
-HOST="http://hgdownload.cse.ucsc.edu/gbdb/hg38/bbi/wgEncodeReg"
-wget -np -nH --cut-dirs 6 -r -A "*.bigWig" $HOST/wgEncodeRegMarkH3k27ac/
-wget -np -nH --cut-dirs 6 -r -A "*.bigWig" $HOST/wgEncodeRegMarkH3k4me3/
-wget -np -nH --cut-dirs 6 -r -A "*.bigWig" $HOST/wgEncodeRegMarkH3k4me1/
+git clone https://github.com/latur/TEA.git
+cd TEA && php -S localhost:8000
 ~~~
 
-Convert bigWig to BedGraph
+## Features
 
-~~~
-wget http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/bigWigToBedGraph
-chmod +x bigWigToBedGraph
-E=$(ls *.bigWig)
-for i in $E; do ./bigWigToBedGraph $i $i.wig; done
-~~~
+- Display the genome, intron/exon structure
+- The ability to import files within retrotransposons
+- Filtration by type of transposon
+- Loading samples from the Library
+- Interactive construction of a phylogenetic tree
+- Comparison loaded transposons with transposons in database
+- Display ChIP-seq data
 
-Convert BedGraph to «.list»
+![](https://te-atlas.ga/media/sc2.png)
 
-~~~
-wget http://dev.mazepa.us/tea/app/wigtolist
-chmod +x wigtosql
-T=0; for i in $(ls *27ac*.bed); do ./wigtolist $i $T '27ac'; let T=($T+1); done
-T=0; for i in $(ls *4me1*.bed); do ./wigtolist $i $T '4me1'; let T=($T+1); done
-T=0; for i in $(ls *4me3*.bed); do ./wigtolist $i $T '4me3'; let T=($T+1); done
-~~~
-
-...
+![](https://te-atlas.ga/media/sc3.png)
